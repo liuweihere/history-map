@@ -1,0 +1,57 @@
+{
+  "story_id": "story_001_yellow_turban",
+  "review_status": "draft",
+  "timeline": {
+    "year": 184,
+    "label": "黄巾起义",
+    "lesson": "三国不是突然来的，是东汉先乱了"
+  },
+  "event": {
+    "id": "event_yellow_turban_184",
+    "title": "黄巾起义",
+    "type": "rebellion",
+    "year": 184,
+    "result": "黄巾军被镇压；东汉中央控制力下降；地方军事力量增强；三国故事的舞台开始形成",
+    "importance": "黄巾起义不是三国本身，但它让东汉变得更弱。后来曹操、刘备、孙权这些人，就是在这样的乱世中出现的。"
+  },
+  "people": [
+    {
+      "id": "person_zhang_jue",
+      "name": "张角",
+      "role": "起义领袖"
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction_eastern_han",
+      "name": "东汉",
+      "color": "gold"
+    },
+    {
+      "id": "faction_yellow_turban",
+      "name": "黄巾军",
+      "color": "yellow"
+    }
+  ],
+  "places": [
+    {
+      "id": "place_julu",
+      "name": "钜鹿",
+      "certainty": "medium"
+    },
+    {
+      "id": "place_luoyang",
+      "name": "洛阳",
+      "certainty": "high"
+    }
+  ],
+  "child_story": {
+    "id": "story_yellow_turban_age7",
+    "title": "黄巾起义：天下开始乱了"
+  },
+  "map_plan": {
+    "id": "map_plan_184_yellow_turban",
+    "display_type": "influence_area",
+    "certainty": "medium"
+  }
+}
