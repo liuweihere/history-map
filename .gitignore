@@ -1,0 +1,7 @@
+.llm-wiki/
+
+# macOS
+.DS_Store
+
+# Optional local editor/runtime noise
+Thumbs.db
