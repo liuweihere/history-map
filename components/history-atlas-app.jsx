@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+
+import { HistoryMapStage } from "./history-map-stage";
 
 const futureMilestones = [
   { year: 184, label: "黄巾起义", status: "active", note: "乱世起点" },
@@ -11,25 +13,6 @@ const futureMilestones = [
   { year: 220, label: "曹丕代汉", status: "upcoming", note: "东汉终结" },
   { year: 221, label: "刘备称帝", status: "upcoming", note: "蜀汉建立" },
   { year: 229, label: "孙权称帝", status: "upcoming", note: "三国定局" },
-];
-
-const placeAnchors = [
-  {
-    id: "place_luoyang",
-    left: "57%",
-    top: "40%",
-    kind: "capital",
-    region: "司隶",
-    english: "Luoyang",
-  },
-  {
-    id: "place_julu",
-    left: "67%",
-    top: "24%",
-    kind: "uprising",
-    region: "冀州",
-    english: "Julu",
-  },
 ];
 
 const mapSignals = [
@@ -46,16 +29,6 @@ function certaintyLabel(level) {
 
 export function HistoryAtlasApp({ event, story }) {
   const [selectedQuestion, setSelectedQuestion] = useState(0);
-
-  const stageAnchors = useMemo(() => {
-    return placeAnchors
-      .map((anchor) => {
-        const place = story.places.find((item) => item.id === anchor.id);
-        if (!place) return null;
-        return { ...anchor, place };
-      })
-      .filter(Boolean);
-  }, [story.places]);
 
   const currentPrompt = event.questions[selectedQuestion] ?? event.questions[0];
 
@@ -105,6 +78,7 @@ export function HistoryAtlasApp({ event, story }) {
           </div>
 
           <div className="atlas-map-stage">
+            <HistoryMapStage story={story} />
             <div className="atlas-frame atlas-frame--top" />
             <div className="atlas-frame atlas-frame--right" />
             <div className="atlas-frame atlas-frame--bottom" />
@@ -167,22 +141,6 @@ export function HistoryAtlasApp({ event, story }) {
             <div className="atlas-region atlas-region--central">中原 / Central Plain</div>
             <div className="atlas-region atlas-region--hebei">冀州地带 / Hebei Zone</div>
             <div className="atlas-region atlas-region--han">东汉中央秩序</div>
-
-            {stageAnchors.map((anchor) => (
-              <button
-                key={anchor.place.id}
-                className={`atlas-marker atlas-marker--${anchor.kind}`}
-                style={{ left: anchor.left, top: anchor.top }}
-                type="button"
-              >
-                <span className="atlas-marker__dot" />
-                <span className="atlas-marker__label">
-                  <strong>{anchor.place.name}</strong>
-                  <small>{anchor.region}</small>
-                  <em>{anchor.kind === "capital" ? "Central Court" : "Uprising Focus"}</em>
-                </span>
-              </button>
-            ))}
 
             <div className="atlas-disturbance-text atlas-disturbance-text--one">黄巾起义扩散带</div>
             <div className="atlas-disturbance-text atlas-disturbance-text--two">中央受损</div>
