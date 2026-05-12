@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -41,6 +41,8 @@ function loadZod() {
 
 const { z } = loadZod();
 
+const stringArraySchema = z.array(z.string().min(1));
+
 const eventFrontmatterSchema = z.object({
   type: z.literal("event"),
   id: z.string().min(1),
@@ -48,18 +50,21 @@ const eventFrontmatterSchema = z.object({
   created: z.string().min(1),
   updated: z.string().min(1),
   review_status: z.string().min(1),
-  source_refs: z.array(z.string()).min(1),
+  source_refs: stringArraySchema.min(1),
   year: z.number().int(),
   period: z.string().min(1),
   era: z.string().min(1),
   event_type: z.string().min(1),
-  factions: z.array(z.string()).min(1),
-  people: z.array(z.string()).min(1),
-  places: z.array(z.string()).min(1),
+  factions: stringArraySchema.min(1),
+  people: stringArraySchema.min(1),
+  places: stringArraySchema.min(1),
   content_mode: z.string().min(1),
   child_ready: z.boolean(),
   map_required: z.boolean(),
   certainty: z.enum(["high", "medium", "low"]),
+  sources: stringArraySchema.min(1),
+  causes: stringArraySchema.optional(),
+  effects: stringArraySchema.optional(),
 });
 
 const childStoryFrontmatterSchema = z.object({
@@ -69,7 +74,7 @@ const childStoryFrontmatterSchema = z.object({
   created: z.string().min(1),
   updated: z.string().min(1),
   review_status: z.string().min(1),
-  source_refs: z.array(z.string()).min(1),
+  source_refs: stringArraySchema.min(1),
   event: z.string().min(1),
   age_level: z.number().int(),
   content_mode: z.string().min(1),
@@ -83,7 +88,7 @@ const parentNoteFrontmatterSchema = z.object({
   created: z.string().min(1),
   updated: z.string().min(1),
   review_status: z.string().min(1),
-  source_refs: z.array(z.string()).min(1),
+  source_refs: stringArraySchema.min(1),
   event: z.string().min(1),
 });
 
@@ -94,14 +99,14 @@ const mapLayerFrontmatterSchema = z.object({
   created: z.string().min(1),
   updated: z.string().min(1),
   review_status: z.string().min(1),
-  source_refs: z.array(z.string()).min(1),
+  source_refs: stringArraySchema.min(1),
   year: z.number().int(),
   event: z.string().min(1),
   display_type: z.string().min(1),
   certainty: z.enum(["high", "medium", "low"]),
   geojson_file: z.string().min(1),
-  related_factions: z.array(z.string()),
-  related_places: z.array(z.string()),
+  related_factions: stringArraySchema,
+  related_places: stringArraySchema,
 });
 
 const factionFrontmatterSchema = z.object({
@@ -111,6 +116,7 @@ const factionFrontmatterSchema = z.object({
   name: z.string().min(1),
   review_status: z.string().min(1),
   color: z.string().min(1),
+  source_refs: stringArraySchema.min(1),
 });
 
 const placeFrontmatterSchema = z.object({
@@ -120,6 +126,7 @@ const placeFrontmatterSchema = z.object({
   name: z.string().min(1),
   review_status: z.string().min(1),
   certainty: z.enum(["high", "medium", "low"]),
+  source_refs: stringArraySchema.min(1),
 });
 
 const personFrontmatterSchema = z.object({
@@ -128,7 +135,21 @@ const personFrontmatterSchema = z.object({
   title: z.string().min(1),
   name: z.string().min(1),
   review_status: z.string().min(1),
-  roles: z.array(z.string()).min(1),
+  roles: stringArraySchema.min(1),
+  source_refs: stringArraySchema.min(1),
+});
+
+const sourceFrontmatterSchema = z.object({
+  type: z.literal("source"),
+  id: z.string().min(1),
+  title: z.string().min(1),
+  created: z.string().min(1),
+  updated: z.string().min(1),
+  review_status: z.string().min(1),
+  source_refs: stringArraySchema.min(1),
+  content_mode: z.string().min(1),
+  child_ready: z.boolean(),
+  sources: stringArraySchema.min(1),
 });
 
 const storyBundleSchema = z.object({
@@ -146,6 +167,11 @@ const storyBundleSchema = z.object({
     year: z.number().int(),
     result: z.string().min(1),
     importance: z.string().min(1),
+  }),
+  sources: z.object({
+    page_ids: stringArraySchema.min(1),
+    raw_files: stringArraySchema.min(1),
+    bibliography: stringArraySchema.min(1),
   }),
   people: z.array(
     z.object({
@@ -188,6 +214,11 @@ const eventBundleSchema = z.object({
   type: z.string().min(1),
   review_status: z.string().min(1),
   source_refs: z.array(z.string()).min(1),
+  sources: z.object({
+    page_ids: stringArraySchema.min(1),
+    raw_files: stringArraySchema.min(1),
+    bibliography: stringArraySchema.min(1),
+  }),
   people: z.array(z.string()).min(1),
   factions: z.array(z.string()).min(1),
   places: z.array(z.string()).min(1),
@@ -206,6 +237,50 @@ function parseScalar(rawValue: string): FrontmatterValue {
   if (value === "true") return true;
   if (value === "false") return false;
   if (value === "[]") return [];
+  if (value.startsWith("[") && value.endsWith("]")) {
+    const inner = value.slice(1, -1).trim();
+    if (!inner) return [];
+
+    const items: string[] = [];
+    let current = "";
+    let quote: '"' | "'" | null = null;
+
+    for (let index = 0; index < inner.length; index += 1) {
+      const character = inner[index];
+
+      if ((character === '"' || character === "'") && (index === 0 || inner[index - 1] !== "\\")) {
+        if (quote === character) {
+          quote = null;
+        } else if (quote === null) {
+          quote = character;
+        }
+        current += character;
+        continue;
+      }
+
+      if (character === "," && quote === null) {
+        const parsed = parseScalar(current);
+        if (typeof parsed !== "string") {
+          items.push(String(parsed));
+        } else if (parsed.trim()) {
+          items.push(parsed.trim());
+        }
+        current = "";
+        continue;
+      }
+
+      current += character;
+    }
+
+    const parsed = parseScalar(current);
+    if (typeof parsed !== "string") {
+      items.push(String(parsed));
+    } else if (parsed.trim()) {
+      items.push(parsed.trim());
+    }
+
+    return items.map((item) => item.trim());
+  }
   if (/^-?\d+(\.\d+)?$/.test(value)) return Number(value);
   if (
     (value.startsWith('"') && value.endsWith('"')) ||
@@ -303,6 +378,14 @@ function compactText(sectionText: string): string {
     .join(" ");
 }
 
+function extractParagraphText(sectionText: string): string {
+  return sectionText
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => Boolean(line) && !line.startsWith("- ") && !/^\d+\.\s+/.test(line))
+    .join(" ");
+}
+
 function parseMarkdownTable(markdownBody: string): Array<Record<string, string>> {
   const tableLines = markdownBody
     .split("\n")
@@ -360,6 +443,18 @@ function stableOrder<T>(items: T[], getKey: (item: T) => string): T[] {
   return [...items].sort((a, b) => getKey(a).localeCompare(getKey(b), "zh-Hans-CN"));
 }
 
+function uniqueStrings(items: string[]): string[] {
+  return [...new Set(items)].sort((a, b) => a.localeCompare(b, "zh-Hans-CN"));
+}
+
+async function assertFileExists(label: string, filePath: string) {
+  try {
+    await access(filePath);
+  } catch {
+    throw new Error(`${label}: missing file ${filePath}`);
+  }
+}
+
 async function main() {
   const eventPage = await readMarkdownPage("wiki/entities/events/184-黄巾起义.md");
   const childStoryPage = await readMarkdownPage(
@@ -372,11 +467,32 @@ async function main() {
     "wiki/entities/map-layers/184-黄巾起义-地图计划.md",
   );
   const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/三国形成篇时间线.md");
+  const readingNoteSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-亲子共读记录.md");
+  const childRetellingSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-小星星讲述.md");
+  const historicalDigestSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-史料提要.md");
 
   const event = eventFrontmatterSchema.parse(eventPage.frontmatter);
   const childStory = childStoryFrontmatterSchema.parse(childStoryPage.frontmatter);
   const parentNote = parentNoteFrontmatterSchema.parse(parentNotePage.frontmatter);
   const mapLayer = mapLayerFrontmatterSchema.parse(mapLayerPage.frontmatter);
+  const sourcePages = stableOrder(
+    [
+      sourceFrontmatterSchema.parse(readingNoteSourcePage.frontmatter),
+      sourceFrontmatterSchema.parse(childRetellingSourcePage.frontmatter),
+      sourceFrontmatterSchema.parse(historicalDigestSourcePage.frontmatter),
+    ],
+    (item) => item.id,
+  );
+
+  const sourcePageIds = sourcePages.map((page) => page.id);
+  const sourcePageIdSet = new Set(sourcePageIds);
+  const rawSourceFiles = uniqueStrings(sourcePages.flatMap((page) => page.sources));
+  const bibliography = uniqueStrings(
+    [
+      ...event.source_refs.filter((ref) => !ref.startsWith("source_")),
+      ...sourcePages.flatMap((page) => page.source_refs.filter((ref) => !ref.startsWith("source_"))),
+    ],
+  );
 
   if (childStory.event !== event.id) {
     throw new Error(
@@ -396,8 +512,57 @@ async function main() {
     );
   }
 
-  const eventResult = compactText(eventPage.sections.get("结果") ?? "");
-  const eventImportance = compactText(eventPage.sections.get("为什么重要") ?? "");
+  for (const sourcePageId of sourcePageIds) {
+    if (!event.source_refs.includes(sourcePageId)) {
+      throw new Error(`Event source_refs is missing canonical source page ${sourcePageId}.`);
+    }
+  }
+
+  for (const sourcePageId of sourcePageIds) {
+    if (!childStory.source_refs.includes(sourcePageId)) {
+      throw new Error(`Child story source_refs is missing canonical source page ${sourcePageId}.`);
+    }
+    if (!parentNote.source_refs.includes(sourcePageId)) {
+      throw new Error(`Parent note source_refs is missing canonical source page ${sourcePageId}.`);
+    }
+  }
+
+  for (const requiredSourceId of [
+    "source_yellow_turban_historical_digest",
+    "source_yellow_turban_reading_note",
+  ]) {
+    if (!mapLayer.source_refs.includes(requiredSourceId)) {
+      throw new Error(`Map layer source_refs is missing required source page ${requiredSourceId}.`);
+    }
+  }
+
+  for (const sourceFile of event.sources) {
+    if (!rawSourceFiles.includes(sourceFile)) {
+      throw new Error(`Event sources contains ${sourceFile}, but no source page exposes it.`);
+    }
+  }
+
+  for (const sourcePage of sourcePages) {
+    for (const sourceRef of sourcePage.source_refs.filter((ref) => ref.startsWith("source_"))) {
+      if (!sourcePageIdSet.has(sourceRef)) {
+        throw new Error(`Source page ${sourcePage.id} references missing source page ${sourceRef}.`);
+      }
+    }
+  }
+
+  for (const rawSourceFile of rawSourceFiles) {
+    await assertFileExists("raw source", path.join(ROOT, "raw/sources", rawSourceFile));
+  }
+
+  const historyMeaningSection = eventPage.sections.get("历史意义") ?? "";
+  const eventResult =
+    compactText(eventPage.sections.get("结果") ?? "") ||
+    (Array.isArray(event.effects) ? event.effects.join("；") : "") ||
+    compactText(historyMeaningSection);
+  const eventImportance =
+    compactText(eventPage.sections.get("为什么重要") ?? "") ||
+    extractParagraphText(historyMeaningSection) ||
+    compactText(historyMeaningSection);
   const eventQuestions = extractListItems(eventPage.sections.get("亲子问题") ?? "");
   const childSummary = compactText(eventPage.sections.get("儿童讲述") ?? "");
 
@@ -472,6 +637,11 @@ async function main() {
     type: event.event_type,
     review_status: event.review_status,
     source_refs: event.source_refs,
+    sources: {
+      page_ids: sourcePageIds,
+      raw_files: rawSourceFiles,
+      bibliography,
+    },
     people: stableOrder([...event.people], (item) => item),
     factions: stableOrder([...event.factions], (item) => item),
     places: stableOrder([...event.places], (item) => item),
@@ -499,6 +669,11 @@ async function main() {
       year: event.year,
       result: eventResult,
       importance: eventImportance,
+    },
+    sources: {
+      page_ids: sourcePageIds,
+      raw_files: rawSourceFiles,
+      bibliography,
     },
     people: people.map((person) => ({
       id: person.id,

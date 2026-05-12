@@ -92,6 +92,9 @@ source_refs: []
 - `map_required: true | false`
 - `causes`
 - `effects`
+- `sources`
+- `tags`
+- `related`
 
 ## Historical Modeling Rules
 
@@ -130,6 +133,22 @@ source_refs: []
 - `certainty`
 - “教学示意图”说明
 - `display_type`
+
+### Source
+
+来源页是 canonical knowledge 的上游整理层，不等于 raw source 本身。
+
+推荐增加：
+
+- `sources`：指向 `raw/sources/` 下的原始材料
+- `tags`：标记来源类型，如正史、编年、教学记录、儿童反馈
+- `related`：说明这份来源支撑哪些事件、人物、地图或叙事
+
+建议每个故事节点至少具备三类来源：
+
+- 一个正史或编年摘要
+- 一个亲子讲述或教学记录
+- 一个儿童反馈来源
 
 ## Writing Rules
 
