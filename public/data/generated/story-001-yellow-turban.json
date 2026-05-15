@@ -11,8 +11,26 @@
     "title": "黄巾起义",
     "type": "rebellion",
     "year": 184,
-    "result": "黄巾军被镇压；东汉中央控制力下降；地方军事力量增强；三国故事的舞台开始形成",
-    "importance": "黄巾起义不是三国本身，但它让东汉变得更弱。后来曹操、刘备、孙权这些人，就是在这样的乱世中出现的。"
+    "result": "东汉统治秩序瓦解；地方军阀势力崛起；为三国割据埋下伏笔",
+    "importance": "黄巾起义的直接结果是失败的，但它深刻改变了中国历史的走向： 黄巾起义不是三国本身，但它让东汉变得更弱。后来曹操、刘备、孙权这些人，就是在这样的乱世中出现的。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_yellow_turban_child_retelling",
+      "source_yellow_turban_historical_digest",
+      "source_yellow_turban_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/184-黄巾起义-史料提要.md",
+      "kids-narration/184-黄巾起义-小星星讲述.md"
+    ],
+    "bibliography": [
+      "待补充书籍与视频来源",
+      "后汉书",
+      "家长讲述",
+      "三国演义",
+      "资治通鉴"
+    ]
   },
   "people": [
     {

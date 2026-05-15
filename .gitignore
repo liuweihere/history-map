@@ -1,5 +1,5 @@
 .next/
+.next-cache-backup-*/
 node_modules/
 out/
 .DS_Store
-

@@ -12,6 +12,8 @@ const siteJsonRoot = path.join(root, "public/data/generated");
 const files = [
   "event_yellow_turban_184.json",
   "story-001-yellow-turban.json",
+  "event_dong_zhuo_entry_190.json",
+  "story-002-dong-zhuo-entry.json",
 ];
 
 async function ensureReadable(filePath) {
@@ -39,4 +41,3 @@ main().catch((error) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
-

@@ -1,25 +1,96 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { HistoryMapStage } from "./history-map-stage";
 
-const futureMilestones = [
-  { year: 184, label: "黄巾起义", status: "active", note: "乱世起点" },
-  { year: 190, label: "董卓进京", status: "upcoming", note: "中央崩塌" },
-  { year: 200, label: "官渡之战", status: "upcoming", note: "北方重排" },
-  { year: 208, label: "赤壁之战", status: "upcoming", note: "南北分岔" },
-  { year: 214, label: "刘备入蜀", status: "upcoming", note: "蜀地成形" },
-  { year: 220, label: "曹丕代汉", status: "upcoming", note: "东汉终结" },
-  { year: 221, label: "刘备称帝", status: "upcoming", note: "蜀汉建立" },
-  { year: 229, label: "孙权称帝", status: "upcoming", note: "三国定局" },
+const chronicleMarks = ["I", "II", "III", "IV"];
+
+const milestoneDefaults = [
+  { year: 184, label: "黄巾起义", note: "乱世起点" },
+  { year: 190, label: "董卓进京", note: "中央崩塌" },
+  { year: 200, label: "官渡之战", note: "北方重排" },
+  { year: 208, label: "赤壁之战", note: "南北分岔" },
+  { year: 214, label: "刘备入蜀", note: "蜀地成形" },
+  { year: 220, label: "曹丕代汉", note: "东汉终结" },
+  { year: 221, label: "刘备称帝", note: "蜀汉建立" },
+  { year: 229, label: "孙权称帝", note: "三国定局" },
 ];
 
-const mapSignals = [
-  { label: "东汉版图仍统一", value: "疆域仍在，秩序先裂" },
-  { label: "起义并非局部小事", value: "影响多州郡，中央应对吃力" },
-  { label: "三国尚未出现", value: "但群雄时代的土壤已经形成" },
-];
+const sceneByStoryId = {
+  story_001_yellow_turban: {
+    deck:
+      "东汉的疆域没有立刻破碎，但政治秩序先出现了裂缝。黄巾起义是这张历史地图开始失稳的第一道大波纹。",
+    mapHeadline: "天下还连在一起，但秩序开始裂开",
+    mapHeadlineEn: "Empire still intact, authority under strain",
+    metaLabel: "乱世起点",
+    yearTags: ["节点一", "地方先乱了"],
+    childSpotlight: "先看钜鹿，再看洛阳。",
+    childSummary:
+      "很多地方先乱了起来，东汉虽然还在，可是已经受了伤。",
+    readingKeys: [
+      { label: "东汉版图仍统一", value: "疆域仍在，秩序先裂" },
+      { label: "起义并非局部小事", value: "影响多州郡，中央应对吃力" },
+      { label: "三国尚未出现", value: "但群雄时代的土壤已经形成" },
+    ],
+    mapFocus: [
+      "先看钜鹿一带的动乱区域，它提醒我们历史变化先从地方冒出来。",
+      "再看洛阳代表的中央秩序区，孩子要知道东汉还在，但已经受伤。",
+      "最后把两者连起来理解：失败的起义也会改变天下后面的走向。",
+    ],
+    annotations: [
+      { kind: "region", label: "中原 / Central Plain", left: "43%", top: "52%" },
+      { kind: "region", label: "冀州地带 / Hebei Zone", left: "63%", top: "20%" },
+      { kind: "region", label: "东汉中央秩序", left: "29%", top: "64%" },
+      { kind: "disturbance", label: "黄巾起义扩散带", right: "24%", top: "19%" },
+      { kind: "disturbance", label: "中央受损", right: "38px", top: "154px" },
+    ],
+    legend: [
+      { key: "backdrop", label: "中华地理轮廓" },
+      { key: "han", label: "东汉大势范围" },
+      { key: "uprising", label: "黄巾动乱高亮" },
+      { key: "river", label: "黄河与主交通轴" },
+    ],
+    caption:
+      "先看整张中华地理轮廓，再看东汉大势范围和黄巾动乱高亮区。地图不是精确军政边界，而是帮助孩子理解“帝国仍在、秩序已裂”的历史状态图。",
+  },
+  story_002_dong_zhuo_entry: {
+    deck:
+      "到 190 年，天下不只是在边缘和地方摇晃，连皇帝身边的中央也被强人控制。历史从“失稳”走向了“中央崩塌”。",
+    mapHeadline: "朝廷还在，可权力已经被夺走",
+    mapHeadlineEn: "The court survives in name, but power is seized",
+    metaLabel: "中央崩塌",
+    yearTags: ["节点二", "中央也乱了"],
+    childSpotlight: "先看洛阳，再看从长安过来的力量。",
+    childSummary:
+      "这次不只是地方乱，连皇帝身边的中央也被强人控制了。",
+    readingKeys: [
+      { label: "危机转入中央", value: "洛阳不只是都城，也是权力争夺中心" },
+      { label: "皇帝仍在但失去主导", value: "这会让地方更不相信中央能自己恢复秩序" },
+      { label: "后续群雄起兵有了政治理由", value: "讨董与自保开始合流" },
+    ],
+    mapFocus: [
+      "先看洛阳，它现在不只是都城，而是被强人控制的中央危机中心。",
+      "再看长安到洛阳的进京走廊，理解权力是怎样从地方军队进入中央的。",
+      "最后看名义中央区：皇帝和朝廷还在，但真正的主导权已经变了。",
+    ],
+    annotations: [
+      { kind: "region", label: "洛阳 / Court Crisis", left: "50%", top: "52%" },
+      { kind: "region", label: "长安 / Western Pivot", left: "24%", top: "36%" },
+      { kind: "region", label: "东汉名义中央", left: "58%", top: "68%" },
+      { kind: "disturbance", label: "董卓入京路线", left: "28%", top: "26%" },
+      { kind: "disturbance", label: "中央被控制", right: "42px", top: "168px" },
+    ],
+    legend: [
+      { key: "backdrop", label: "中华地理轮廓" },
+      { key: "han", label: "东汉名义版图" },
+      { key: "uprising", label: "中央危机高亮" },
+      { key: "river", label: "西向入京路线" },
+    ],
+    caption:
+      "先看整张中华地理轮廓，再看东汉名义版图和中央危机高亮区。地图强调的是权力如何进入中央、夺走中央，而不是细化每一支军队的具体部署。",
+  },
+};
 
 function certaintyLabel(level) {
   if (level === "high") return "高";
@@ -27,10 +98,53 @@ function certaintyLabel(level) {
   return "低";
 }
 
-export function HistoryAtlasApp({ event, story }) {
+function buildMilestones(entries, currentYear) {
+  const entryByYear = new Map(entries.map((entry) => [entry.story.timeline.year, entry]));
+
+  return milestoneDefaults.map((milestone) => {
+    const entry = entryByYear.get(milestone.year);
+    if (!entry) {
+      return { ...milestone, status: "upcoming", interactive: false };
+    }
+
+    return {
+      year: milestone.year,
+      label: entry.story.timeline.label,
+      note: milestone.note,
+      status: milestone.year === currentYear ? "active" : "available",
+      interactive: true,
+    };
+  });
+}
+
+export function HistoryAtlasApp({ entries }) {
+  const chronicleEntries = [...entries].sort((a, b) => a.story.timeline.year - b.story.timeline.year);
+  const [selectedYear, setSelectedYear] = useState(chronicleEntries[0]?.story.timeline.year ?? 184);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
 
+  const currentEntry =
+    chronicleEntries.find((entry) => entry.story.timeline.year === selectedYear) ?? chronicleEntries[0];
+
+  useEffect(() => {
+    setSelectedQuestion(0);
+  }, [selectedYear]);
+
+  useEffect(() => {
+    if (!chronicleEntries.some((entry) => entry.story.timeline.year === selectedYear)) {
+      setSelectedYear(chronicleEntries[0]?.story.timeline.year ?? 184);
+    }
+  }, [chronicleEntries, selectedYear]);
+
+  if (!currentEntry) {
+    return null;
+  }
+
+  const { event, story } = currentEntry;
+  const scene = sceneByStoryId[story.story_id] ?? sceneByStoryId.story_001_yellow_turban;
   const currentPrompt = event.questions[selectedQuestion] ?? event.questions[0];
+  const currentIndex = chronicleEntries.findIndex((entry) => entry.story.story_id === story.story_id);
+  const chronicleMark = chronicleMarks[currentIndex] ?? String(currentIndex + 1);
+  const milestones = buildMilestones(chronicleEntries, story.timeline.year);
 
   return (
     <main className="atlas-shell">
@@ -38,28 +152,26 @@ export function HistoryAtlasApp({ event, story }) {
 
       <header className="atlas-masthead">
         <div className="atlas-masthead__title">
-          <p className="atlas-kicker">Little Star History Atlas · Chronicle I</p>
+          <p className="atlas-kicker">Little Star History Atlas · Chronicle {chronicleMark}</p>
           <div className="atlas-heading-row">
             <span className="atlas-year-mark">{story.timeline.year}</span>
             <h1>{event.title}</h1>
           </div>
-          <p className="atlas-deck">
-            东汉的疆域没有立刻破碎，但政治秩序先出现了裂缝。黄巾起义是这张历史地图开始失稳的第一道大波纹。
-          </p>
+          <p className="atlas-deck">{scene.deck}</p>
         </div>
 
         <div className="atlas-meta">
           <div>
-            <span>Period</span>
+            <span>时代 / Period</span>
             <strong>{event.period}</strong>
           </div>
           <div>
-            <span>Map Certainty</span>
+            <span>地图可信度 / Certainty</span>
             <strong>{certaintyLabel(story.map_plan.certainty)}</strong>
           </div>
           <div>
-            <span>Source Mode</span>
-            <strong>{event.review_status}</strong>
+            <span>这一页在讲 / Focus</span>
+            <strong>{scene.metaLabel}</strong>
           </div>
         </div>
       </header>
@@ -68,8 +180,9 @@ export function HistoryAtlasApp({ event, story }) {
         <article className="atlas-map-card">
           <div className="atlas-map-card__header">
             <div>
-              <p className="atlas-panel-kicker">Historical Situation Map</p>
-              <h2>Empire still intact, authority under strain</h2>
+              <p className="atlas-panel-kicker">历史态势图 / Historical Situation Map</p>
+              <h2>{scene.mapHeadline}</h2>
+              <p className="atlas-map-card__subhead">{scene.mapHeadlineEn}</p>
             </div>
             <div className="atlas-map-card__badge">
               <span>示意图</span>
@@ -78,7 +191,7 @@ export function HistoryAtlasApp({ event, story }) {
           </div>
 
           <div className="atlas-map-stage">
-            <HistoryMapStage story={story} />
+            <HistoryMapStage key={story.story_id} story={story} />
             <div className="atlas-frame atlas-frame--top" />
             <div className="atlas-frame atlas-frame--right" />
             <div className="atlas-frame atlas-frame--bottom" />
@@ -90,128 +203,82 @@ export function HistoryAtlasApp({ event, story }) {
               <span>N</span>
             </div>
 
-            <svg
-              className="atlas-silhouette"
-              viewBox="0 0 1200 760"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <path
-                d="M203 516C180 451 188 351 243 266C309 163 421 98 557 90C704 81 841 139 928 242C1004 332 1031 455 993 554C954 656 861 711 740 711C646 711 579 685 495 660C404 633 284 600 203 516Z"
-                className="atlas-silhouette__land"
-              />
-              <path
-                d="M406 137C507 110 621 111 723 149C809 180 896 241 954 332"
-                className="atlas-silhouette__ridge"
-              />
-              <path
-                d="M334 442C451 445 581 477 688 525C780 567 861 617 920 671"
-                className="atlas-silhouette__river"
-              />
-              <path
-                d="M352 292C450 285 545 306 624 360"
-                className="atlas-silhouette__river atlas-silhouette__river--secondary"
-              />
-              <path
-                d="M635 174C722 188 806 226 873 289"
-                className="atlas-silhouette__route"
-              />
-              <path
-                d="M733 182C763 188 799 210 830 239"
-                className="atlas-silhouette__route atlas-silhouette__route--minor"
-              />
-              <path
-                d="M767 102C822 123 883 164 932 216"
-                className="atlas-silhouette__coast"
-              />
-              <ellipse cx="719" cy="220" rx="92" ry="69" className="atlas-silhouette__disturbance" />
-              <ellipse
-                cx="787"
-                cy="264"
-                rx="70"
-                ry="49"
-                className="atlas-silhouette__disturbance atlas-silhouette__disturbance--soft"
-              />
-            </svg>
-
             <div className="atlas-grid atlas-grid--vertical" />
             <div className="atlas-grid atlas-grid--horizontal" />
 
-            <div className="atlas-region atlas-region--central">中原 / Central Plain</div>
-            <div className="atlas-region atlas-region--hebei">冀州地带 / Hebei Zone</div>
-            <div className="atlas-region atlas-region--han">东汉中央秩序</div>
-
-            <div className="atlas-disturbance-text atlas-disturbance-text--one">黄巾起义扩散带</div>
-            <div className="atlas-disturbance-text atlas-disturbance-text--two">中央受损</div>
+            {scene.annotations.map((annotation) => (
+              <div
+                key={annotation.label}
+                className={annotation.kind === "region" ? "atlas-region" : "atlas-disturbance-text"}
+                style={{
+                  left: annotation.left,
+                  right: annotation.right,
+                  top: annotation.top,
+                  bottom: annotation.bottom,
+                }}
+              >
+                {annotation.label}
+              </div>
+            ))}
 
             <div className="atlas-stage-legend">
-              <span>
-                <i className="atlas-stage-legend__swatch atlas-stage-legend__swatch--han" />
-                东汉秩序区
-              </span>
-              <span>
-                <i className="atlas-stage-legend__swatch atlas-stage-legend__swatch--uprising" />
-                动乱与起义压力
-              </span>
-              <span>
-                <i className="atlas-stage-legend__swatch atlas-stage-legend__swatch--river" />
-                主要河流与交通线
-              </span>
+              {scene.legend.map((item) => (
+                <span key={item.label}>
+                  <i className={`atlas-stage-legend__swatch atlas-stage-legend__swatch--${item.key}`} />
+                  {item.label}
+                </span>
+              ))}
             </div>
 
             <div className="atlas-map-caption">
-              <p>
-                这不是精确军政边界图，而是帮助孩子理解“帝国仍在、秩序已裂”的历史状态图。
-              </p>
+              <p>{scene.caption}</p>
             </div>
           </div>
         </article>
 
         <aside className="atlas-side-panel">
           <div className="dossier-card dossier-card--lead">
-            <p className="atlas-panel-kicker">This Year</p>
+            <p className="atlas-panel-kicker">今年发生了什么 / This Year</p>
             <h3>{story.timeline.lesson}</h3>
-            <p>{event.child_summary}</p>
-          </div>
-
-          <div className="dossier-card">
-            <p className="atlas-panel-kicker">Reading Keys</p>
-            <ul className="signal-list">
-              {mapSignals.map((signal) => (
-                <li key={signal.label}>
-                  <strong>{signal.label}</strong>
-                  <span>{signal.value}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="dossier-card">
-            <p className="atlas-panel-kicker">Forces on Stage</p>
-            <div className="faction-table">
-              {story.factions.map((faction) => (
-                <div key={faction.id} className="faction-row">
-                  <span className="faction-row__name">{faction.name}</span>
-                  <span className="faction-row__tone">{faction.color}</span>
-                </div>
-              ))}
-              {story.people.map((person) => (
-                <div key={person.id} className="faction-row faction-row--person">
-                  <span className="faction-row__name">{person.name}</span>
-                  <span className="faction-row__tone">{person.role}</span>
-                </div>
+            <p className="dossier-card__child-summary">{scene.childSummary}</p>
+            <div className="dossier-card__spotlight">
+              <span>先看地图</span>
+              <strong>{scene.childSpotlight}</strong>
+            </div>
+            <div className="dossier-inline-meta">
+              {scene.yearTags.map((tag) => (
+                <span key={tag}>{tag}</span>
               ))}
             </div>
           </div>
 
-          <div className="dossier-card dossier-card--sources">
-            <p className="atlas-panel-kicker">Source Trail</p>
-            <div className="source-list">
-              {event.source_refs.map((source) => (
-                <span key={source}>{source}</span>
+          <div className="dossier-card dossier-card--focus">
+            <p className="atlas-panel-kicker">先看地图哪里 / Read The Map First</p>
+            <ol className="focus-list">
+              {scene.mapFocus.map((item) => (
+                <li key={item}>{item}</li>
               ))}
-            </div>
+            </ol>
+
+            <details className="parent-details">
+              <summary>给家长展开</summary>
+              <div className="parent-details__body">
+                <p className="atlas-panel-kicker">为什么重要 / Why It Matters</p>
+                <p className="dossier-card__focus-lede">{story.event.importance}</p>
+
+                <div className="dossier-subsection">
+                  <p className="atlas-panel-kicker">阅读抓手 / Reading Keys</p>
+                  <ul className="signal-list">
+                    {scene.readingKeys.map((signal) => (
+                      <li key={signal.label}>
+                        <strong>{signal.label}</strong>
+                        <span>{signal.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </details>
           </div>
         </aside>
       </section>
@@ -220,22 +287,25 @@ export function HistoryAtlasApp({ event, story }) {
         <div className="timeline-card">
           <div className="timeline-card__header">
             <div>
-              <p className="atlas-panel-kicker">Historical Rail</p>
-              <h3>From late Han instability to the Three Kingdoms</h3>
+              <p className="atlas-panel-kicker">时间轨 / Historical Rail</p>
+              <h3>从东汉失稳到三国形成</h3>
             </div>
-            <span className="timeline-card__state">Sequential interpretation</span>
+            <span className="timeline-card__state">按顺序读下去</span>
           </div>
           <div className="timeline-rail">
-            {futureMilestones.map((milestone, index) => (
-              <div
+            {milestones.map((milestone, index) => (
+              <button
                 key={milestone.year}
                 className={`timeline-stop timeline-stop--${milestone.status}`}
+                disabled={!milestone.interactive}
+                onClick={() => milestone.interactive && setSelectedYear(milestone.year)}
+                type="button"
               >
                 <span className="timeline-stop__year">{milestone.year}</span>
                 <span className="timeline-stop__label">{milestone.label}</span>
                 <span className="timeline-stop__note">{milestone.note}</span>
-                {index < futureMilestones.length - 1 ? <i className="timeline-stop__bar" /> : null}
-              </div>
+                {index < milestones.length - 1 ? <i className="timeline-stop__bar" /> : null}
+              </button>
             ))}
           </div>
         </div>
@@ -243,7 +313,7 @@ export function HistoryAtlasApp({ event, story }) {
         <div className="prompt-card">
           <div className="prompt-card__header">
             <div>
-              <p className="atlas-panel-kicker">Family Prompt Deck</p>
+              <p className="atlas-panel-kicker">一起问问题 / Family Prompt Deck</p>
               <h3>看地图，再问问题</h3>
             </div>
             <span>
@@ -252,7 +322,7 @@ export function HistoryAtlasApp({ event, story }) {
           </div>
 
           <div className="prompt-card__question">
-            <span className="prompt-card__badge">Question</span>
+            <span className="prompt-card__badge">问题</span>
             <p>{currentPrompt}</p>
           </div>
 
@@ -270,7 +340,7 @@ export function HistoryAtlasApp({ event, story }) {
           </div>
 
           <div className="prompt-card__result">
-            <p className="atlas-panel-kicker">Historical Result</p>
+            <p className="atlas-panel-kicker">历史结果 / Historical Result</p>
             <p>{event.result}</p>
           </div>
         </div>

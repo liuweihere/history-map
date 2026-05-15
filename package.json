@@ -4,11 +4,9 @@
   "type": "module",
   "scripts": {
     "sync:data": "node scripts/sync-history-data.mjs",
-    "predev": "npm run sync:data",
-    "prebuild": "npm run sync:data",
-    "dev": "node ./node_modules/next/dist/bin/next dev",
-    "build": "node ./node_modules/next/dist/bin/next build",
-    "start": "node ./node_modules/next/dist/bin/next start"
+    "dev": "node scripts/run-next.mjs dev",
+    "build": "node scripts/run-next.mjs build",
+    "start": "node scripts/run-next.mjs start"
   },
   "dependencies": {
     "maplibre-gl": "^5.24.0",
