@@ -7,9 +7,76 @@ type FrontmatterValue = string | number | boolean | string[] | undefined;
 
 type FrontmatterRecord = Record<string, FrontmatterValue>;
 
+type StoryCompileConfig = {
+  storyId: string;
+  eventFile: string;
+  childStoryFile: string;
+  parentNoteFile: string;
+  mapLayerFile: string;
+  sourcePageFiles: string[];
+  requiredMapSourceIds: string[];
+  outputEventFile: string;
+  outputStoryFile: string;
+};
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
+
+const PERSON_FILE_BY_ID: Record<string, string> = {
+  person_zhang_jue: "wiki/entities/people/张角.md",
+  person_dong_zhuo: "wiki/entities/people/董卓.md",
+};
+
+const FACTION_FILE_BY_ID: Record<string, string> = {
+  faction_eastern_han: "wiki/entities/factions/东汉.md",
+  faction_yellow_turban: "wiki/entities/factions/黄巾军.md",
+  faction_dong_zhuo: "wiki/entities/factions/董卓势力.md",
+};
+
+const PLACE_FILE_BY_ID: Record<string, string> = {
+  place_luoyang: "wiki/entities/places/洛阳.md",
+  place_julu: "wiki/entities/places/钜鹿.md",
+  place_changan: "wiki/entities/places/长安.md",
+};
+
+const STORY_CONFIGS: StoryCompileConfig[] = [
+  {
+    storyId: "story_001_yellow_turban",
+    eventFile: "wiki/entities/events/184-黄巾起义.md",
+    childStoryFile: "wiki/synthesis/child-stories/184-黄巾起义-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/184-黄巾起义-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/184-黄巾起义-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/184-黄巾起义-亲子共读记录.md",
+      "wiki/sources/184-黄巾起义-小星星讲述.md",
+      "wiki/sources/184-黄巾起义-史料提要.md",
+    ],
+    requiredMapSourceIds: [
+      "source_yellow_turban_historical_digest",
+      "source_yellow_turban_reading_note",
+    ],
+    outputEventFile: "event_yellow_turban_184.json",
+    outputStoryFile: "story-001-yellow-turban.json",
+  },
+  {
+    storyId: "story_002_dong_zhuo_entry",
+    eventFile: "wiki/entities/events/190-董卓进京.md",
+    childStoryFile: "wiki/synthesis/child-stories/190-董卓进京-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/190-董卓进京-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/190-董卓进京-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/190-董卓进京-亲子讲述提纲.md",
+      "wiki/sources/190-董卓进京-史料提要.md",
+    ],
+    requiredMapSourceIds: [
+      "source_dong_zhuo_entry_historical_digest",
+      "source_dong_zhuo_entry_reading_note",
+    ],
+    outputEventFile: "event_dong_zhuo_entry_190.json",
+    outputStoryFile: "story-002-dong-zhuo-entry.json",
+  },
+];
 
 const require = createRequire(import.meta.url);
 
@@ -455,32 +522,38 @@ async function assertFileExists(label: string, filePath: string) {
   }
 }
 
-async function main() {
-  const eventPage = await readMarkdownPage("wiki/entities/events/184-黄巾起义.md");
-  const childStoryPage = await readMarkdownPage(
-    "wiki/synthesis/child-stories/184-黄巾起义-age7.md",
+async function readEntityPages(ids: string[], fileMap: Record<string, string>, label: string) {
+  return Promise.all(
+    ids.map(async (id) => {
+      const fileName = fileMap[id];
+      if (!fileName) {
+        throw new Error(`No file mapping configured for ${label} ${id}.`);
+      }
+      return readMarkdownPage(fileName);
+    }),
   );
-  const parentNotePage = await readMarkdownPage(
-    "wiki/synthesis/parent-notes/184-黄巾起义-家长说明.md",
-  );
-  const mapLayerPage = await readMarkdownPage(
-    "wiki/entities/map-layers/184-黄巾起义-地图计划.md",
-  );
-  const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/三国形成篇时间线.md");
-  const readingNoteSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-亲子共读记录.md");
-  const childRetellingSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-小星星讲述.md");
-  const historicalDigestSourcePage = await readMarkdownPage("wiki/sources/184-黄巾起义-史料提要.md");
+}
+
+async function compileStory(
+  config: StoryCompileConfig,
+  timelineRows: Array<Record<string, string>>,
+  outputDir: string,
+) {
+  const [eventPage, childStoryPage, parentNotePage, mapLayerPage, ...sourcePageDocs] =
+    await Promise.all([
+      readMarkdownPage(config.eventFile),
+      readMarkdownPage(config.childStoryFile),
+      readMarkdownPage(config.parentNoteFile),
+      readMarkdownPage(config.mapLayerFile),
+      ...config.sourcePageFiles.map((file) => readMarkdownPage(file)),
+    ]);
 
   const event = eventFrontmatterSchema.parse(eventPage.frontmatter);
   const childStory = childStoryFrontmatterSchema.parse(childStoryPage.frontmatter);
   const parentNote = parentNoteFrontmatterSchema.parse(parentNotePage.frontmatter);
   const mapLayer = mapLayerFrontmatterSchema.parse(mapLayerPage.frontmatter);
   const sourcePages = stableOrder(
-    [
-      sourceFrontmatterSchema.parse(readingNoteSourcePage.frontmatter),
-      sourceFrontmatterSchema.parse(childRetellingSourcePage.frontmatter),
-      sourceFrontmatterSchema.parse(historicalDigestSourcePage.frontmatter),
-    ],
+    sourcePageDocs.map((page) => sourceFrontmatterSchema.parse(page.frontmatter)),
     (item) => item.id,
   );
 
@@ -516,9 +589,6 @@ async function main() {
     if (!event.source_refs.includes(sourcePageId)) {
       throw new Error(`Event source_refs is missing canonical source page ${sourcePageId}.`);
     }
-  }
-
-  for (const sourcePageId of sourcePageIds) {
     if (!childStory.source_refs.includes(sourcePageId)) {
       throw new Error(`Child story source_refs is missing canonical source page ${sourcePageId}.`);
     }
@@ -527,10 +597,7 @@ async function main() {
     }
   }
 
-  for (const requiredSourceId of [
-    "source_yellow_turban_historical_digest",
-    "source_yellow_turban_reading_note",
-  ]) {
+  for (const requiredSourceId of config.requiredMapSourceIds) {
     if (!mapLayer.source_refs.includes(requiredSourceId)) {
       throw new Error(`Map layer source_refs is missing required source page ${requiredSourceId}.`);
     }
@@ -571,49 +638,16 @@ async function main() {
   if (eventQuestions.length === 0) throw new Error("Event page missing 亲子问题 list.");
   if (!childSummary) throw new Error("Event page missing 儿童讲述 section content.");
 
-  const timelineRows = parseMarkdownTable(timelinePage.body);
   const timelineRow = timelineRows.find((row) => row["年份"] === String(event.year));
   if (!timelineRow) {
     throw new Error(`Timeline is missing year ${event.year}.`);
   }
 
-  const personPages = await Promise.all(
-    event.people.map(async (personId: string) => {
-      const fileName =
-        personId === "person_zhang_jue"
-          ? "wiki/entities/people/张角.md"
-          : (() => {
-              throw new Error(`No file mapping configured for person ${personId}.`);
-            })();
-      return readMarkdownPage(fileName);
-    }),
-  );
-  const factionPages = await Promise.all(
-    event.factions.map(async (factionId: string) => {
-      const fileName =
-        factionId === "faction_eastern_han"
-          ? "wiki/entities/factions/东汉.md"
-          : factionId === "faction_yellow_turban"
-            ? "wiki/entities/factions/黄巾军.md"
-            : (() => {
-                throw new Error(`No file mapping configured for faction ${factionId}.`);
-              })();
-      return readMarkdownPage(fileName);
-    }),
-  );
-  const placePages = await Promise.all(
-    event.places.map(async (placeId: string) => {
-      const fileName =
-        placeId === "place_luoyang"
-          ? "wiki/entities/places/洛阳.md"
-          : placeId === "place_julu"
-            ? "wiki/entities/places/钜鹿.md"
-            : (() => {
-                throw new Error(`No file mapping configured for place ${placeId}.`);
-              })();
-      return readMarkdownPage(fileName);
-    }),
-  );
+  const [personPages, factionPages, placePages] = await Promise.all([
+    readEntityPages(event.people, PERSON_FILE_BY_ID, "person"),
+    readEntityPages(event.factions, FACTION_FILE_BY_ID, "faction"),
+    readEntityPages(event.places, PLACE_FILE_BY_ID, "place"),
+  ]);
 
   const people = stableOrder(
     personPages.map((page) => personFrontmatterSchema.parse(page.frontmatter)),
@@ -655,7 +689,7 @@ async function main() {
   });
 
   const storyJson = storyBundleSchema.parse({
-    story_id: "story_001_yellow_turban",
+    story_id: config.storyId,
     review_status: event.review_status,
     timeline: {
       year: event.year,
@@ -705,21 +739,29 @@ async function main() {
     },
   });
 
-  const outputDir = path.join(ROOT, "06_Exports/json");
-  await mkdir(outputDir, { recursive: true });
-
   await writeFile(
-    path.join(outputDir, "event_yellow_turban_184.json"),
+    path.join(outputDir, config.outputEventFile),
     `${JSON.stringify(eventJson, null, 2)}\n`,
     "utf8",
   );
   await writeFile(
-    path.join(outputDir, "story-001-yellow-turban.json"),
+    path.join(outputDir, config.outputStoryFile),
     `${JSON.stringify(storyJson, null, 2)}\n`,
     "utf8",
   );
+}
 
-  console.log("Exported Story 001 history JSON successfully.");
+async function main() {
+  const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/三国形成篇时间线.md");
+  const timelineRows = parseMarkdownTable(timelinePage.body);
+  const outputDir = path.join(ROOT, "06_Exports/json");
+  await mkdir(outputDir, { recursive: true });
+
+  for (const config of STORY_CONFIGS) {
+    await compileStory(config, timelineRows, outputDir);
+  }
+
+  console.log(`Exported ${STORY_CONFIGS.length} history story bundle(s) successfully.`);
 }
 
 main().catch((error) => failWithContext("export-history-data", error));
