@@ -1,21 +1,56 @@
 # Little Star History Site
 
-This repo is the runtime-facing frontend for the sibling knowledge repo:
+This repository is the frontend runtime for the Little Star History project.
 
-- `../little-star-history-wiki` — source-of-truth content and exporter
-- `./public/data/generated` — synced product JSON snapshots for the site
+It consumes exported knowledge data from the sibling content repository:
 
-## Data flow
+- `little-star-history-wiki`
 
-1. Run the wiki exporter in `little-star-history-wiki`
-2. Run `npm run sync:data` in this repo
-3. Start the site with `npm run dev`
+## Repository Role
 
-## Design direction
+This repo is responsible for:
 
-- Map-first layout
-- Historical atlas / editorial paper aesthetic
-- Strong year rail
-- Child-friendly explanation panel
-- Clear separation between source wiki and runtime site
+- the child-facing map-first history experience
+- the timeline UI
+- MapLibre rendering
+- runtime reading of generated JSON data
+- static map assets such as the China base layer
 
+It does not store raw historical research as the source of truth. That work belongs in `little-star-history-wiki`.
+
+## Data Flow
+
+```text
+little-star-history-wiki
+  raw sources
+    -> canonical wiki pages
+    -> exported JSON
+      -> little-star-history-site
+        -> runtime map + timeline UI
+```
+
+## Key Directories
+
+- `app/` Next.js app routes and page shell
+- `components/` atlas UI and map stage
+- `lib/` runtime data shaping and story scene config
+- `public/data/generated/` generated story data synced from the wiki repo
+- `public/data/static/` static map assets such as `china-base.geojson`
+- `scripts/sync-history-data.mjs` syncs generated exports from the wiki repo
+- `scripts/run-next.mjs` wraps dev/build/start with a stable startup flow
+
+## Commands
+
+```bash
+npm run dev
+npm run build
+```
+
+## Current Runtime Scope
+
+The current site includes:
+
+- `184 黄巾起义`
+- `190 董卓进京`
+
+with a dual-story atlas runtime and a China base map layer.
