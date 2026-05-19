@@ -32,6 +32,13 @@ function createMarkerNode(kind, label, subtitle) {
   return wrapper;
 }
 
+function markerKindForPlace(placeId, storyId) {
+  if (storyId === "story_000_xiang_yu_wujiang") {
+    return placeId === "place_wujiang" ? "capital" : "uprising";
+  }
+  return placeId === "place_luoyang" ? "capital" : "uprising";
+}
+
 export function HistoryMapStage({ story }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
@@ -236,7 +243,7 @@ export function HistoryMapStage({ story }) {
             .filter(Boolean);
 
           markersRef.current = placeMeta.map(({ place, coordinate, subtitle }) => {
-            const kind = place.id === "place_luoyang" ? "capital" : "uprising";
+            const kind = markerKindForPlace(place.id, story.story_id);
             return new maplibregl.Marker({
               element: createMarkerNode(kind, coordinate.label, subtitle),
               anchor: "left",

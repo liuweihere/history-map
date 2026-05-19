@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,12 +9,12 @@ const wikiRoot = path.resolve(root, "../little-star-history-wiki");
 const wikiJsonRoot = path.join(wikiRoot, "06_Exports/json");
 const siteJsonRoot = path.join(root, "public/data/generated");
 
-const files = [
-  "event_yellow_turban_184.json",
-  "story-001-yellow-turban.json",
-  "event_dong_zhuo_entry_190.json",
-  "story-002-dong-zhuo-entry.json",
-];
+function isHistoryExport(fileName) {
+  return (
+    (fileName.startsWith("event_") || fileName.startsWith("story-") || fileName === "timeline-rail.json") &&
+    fileName.endsWith(".json")
+  );
+}
 
 async function ensureReadable(filePath) {
   try {
@@ -24,8 +24,21 @@ async function ensureReadable(filePath) {
   }
 }
 
-async function main() {
+async function clearSiteExports() {
   await mkdir(siteJsonRoot, { recursive: true });
+  const existingFiles = await readdir(siteJsonRoot);
+
+  await Promise.all(
+    existingFiles
+      .filter((fileName) => isHistoryExport(fileName))
+      .map((fileName) => unlink(path.join(siteJsonRoot, fileName))),
+  );
+}
+
+async function main() {
+  await clearSiteExports();
+
+  const files = (await readdir(wikiJsonRoot)).filter((fileName) => isHistoryExport(fileName)).sort();
 
   for (const file of files) {
     const from = path.join(wikiJsonRoot, file);

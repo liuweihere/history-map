@@ -23,7 +23,8 @@ It does not store raw historical research as the source of truth. That work belo
 ```text
 little-star-history-wiki
   raw sources
-    -> canonical wiki pages
+    -> canonical source pages
+    -> story bundle pages
     -> exported JSON
       -> little-star-history-site
         -> runtime map + timeline UI
@@ -48,9 +49,6 @@ npm run build
 
 ## Current Runtime Scope
 
-The current site includes:
+The current site is validating a single real story bundle:
 
-- `184 黄巾起义`
-- `190 董卓进京`
-
-with a dual-story atlas runtime and a China base map layer.
+- `前202 项羽乌江自刎`
