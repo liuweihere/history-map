@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -24,57 +24,39 @@ const __dirname = path.dirname(__filename);
 const ROOT = path.resolve(__dirname, "..");
 
 const PERSON_FILE_BY_ID: Record<string, string> = {
-  person_zhang_jue: "wiki/entities/people/张角.md",
-  person_dong_zhuo: "wiki/entities/people/董卓.md",
+  person_liu_bang: "wiki/entities/people/刘邦.md",
+  person_xiang_yu: "wiki/entities/people/项羽.md",
 };
 
 const FACTION_FILE_BY_ID: Record<string, string> = {
-  faction_eastern_han: "wiki/entities/factions/东汉.md",
-  faction_yellow_turban: "wiki/entities/factions/黄巾军.md",
-  faction_dong_zhuo: "wiki/entities/factions/董卓势力.md",
+  faction_han_army: "wiki/entities/factions/汉军.md",
+  faction_chu_army: "wiki/entities/factions/楚军.md",
 };
 
 const PLACE_FILE_BY_ID: Record<string, string> = {
-  place_luoyang: "wiki/entities/places/洛阳.md",
-  place_julu: "wiki/entities/places/钜鹿.md",
-  place_changan: "wiki/entities/places/长安.md",
+  place_gaixia: "wiki/entities/places/垓下.md",
+  place_wujiang: "wiki/entities/places/乌江.md",
 };
 
 const STORY_CONFIGS: StoryCompileConfig[] = [
   {
-    storyId: "story_001_yellow_turban",
-    eventFile: "wiki/entities/events/184-黄巾起义.md",
-    childStoryFile: "wiki/synthesis/child-stories/184-黄巾起义-age7.md",
-    parentNoteFile: "wiki/synthesis/parent-notes/184-黄巾起义-家长说明.md",
-    mapLayerFile: "wiki/entities/map-layers/184-黄巾起义-地图计划.md",
+    storyId: "story_000_xiang_yu_wujiang",
+    eventFile: "wiki/entities/events/前202-项羽乌江自刎.md",
+    childStoryFile: "wiki/synthesis/child-stories/前202-项羽乌江自刎-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/前202-项羽乌江自刎-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/前202-项羽乌江自刎-地图计划.md",
     sourcePageFiles: [
-      "wiki/sources/184-黄巾起义-亲子共读记录.md",
-      "wiki/sources/184-黄巾起义-小星星讲述.md",
-      "wiki/sources/184-黄巾起义-史料提要.md",
+      "wiki/sources/前202-项羽乌江自刎-史料提要.md",
+      "wiki/sources/前202-项羽乌江自刎-史记摘录.md",
+      "wiki/sources/前202-项羽乌江自刎-亲子讲述提纲.md",
+      "wiki/sources/前202-项羽乌江自刎-小星星讲述.md",
     ],
     requiredMapSourceIds: [
-      "source_yellow_turban_historical_digest",
-      "source_yellow_turban_reading_note",
+      "source_xiang_yu_wujiang_historical_digest",
+      "source_xiang_yu_wujiang_reading_note",
     ],
-    outputEventFile: "event_yellow_turban_184.json",
-    outputStoryFile: "story-001-yellow-turban.json",
-  },
-  {
-    storyId: "story_002_dong_zhuo_entry",
-    eventFile: "wiki/entities/events/190-董卓进京.md",
-    childStoryFile: "wiki/synthesis/child-stories/190-董卓进京-age7.md",
-    parentNoteFile: "wiki/synthesis/parent-notes/190-董卓进京-家长说明.md",
-    mapLayerFile: "wiki/entities/map-layers/190-董卓进京-地图计划.md",
-    sourcePageFiles: [
-      "wiki/sources/190-董卓进京-亲子讲述提纲.md",
-      "wiki/sources/190-董卓进京-史料提要.md",
-    ],
-    requiredMapSourceIds: [
-      "source_dong_zhuo_entry_historical_digest",
-      "source_dong_zhuo_entry_reading_note",
-    ],
-    outputEventFile: "event_dong_zhuo_entry_190.json",
-    outputStoryFile: "story-002-dong-zhuo-entry.json",
+    outputEventFile: "event_xiang_yu_wujiang_202_bce.json",
+    outputStoryFile: "story-000-xiang-yu-wujiang.json",
   },
 ];
 
@@ -265,11 +247,61 @@ const storyBundleSchema = z.object({
     id: z.string().min(1),
     title: z.string().min(1),
   }),
+  panel: z.object({
+    child_spotlight: z.string().min(1),
+    year_tags: z.array(z.string().min(1)).min(1),
+    map_focus: z.array(z.string().min(1)).min(1),
+    reading_keys: z.array(
+      z.object({
+        label: z.string().min(1),
+        value: z.string().min(1),
+      }),
+    ).min(1),
+    memory_anchors: z.array(z.string().min(1)).min(1),
+    parent_prompt: z.array(z.string().min(1)).min(1),
+  }),
+  scene: z.object({
+    deck: z.string().min(1),
+    map_headline: z.string().min(1),
+    map_headline_en: z.string().min(1),
+    meta_label: z.string().min(1),
+    caption: z.string().min(1),
+    annotations: z.array(
+      z.object({
+        kind: z.enum(["region", "disturbance"]),
+        label: z.string().min(1),
+        left: z.string().optional(),
+        right: z.string().optional(),
+        top: z.string().optional(),
+        bottom: z.string().optional(),
+      }),
+    ),
+    legend: z.array(
+      z.object({
+        key: z.string().min(1),
+        label: z.string().min(1),
+      }),
+    ),
+  }),
   map_plan: z.object({
     id: z.string().min(1),
     display_type: z.string().min(1),
     certainty: z.enum(["high", "medium", "low"]),
   }),
+});
+
+const timelineRailSchema = z.object({
+  milestones: z.array(
+    z.object({
+      year: z.number().int(),
+      period: z.string().min(1),
+      label: z.string().min(1),
+      note: z.string().min(1),
+      lesson: z.string().min(1),
+      story_id: z.string().nullable(),
+      story_status: z.enum(["recorded", "planned"]),
+    }),
+  ).min(1),
 });
 
 const eventBundleSchema = z.object({
@@ -451,6 +483,95 @@ function extractParagraphText(sectionText: string): string {
     .map((line) => line.trim())
     .filter((line) => Boolean(line) && !line.startsWith("- ") && !/^\d+\.\s+/.test(line))
     .join(" ");
+}
+
+function extractFirstSentence(sectionText: string): string {
+  return extractParagraphText(sectionText).replace(/^["“]|["”]$/g, "").trim();
+}
+
+function extractKeyValueItems(sectionText: string): Array<{ label: string; value: string }> {
+  return extractListItems(sectionText)
+    .map((item) => {
+      const [label, value] = item.split("｜").map((part) => part.trim());
+      if (!label || !value) return null;
+      return { label, value };
+    })
+    .filter((item): item is { label: string; value: string } => Boolean(item));
+}
+
+function extractSingleValue(sectionText: string): string {
+  return (
+    extractParagraphText(sectionText) ||
+    extractListItems(sectionText)[0] ||
+    compactText(sectionText)
+  ).trim();
+}
+
+function extractLegendItems(sectionText: string): Array<{ key: string; label: string }> {
+  return extractListItems(sectionText)
+    .map((item) => {
+      const [key, label] = item.split("｜").map((part) => part.trim());
+      if (!key || !label) return null;
+      return { key, label };
+    })
+    .filter((item): item is { key: string; label: string } => Boolean(item));
+}
+
+function extractAnnotationItems(sectionText: string): Array<{
+  kind: "region" | "disturbance";
+  label: string;
+  left?: string;
+  right?: string;
+  top?: string;
+  bottom?: string;
+}> {
+  return extractListItems(sectionText)
+    .map((item) => {
+      const [kindRaw, label, positionRaw] = item.split("｜").map((part) => part.trim());
+      if (!kindRaw || !label) return null;
+      if (kindRaw !== "region" && kindRaw !== "disturbance") {
+        throw new Error(`Unsupported annotation kind: ${kindRaw}`);
+      }
+
+      const annotation: {
+        kind: "region" | "disturbance";
+        label: string;
+        left?: string;
+        right?: string;
+        top?: string;
+        bottom?: string;
+      } = { kind: kindRaw, label };
+
+      if (positionRaw) {
+        for (const part of positionRaw.split(";")) {
+          const [positionKey, positionValue] = part.split(":").map((segment) => segment.trim());
+          if (!positionKey || !positionValue) continue;
+          if (positionKey === "left" || positionKey === "right" || positionKey === "top" || positionKey === "bottom") {
+            annotation[positionKey] = positionValue;
+          }
+        }
+      }
+
+      return annotation;
+    })
+    .filter(
+      (
+        item,
+      ): item is {
+        kind: "region" | "disturbance";
+        label: string;
+        left?: string;
+        right?: string;
+        top?: string;
+        bottom?: string;
+      } => Boolean(item),
+    );
+}
+
+function stripWikiMarkup(value: string): string {
+  return value.replace(/\[\[([^\]|]+)(\|([^\]]+))?\]\]/g, (_match, target, _pipe, alias) => {
+    return alias ?? target;
+  }).trim();
 }
 
 function parseMarkdownTable(markdownBody: string): Array<Record<string, string>> {
@@ -638,6 +759,35 @@ async function compileStory(
   if (eventQuestions.length === 0) throw new Error("Event page missing 亲子问题 list.");
   if (!childSummary) throw new Error("Event page missing 儿童讲述 section content.");
 
+  const childSpotlight =
+    extractFirstSentence(mapLayerPage.sections.get("先看地图") ?? "") ||
+    extractFirstSentence(mapLayerPage.sections.get("儿童提示语") ?? "");
+  const yearTags = extractListItems(mapLayerPage.sections.get("年度标签") ?? "");
+  const mapFocus = extractListItems(mapLayerPage.sections.get("地图阅读步骤") ?? "");
+  const readingKeys = extractKeyValueItems(mapLayerPage.sections.get("阅读抓手") ?? "");
+  const memoryAnchors = extractListItems(mapLayerPage.sections.get("记忆锚点") ?? "");
+  const parentPrompt = extractListItems(parentNotePage.sections.get("适合追问孩子的问题") ?? "");
+  const sceneDeck = extractSingleValue(mapLayerPage.sections.get("页首导语") ?? "");
+  const sceneHeadline = extractSingleValue(mapLayerPage.sections.get("地图标题") ?? "");
+  const sceneHeadlineEn = extractSingleValue(mapLayerPage.sections.get("地图标题英文") ?? "");
+  const sceneMetaLabel = extractSingleValue(mapLayerPage.sections.get("焦点标签") ?? "");
+  const sceneCaption = extractSingleValue(mapLayerPage.sections.get("地图注脚") ?? "");
+  const sceneAnnotations = extractAnnotationItems(mapLayerPage.sections.get("地图注记") ?? "");
+  const sceneLegend = extractLegendItems(mapLayerPage.sections.get("图例") ?? "");
+
+  if (!childSpotlight) throw new Error("Map layer page missing 先看地图 or 儿童提示语 content.");
+  if (yearTags.length === 0) throw new Error("Map layer page missing 年度标签 list.");
+  if (mapFocus.length === 0) throw new Error("Map layer page missing 地图阅读步骤 list.");
+  if (readingKeys.length === 0) throw new Error("Map layer page missing 阅读抓手 list.");
+  if (memoryAnchors.length === 0) throw new Error("Map layer page missing 记忆锚点 list.");
+  if (parentPrompt.length === 0) throw new Error("Parent note page missing 适合追问孩子的问题 list.");
+  if (!sceneDeck) throw new Error("Map layer page missing 页首导语 content.");
+  if (!sceneHeadline) throw new Error("Map layer page missing 地图标题 content.");
+  if (!sceneHeadlineEn) throw new Error("Map layer page missing 地图标题英文 content.");
+  if (!sceneMetaLabel) throw new Error("Map layer page missing 焦点标签 content.");
+  if (!sceneCaption) throw new Error("Map layer page missing 地图注脚 content.");
+  if (sceneLegend.length === 0) throw new Error("Map layer page missing 图例 list.");
+
   const timelineRow = timelineRows.find((row) => row["年份"] === String(event.year));
   if (!timelineRow) {
     throw new Error(`Timeline is missing year ${event.year}.`);
@@ -732,6 +882,23 @@ async function compileStory(
         ?.replace(/^#\s+/, "")
         .trim() ?? childStory.title,
     },
+    panel: {
+      child_spotlight: childSpotlight,
+      year_tags: yearTags,
+      map_focus: mapFocus,
+      reading_keys: readingKeys,
+      memory_anchors: memoryAnchors,
+      parent_prompt: parentPrompt,
+    },
+    scene: {
+      deck: sceneDeck,
+      map_headline: sceneHeadline,
+      map_headline_en: sceneHeadlineEn,
+      meta_label: sceneMetaLabel,
+      caption: sceneCaption,
+      annotations: sceneAnnotations,
+      legend: sceneLegend,
+    },
     map_plan: {
       id: mapLayer.id,
       display_type: mapLayer.display_type,
@@ -751,11 +918,60 @@ async function compileStory(
   );
 }
 
+async function clearGeneratedStoryExports(outputDir: string) {
+  await mkdir(outputDir, { recursive: true });
+  const fileNames = await readdir(outputDir);
+
+  await Promise.all(
+    fileNames
+      .filter(
+        (fileName) =>
+          fileName.startsWith("event_") ||
+          fileName.startsWith("story-") ||
+          fileName === "timeline-rail.json",
+      )
+      .map((fileName) => unlink(path.join(outputDir, fileName))),
+  );
+}
+
+async function exportTimelineRail(
+  timelineRows: Array<Record<string, string>>,
+  outputDir: string,
+) {
+  const milestones = timelineRows.map((row) => {
+    const year = Number(row["年份"]);
+    if (!Number.isInteger(year)) {
+      throw new Error(`Invalid timeline year: ${row["年份"]}`);
+    }
+
+    const storyId = row["story_id"]?.trim() || null;
+    const storyStatusRaw = row["故事状态"]?.trim() || (storyId ? "recorded" : "planned");
+
+    return {
+      year,
+      period: stripWikiMarkup(row["时代"]?.trim() || "历史时间轴"),
+      label: stripWikiMarkup(row["事件"]?.trim() || "未命名节点"),
+      note: stripWikiMarkup(row["时间轴提示"]?.trim() || row["地图变化"]?.trim() || "历史节点"),
+      lesson: stripWikiMarkup(row["孩子要理解"]?.trim() || row["结果"]?.trim() || "理解这个历史节点的位置"),
+      story_id: storyId,
+      story_status: storyStatusRaw,
+    };
+  });
+
+  const timelineRail = timelineRailSchema.parse({ milestones });
+  await writeFile(
+    path.join(outputDir, "timeline-rail.json"),
+    `${JSON.stringify(timelineRail, null, 2)}\n`,
+    "utf8",
+  );
+}
+
 async function main() {
-  const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/三国形成篇时间线.md");
+  const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/小星星历史时间线.md");
   const timelineRows = parseMarkdownTable(timelinePage.body);
   const outputDir = path.join(ROOT, "06_Exports/json");
-  await mkdir(outputDir, { recursive: true });
+  await clearGeneratedStoryExports(outputDir);
+  await exportTimelineRail(timelineRows, outputDir);
 
   for (const config of STORY_CONFIGS) {
     await compileStory(config, timelineRows, outputDir);

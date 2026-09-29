@@ -1,43 +1,36 @@
 # Reading Template
 
-复制这份模板，为每一本史料、每一篇讲义或每一份研究材料建立一页“阅读页”。
+这份模板用于处理较长的书目、论文、章节阅读，不直接等于故事包 source 页。
 
-建议文件名：
-
-- `wiki/sources/sanguozhi-wudi-ji-reading.md`
-- `wiki/sources/zizhi-tongjian-hanji-57-reading.md`
-- `wiki/sources/history-atlas-three-kingdoms-reading.md`
-
-## Template
+当一份材料很长、需要先做阅读笔记，再沉淀成 source 页时，先用这份模板。
 
 ```md
 ---
 type: source
-id: source_replace_me
-title: Replace Me
-created: 2026-05-11
-updated: 2026-05-11
+id: source_reading_replace_me
+title: 阅读笔记标题
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
 review_status: draft
 source_refs:
-  - 原始书名或资料名
+  - 书名 / 章节 / 页码
 content_mode: 正史
 child_ready: false
 ---
 
-# 资料标题
+# 阅读笔记标题
 
 ## Source Metadata
 
 - 书名 / 资料名：
 - 作者 / 编者：
 - 章节 / 页码：
-- 年代：
-- 资料类型：正史 / 编年 / 地图参考 / 儿童读物 / 讲义
+- 资料类型：
 
 ## Why This Matters
 
-- 这份资料对当前 MVP 有什么价值？
-- 它主要支持哪些人物 / 事件 / 地点 / 地图判断？
+- 它主要支撑哪个故事包
+- 它能补强什么判断
 
 ## Key Historical Facts
 
@@ -45,53 +38,23 @@ child_ready: false
 - 
 - 
 
-## Candidate Entities
+## Candidate Assertions
 
-### People
-
-- [[曹操]]
-- [[刘备]]
-
-### Events
-
-- [[官渡之战]]
-- [[赤壁之战]]
-
-### Places
-
-- [[官渡]]
-- [[赤壁]]
-
-## Timeline Notes
-
-- 年份：
-- 前因：
-- 后果：
+- 可以沉淀到哪一页 source page
+- 可以支撑哪一个 event / place / person
 
 ## Map Notes
 
-- 这份资料是否支持地图边界、路线或地点定位？
-- 可信度如何：high / medium / low
+- 是否能支撑地点定位、路线或边界判断
+- 可信度如何
 
 ## Child-Layer Notes
 
-- 哪些内容可以给 7 岁孩子讲？
-- 哪些内容只适合放到家长模式？
-
-## Zhengshi vs Yanyi
-
-- 哪些内容属于正史？
-- 哪些内容属于演义或后世加工？
+- 哪些内容可转成儿童讲述
+- 哪些内容只适合留在家长说明
 
 ## Open Questions
 
 - 
 - 
-
-## Next Actions
-
-- [ ] 抽取事件页
-- [ ] 抽取人物页
-- [ ] 抽取地点页
-- [ ] 进入家长审核
 ```
