@@ -58,28 +58,13 @@ export function HistoryMapStage({ story }) {
         container: mapNodeRef.current,
         style: {
           version: 8,
-          sources: {
-            carto: {
-              type: "raster",
-              tiles: [
-                "https://a.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png",
-                "https://b.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png",
-                "https://c.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}@2x.png",
-              ],
-              tileSize: 256,
-              attribution:
-                '&copy; OpenStreetMap contributors &copy; <a href="https://carto.com/">CARTO</a>',
-            },
-          },
+          sources: {},
           layers: [
             {
-              id: "carto-base",
-              type: "raster",
-              source: "carto",
+              id: "parchment-base",
+              type: "background",
               paint: {
-                "raster-opacity": 0.94,
-                "raster-saturation": -0.32,
-                "raster-contrast": 0.04,
+                "background-color": "#efe3cf",
               },
             },
           ],
@@ -95,13 +80,6 @@ export function HistoryMapStage({ story }) {
       });
 
       mapRef.current = map;
-
-      map.addControl(
-        new maplibregl.AttributionControl({
-          compact: true,
-        }),
-        "bottom-left",
-      );
 
       map.on("load", () => {
         const scene = storyMapScenes[story.story_id];
