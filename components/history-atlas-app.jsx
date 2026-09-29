@@ -231,7 +231,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
           <div className="timeline-rail">
             {milestones.map((milestone, index) => (
               <button
-                key={milestone.year}
+                key={`${milestone.year}-${milestone.label}`}
                 className={`timeline-stop timeline-stop--${milestone.status}`}
                 disabled={!milestone.interactive}
                 onClick={() => milestone.interactive && milestone.storyYear !== null && setSelectedYear(milestone.storyYear)}

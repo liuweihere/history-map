@@ -42,6 +42,26 @@ little-star-history-wiki
 
 ## Commands
 
+这条链路现在是：
+小星星历史时间线.md (line 1)
+→ npm run export:history
+→ 06_Exports/json/timeline-rail.json (line 1)
+→ npm run sync:data
+→ public/data/generated/timeline-rail.json (line 1)
+→ 网页读取这个生成文件
+
+```
+
+cd /Users/mialiu/repository/llm-wiki/little-star-history-wiki
+npm run export:history
+```
+
+```
+cd /Users/mialiu/repository/llm-wiki/little-star-history-site
+npm run sync:data
+```
+
+
 ```bash
 npm run dev
 npm run build
