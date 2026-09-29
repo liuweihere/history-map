@@ -1,42 +1,43 @@
+# Source Template
+
+```md
 ---
 type: source
-id: source_slug_here
-title: 来源标题
+id: source_replace_me
+title: 来源页标题
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 review_status: draft
 source_refs:
-  - 真实书名 / 上游来源 / 上级来源页
-content_mode: 正史改写 | 演义改写 | 儿童改写
+  - 上游真实来源名
+content_mode: 正史改写 | 亲子讲述 | 儿童口述
 child_ready: false
 tags:
-  - 来源类型
+  - 正史摘要 | 原典摘录 | 亲子讲述 | 儿童反馈
 related:
   - 关联事件
-  - 关联人物
   - 关联地图
 sources:
   - raw/sources 下的相对路径
 ---
 
-# 来源标题
-
-这份来源页的任务是把 raw source 整理成可被 wiki 引用、可被 exporter 校验的上游材料。
+# 来源页标题
 
 ## 来源类型
 
-- 正史摘要 / 编年摘要 / 文学来源 / 教学记录 / 儿童反馈 / 地图参考
+- 这是一份什么来源
+- 它和 raw 文件的关系是什么
 
 ## 支撑对象
 
-- 支撑哪些事件
-- 支撑哪些人物
-- 支撑哪些地图判断
-- 支撑哪些儿童叙事改写
+- 支撑哪个故事包
+- 支撑哪些事件 / 地点 / 人物 / 地图判断
 
 ## 内容摘要
 
-- 这里写能稳定支撑后续 canonical 页的核心信息
+- 
+- 
+- 
 
 ## 关键断言
 
@@ -44,8 +45,12 @@ sources:
 - 断言 2
 - 断言 3
 
-## 注意事项
+## 可直接给孩子讲的部分
 
-- 哪些地方需要继续核查
-- 哪些地方只能做教学示意
-- 哪些地方必须区分正史与文学
+- 
+
+## 需要校正或保留疑问的部分
+
+- 
+- 
+```
