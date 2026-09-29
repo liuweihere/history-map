@@ -1,0 +1,751 @@
+{
+  "milestones": [
+    {
+      "year": -5000,
+      "period": "上古",
+      "label": "盘古开天",
+      "note": "先从传说世界开始",
+      "lesson": "历史最早的一段，常常先用神话帮孩子建立时间感",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -4500,
+      "period": "上古",
+      "label": "女娲补天",
+      "note": "传说中的第一次大修补",
+      "lesson": "很多很早的故事，不是在讲真假，而是在讲人们怎么理解世界",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -2697,
+      "period": "上古",
+      "label": "炎黄传说",
+      "note": "很多部族慢慢汇到一起",
+      "lesson": "先有很多部族，后来才慢慢有更大的“我们”",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -2357,
+      "period": "上古",
+      "label": "尧舜禅让",
+      "note": "天下交给更合适的人",
+      "lesson": "有些古人心里，好的领导者要先会照顾大家",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -2070,
+      "period": "上古",
+      "label": "大禹治水",
+      "note": "洪水时代结束",
+      "lesson": "很多王朝故事，前面先会有“把世界安顿好”的人",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -2070,
+      "period": "夏",
+      "label": "大禹建夏",
+      "note": "传说王朝开始成形",
+      "lesson": "从这里开始，故事不只是英雄，也开始有王朝",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1970,
+      "period": "夏",
+      "label": "少康中兴",
+      "note": "失掉的王朝又撑起来",
+      "lesson": "历史里一个国家会衰弱，也可能再撑一阵",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1600,
+      "period": "夏",
+      "label": "夏桀失国",
+      "note": "最后的统治者守不住天下",
+      "lesson": "王朝会换人，不是因为名字变了，而是力量和人心都变了",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1600,
+      "period": "商",
+      "label": "商汤灭夏",
+      "note": "第一次大王朝更替",
+      "lesson": "一个新王朝常常是在旧王朝撑不住时上来的",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1540,
+      "period": "商",
+      "label": "伊尹辅政",
+      "note": "新王朝需要能治理的人",
+      "lesson": "会打天下很重要，会治理天下也很重要",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1300,
+      "period": "商",
+      "label": "盘庚迁殷",
+      "note": "王朝搬到更合适的地方",
+      "lesson": "有时候迁都不是逃跑，而是在重做国家中心",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1250,
+      "period": "商",
+      "label": "武丁中兴",
+      "note": "商朝重新变强",
+      "lesson": "一个王朝会有自己的高峰期",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1240,
+      "period": "商",
+      "label": "妇好出征",
+      "note": "战场上出现有名的女性将领",
+      "lesson": "历史里重要人物不只有国王，也有能打仗的人",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1046,
+      "period": "商",
+      "label": "商纣失国",
+      "note": "商朝走到最后",
+      "lesson": "老王朝不是一下消失，是一步步失掉支持",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1046,
+      "period": "西周",
+      "label": "武王伐纣",
+      "note": "周人改写天下秩序",
+      "lesson": "打败旧王朝之后，要开始建立新的规矩",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -1043,
+      "period": "西周",
+      "label": "周公辅成王",
+      "note": "新王朝先稳内部",
+      "lesson": "建国之后，最难的是让新秩序真正站住",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -841,
+      "period": "西周",
+      "label": "国人暴动",
+      "note": "王朝内部出现强烈反弹",
+      "lesson": "一个王朝出问题，常常先从内部不满开始",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -771,
+      "period": "西周",
+      "label": "烽火戏诸侯",
+      "note": "王朝最后的失控时刻",
+      "lesson": "开玩笑和失信，在王朝层面会变成大祸",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -770,
+      "period": "春秋",
+      "label": "周平王东迁",
+      "note": "东周开始",
+      "lesson": "很多英雄故事，是在旧王朝变弱以后才开始的",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -743,
+      "period": "春秋",
+      "label": "郑庄公小霸",
+      "note": "新时代先由强诸侯出头",
+      "lesson": "王室变弱以后，真正说话算数的常常换成诸侯",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -685,
+      "period": "春秋",
+      "label": "齐桓公称霸",
+      "note": "第一位春秋霸主站出来",
+      "lesson": "有时一个强国出现，会让大家暂时跟着它转",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -685,
+      "period": "春秋",
+      "label": "管鲍之交",
+      "note": "霸主背后也要有人辅佐",
+      "lesson": "好朋友和好搭档，也能改变国家命运",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -655,
+      "period": "春秋",
+      "label": "假途灭虢",
+      "note": "借路吞并",
+      "lesson": "有些故事看起来像计谋，其实在改变格局",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -633,
+      "period": "春秋",
+      "label": "退避三舍",
+      "note": "决战前夜",
+      "lesson": "有时候先退，不代表真的输了",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -632,
+      "period": "春秋",
+      "label": "城濮之战",
+      "note": "晋楚争霸",
+      "lesson": "一场战役会改变谁说了算",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -613,
+      "period": "春秋",
+      "label": "楚庄王问鼎",
+      "note": "南方强国也来争天下位置",
+      "lesson": "天下谁强，不一定一直由老牌强国决定",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -506,
+      "period": "春秋",
+      "label": "孙武练兵",
+      "note": "吴国崛起",
+      "lesson": "好的办法和训练，也能改变国家强弱",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -496,
+      "period": "春秋",
+      "label": "卧薪尝胆",
+      "note": "越王忍辱",
+      "lesson": "忍耐和准备，有时比立刻出手更重要",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -494,
+      "period": "春秋",
+      "label": "夫差败越",
+      "note": "吴越死斗",
+      "lesson": "暂时输掉，不等于以后没有机会",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -473,
+      "period": "春秋",
+      "label": "吴越争霸终局",
+      "note": "春秋末局",
+      "lesson": "历史里常常会有“后面翻盘”的故事",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -453,
+      "period": "战国",
+      "label": "三家分晋",
+      "note": "旧秩序被拆开",
+      "lesson": "有些变化不是一战决定，而是旧国家被慢慢拆掉",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -356,
+      "period": "战国",
+      "label": "商鞅变法",
+      "note": "秦国变强的起点",
+      "lesson": "能不能治理好国家，和会不会打仗一样重要",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -342,
+      "period": "战国",
+      "label": "孙膑斗庞涓",
+      "note": "老同学变成战场对手",
+      "lesson": "战国很多故事，不只是拼兵力，也拼谁更会用脑子",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -341,
+      "period": "战国",
+      "label": "围魏救赵",
+      "note": "强弱重新洗牌",
+      "lesson": "聪明的打法，有时比硬碰硬更厉害",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -307,
+      "period": "战国",
+      "label": "胡服骑射",
+      "note": "赵国主动改变",
+      "lesson": "愿意改变旧方法，国家会更强",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -283,
+      "period": "战国",
+      "label": "完璧归赵",
+      "note": "赵秦较量",
+      "lesson": "有时候不打仗，也是在较量谁更强",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -279,
+      "period": "战国",
+      "label": "负荆请罪",
+      "note": "将相和",
+      "lesson": "一个国家想变强，内部也要能合作",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -260,
+      "period": "战国",
+      "label": "长平之战",
+      "note": "秦赵分水岭",
+      "lesson": "有些节点一过去，天下大势就更清楚了",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -227,
+      "period": "战国",
+      "label": "荆轲刺秦王",
+      "note": "燕国最后一搏",
+      "lesson": "勇敢不一定能改变大势，但会被一直记住",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -221,
+      "period": "秦",
+      "label": "秦统一六国",
+      "note": "战国结束",
+      "lesson": "很多前面的变化，最后会收成一个新王朝",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -214,
+      "period": "秦",
+      "label": "修筑长城",
+      "note": "北方防线被连成大工程",
+      "lesson": "王朝强大时，不只打仗，还会留下很大的工程",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -213,
+      "period": "秦",
+      "label": "焚书坑儒",
+      "note": "秦朝开始用更严厉的办法管天下",
+      "lesson": "国家统一以后，如果压得太紧，也会埋下新的问题",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -210,
+      "period": "秦",
+      "label": "沙丘之变",
+      "note": "皇帝去世后朝廷先乱了",
+      "lesson": "大王朝崩掉前，常常先从宫廷内部乱起来",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -209,
+      "period": "秦末",
+      "label": "陈胜吴广起义",
+      "note": "秦朝开始晃动",
+      "lesson": "大王朝也可能从内部开始松动",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -207,
+      "period": "楚汉相争",
+      "label": "巨鹿之战",
+      "note": "反秦力量开始分出高下",
+      "lesson": "旧王朝快结束时，新英雄会先冒出来",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -206,
+      "period": "楚汉相争",
+      "label": "鸿门宴",
+      "note": "新秩序还没定",
+      "lesson": "打倒旧王朝，不等于新秩序马上稳定",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -206,
+      "period": "西汉",
+      "label": "韩信拜将",
+      "note": "刘邦找到最能打的大将",
+      "lesson": "一个团队有时会因为找到对的人而整个变强",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -205,
+      "period": "楚汉相争",
+      "label": "楚汉相争",
+      "note": "天下改成两股大力量对撞",
+      "lesson": "历史最精彩的时候，常常是“谁都会赢，也谁都可能输”",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -202,
+      "period": "楚汉相争",
+      "label": "四面楚歌",
+      "note": "最后的决战把退路越收越窄",
+      "lesson": "很多大结局不是一下结束，而是先被一步步围住",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -202,
+      "period": "楚汉相争",
+      "label": "项羽乌江自刎",
+      "note": "节点零",
+      "lesson": "一个英雄的结束，也意味着汉朝快要开始",
+      "story_id": null,
+      "story_status": "recorded"
+    },
+    {
+      "year": -202,
+      "period": "西汉",
+      "label": "汉朝建立",
+      "note": "新王朝终于站稳名分",
+      "lesson": "打赢天下之后，真正难的是把天下安定下来",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -200,
+      "period": "西汉",
+      "label": "白登之围",
+      "note": "新王朝先遇到北方强敌",
+      "lesson": "新王朝刚建立时，不一定马上处处都强",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -180,
+      "period": "西汉",
+      "label": "吕后专权",
+      "note": "皇帝去世后宫廷接管权力",
+      "lesson": "王朝稳不稳，不只看皇帝，也看继位之后怎么接班",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -157,
+      "period": "西汉",
+      "label": "文景之治",
+      "note": "汉朝开始慢慢养回元气",
+      "lesson": "一个国家最厉害的时候，不一定在打仗，而可能在休养生息",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -154,
+      "period": "西汉",
+      "label": "周亚夫治军",
+      "note": "名将替王朝稳住局面",
+      "lesson": "一个王朝要稳，不只要有皇帝，也要有能顶住大局的人",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -154,
+      "period": "西汉",
+      "label": "七国之乱",
+      "note": "王朝内部再试图分裂",
+      "lesson": "一个王朝要长久，常常要先解决内部谁说了算",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -141,
+      "period": "西汉",
+      "label": "汉武帝即位",
+      "note": "西汉进入更强势的时代",
+      "lesson": "不同皇帝会把同一个王朝带向完全不同的样子",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -139,
+      "period": "西汉",
+      "label": "张骞通西域",
+      "note": "汉朝第一次更远地看天下",
+      "lesson": "原来天下不只眼前这一块地方，还有更远的世界",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -121,
+      "period": "西汉",
+      "label": "卫青霍去病",
+      "note": "汉朝北击匈奴",
+      "lesson": "有些时代会因为几位厉害将领而改写边疆格局",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -100,
+      "period": "西汉",
+      "label": "苏武牧羊",
+      "note": "汉匈对峙里留下人的气节故事",
+      "lesson": "历史里有人不是靠打赢，而是靠坚持被记住",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": -33,
+      "period": "西汉",
+      "label": "昭君出塞",
+      "note": "边疆关系换了一种处理办法",
+      "lesson": "处理冲突不一定只有打仗，也可以用另一种方式换和平",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 8,
+      "period": "西汉",
+      "label": "王莽改制",
+      "note": "老王朝内部想用大改法救局",
+      "lesson": "改得太急太大，也可能把原来就不稳的局面弄得更乱",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 25,
+      "period": "东汉",
+      "label": "刘秀建东汉",
+      "note": "汉朝重新立起来",
+      "lesson": "一个王朝倒下后，有时还会以新的样子再回来",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 30,
+      "period": "东汉",
+      "label": "光武中兴",
+      "note": "新汉朝先做恢复工作",
+      "lesson": "重建秩序，有时比开国打仗更考验本事",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 73,
+      "period": "东汉",
+      "label": "班超经营西域",
+      "note": "东汉把目光再推向更远边地",
+      "lesson": "同一个方向，前朝做过，后朝也可能接着做",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 150,
+      "period": "东汉",
+      "label": "江南可采莲",
+      "note": "南方水乡先唱进歌里",
+      "lesson": "很早以前人们就用歌记住自己生活的地方",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 166,
+      "period": "东汉",
+      "label": "党锢之祸",
+      "note": "朝廷内部争斗越来越重",
+      "lesson": "一个王朝快出问题时，常常是内部先彼此不信任",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 184,
+      "period": "东汉",
+      "label": "黄巾起义",
+      "note": "东汉开始大范围失控",
+      "lesson": "大时代结束前，往往会先出现一场大家都压不住的大乱",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 190,
+      "period": "东汉末",
+      "label": "管宁割席",
+      "note": "读书人先学会选朋友",
+      "lesson": "交朋友时，看清对方真正在乎什么很重要",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 199,
+      "period": "东汉末",
+      "label": "望梅止渴",
+      "note": "聪明的将领带兵走出绝境",
+      "lesson": "有时候一个聪明的想法，能帮大家度过难关",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 207,
+      "period": "东汉末",
+      "label": "观沧海",
+      "note": "大英雄面对大海写下诗",
+      "lesson": "站得高看得远的人，心里常常装着更大的世界",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 220,
+      "period": "三国",
+      "label": "三国鼎立",
+      "note": "天下分成三块",
+      "lesson": "一个大时代结束后，天下有时会分成好几块",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 280,
+      "period": "西晋",
+      "label": "三国归晋",
+      "note": "分开的三块又合成一块",
+      "lesson": "分久必合，但合起来的天下还要学会怎么守住",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 317,
+      "period": "东晋",
+      "label": "衣冠南渡",
+      "note": "北方人搬到南方去生活",
+      "lesson": "人们搬家有时是因为战乱，新家会慢慢长出新的繁荣",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 330,
+      "period": "东晋",
+      "label": "坦腹东床",
+      "note": "最真实的样子反而被选中",
+      "lesson": "真实自然的样子，本身就很有魅力",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 360,
+      "period": "东晋",
+      "label": "雪夜访戴",
+      "note": "想念朋友就连夜坐船去看他",
+      "lesson": "做一件事，开心在路上，不一定非要到达终点",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 375,
+      "period": "东晋",
+      "label": "咏雪之才",
+      "note": "一场雪比出两位才女才子",
+      "lesson": "好的比喻能让平常的东西一下子变活",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 383,
+      "period": "东晋",
+      "label": "淝水之战",
+      "note": "南方顶住了北方的大军",
+      "lesson": "看似弱小的一方，准备充分也能守住自己",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 406,
+      "period": "东晋",
+      "label": "归园田居",
+      "note": "有人辞官回家种豆",
+      "lesson": "生活里不只有做官，种地看山也可以是一种选择",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 450,
+      "period": "南北朝",
+      "label": "木兰诗",
+      "note": "女孩子替父亲去从军",
+      "lesson": "勇敢和担当，不分男孩女孩",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 494,
+      "period": "南北朝",
+      "label": "孝文帝迁都洛阳",
+      "note": "北方的皇帝学中原文化",
+      "lesson": "不同民族生活在一起，会互相学习变成新的样子",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 546,
+      "period": "南北朝",
+      "label": "敕勒歌",
+      "note": "草原上的歌传进了中原",
+      "lesson": "每个地方的人，都会用歌记住自己的家园",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 589,
+      "period": "隋",
+      "label": "隋统一南北",
+      "note": "长久分开的天下又归一",
+      "lesson": "分开很久的两半，总有一天会重新合在一起",
+      "story_id": null,
+      "story_status": "planned"
+    }
+  ]
+}

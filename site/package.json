@@ -1,0 +1,17 @@
+{
+  "name": "little-star-history-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync:data": "node scripts/sync-history-data.mjs",
+    "dev": "node scripts/run-next.mjs dev",
+    "build": "node scripts/run-next.mjs build",
+    "start": "node scripts/run-next.mjs start"
+  },
+  "dependencies": {
+    "maplibre-gl": "^5.24.0",
+    "next": "^15.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}

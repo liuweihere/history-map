@@ -1,0 +1,169 @@
+{
+  "story_id": "story_000_xiang_yu_wujiang",
+  "review_status": "draft",
+  "timeline": {
+    "year": -202,
+    "label": "项羽乌江自刎",
+    "lesson": "很多大结局不是一下结束，而是先被一步步围住"
+  },
+  "event": {
+    "id": "event_xiang_yu_wujiang_202_bce",
+    "title": "项羽乌江自刎",
+    "type": "collapse",
+    "year": -202,
+    "result": "项羽在乌江边自刎；楚汉相争大局确定；刘邦建立汉朝的道路完全打开",
+    "importance": "项羽乌江自刎，不只是一个英雄死亡的故事。它真正重要的地方在于：天下争夺到这里，谁能重新建立新秩序已经基本分出来了。 项羽非常勇猛，也很有名，可是最后建立汉朝的人不是他，而是刘邦。这个故事能帮助孩子理解：会打仗、很勇敢、很有气势，并不一定等于最后最适合把天下重新安定下来。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_xiang_yu_wujiang_child_retelling",
+      "source_xiang_yu_wujiang_historical_digest",
+      "source_xiang_yu_wujiang_reading_note",
+      "source_xiang_yu_wujiang_shiji_primary"
+    ],
+    "raw_files": [
+      "classical-texts/前202-项羽乌江自刎-史记项羽本纪摘录.md",
+      "historical-digests/前202-项羽乌江自刎-史料提要.md",
+      "kids-narration/前202-项羽乌江自刎-小星星讲述.md",
+      "teaching-notes/前202-项羽乌江自刎-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "汉书",
+      "家长讲述",
+      "女儿口述",
+      "史记"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_liu_bang",
+      "name": "刘邦",
+      "role": "汉王"
+    },
+    {
+      "id": "person_xiang_yu",
+      "name": "项羽",
+      "role": "西楚霸王"
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction_chu_army",
+      "name": "楚军",
+      "color": "crimson"
+    },
+    {
+      "id": "faction_han_army",
+      "name": "汉军",
+      "color": "gold"
+    }
+  ],
+  "places": [
+    {
+      "id": "place_gaixia",
+      "name": "垓下",
+      "certainty": "medium"
+    },
+    {
+      "id": "place_wujiang",
+      "name": "乌江",
+      "certainty": "medium"
+    }
+  ],
+  "child_story": {
+    "id": "story_xiang_yu_wujiang_age7",
+    "title": "项羽乌江自刎：一个英雄走到了最后"
+  },
+  "panel": {
+    "child_spotlight": "先看垓下，再看乌江。",
+    "year_tags": [
+      "节点零",
+      "一个时代要结束了"
+    ],
+    "map_focus": [
+      "先看垓下，告诉孩子故事不是从乌江开始，而是从被围住开始。",
+      "再沿着退路线看到乌江，理解项羽不是在前进，而是在走向结局。",
+      "最后停在乌江：这是最后一次可以转身的地方，也是历史转折真正落下来的地方。"
+    ],
+    "reading_keys": [
+      {
+        "label": "先有垓下被围",
+        "value": "失败不是一下发生，而是一步步逼近"
+      },
+      {
+        "label": "乌江是最后选择点",
+        "value": "还能不能重来，在这里变成了真正的问题"
+      },
+      {
+        "label": "项羽之死连着汉朝将起",
+        "value": "英雄结束，也代表天下归属快定了"
+      }
+    ],
+    "memory_anchors": [
+      "不肯过江东",
+      "无颜见江东父老",
+      "乌骓马"
+    ],
+    "parent_prompt": [
+      "为什么大家会一直记得一个失败的英雄？",
+      "你觉得项羽更像是不想逃，还是不想重新开始？",
+      "为什么项羽的失败，会让刘邦更接近建立新朝代？"
+    ]
+  },
+  "scene": {
+    "deck": "这不是一场新战争的开始，而是一位顶级英雄走向结局的最后一程。地图要让孩子看懂，项羽之死和汉朝将起其实是同一个转折。",
+    "map_headline": "退路越来越窄，楚汉之争走到终点",
+    "map_headline_en": "The retreat narrows and the Chu-Han struggle nears its end",
+    "meta_label": "楚汉终局",
+    "caption": "先看楚汉争夺区域，再看垓下到乌江的退路线。地图不是复盘每一支军队，而是帮助孩子理解“项羽走向结局，汉朝快要到来”的历史状态。",
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "垓下 / Encirclement",
+        "left": "54%",
+        "top": "28%"
+      },
+      {
+        "kind": "region",
+        "label": "乌江 / Final Choice",
+        "left": "68%",
+        "top": "70%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "项羽南退路线",
+        "left": "44%",
+        "top": "46%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "楚汉终局",
+        "right": "40px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "backdrop",
+        "label": "楚汉争夺区域"
+      },
+      {
+        "key": "han",
+        "label": "主要战事舞台"
+      },
+      {
+        "key": "uprising",
+        "label": "退路压力带"
+      },
+      {
+        "key": "river",
+        "label": "垓下到乌江路线"
+      }
+    ]
+  },
+  "map_plan": {
+    "id": "map_plan_202_bce_xiang_yu_wujiang",
+    "display_type": "retreat_corridor",
+    "certainty": "medium"
+  }
+}

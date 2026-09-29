@@ -1,0 +1,60 @@
+{
+  "id": "event_xiang_yu_wujiang_202_bce",
+  "title": "项羽乌江自刎",
+  "year": -202,
+  "period": "楚汉相争",
+  "era": "楚汉篇",
+  "type": "collapse",
+  "review_status": "draft",
+  "source_refs": [
+    "史记",
+    "汉书",
+    "source_xiang_yu_wujiang_historical_digest",
+    "source_xiang_yu_wujiang_shiji_primary",
+    "source_xiang_yu_wujiang_reading_note",
+    "source_xiang_yu_wujiang_child_retelling"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_xiang_yu_wujiang_child_retelling",
+      "source_xiang_yu_wujiang_historical_digest",
+      "source_xiang_yu_wujiang_reading_note",
+      "source_xiang_yu_wujiang_shiji_primary"
+    ],
+    "raw_files": [
+      "classical-texts/前202-项羽乌江自刎-史记项羽本纪摘录.md",
+      "historical-digests/前202-项羽乌江自刎-史料提要.md",
+      "kids-narration/前202-项羽乌江自刎-小星星讲述.md",
+      "teaching-notes/前202-项羽乌江自刎-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "汉书",
+      "家长讲述",
+      "女儿口述",
+      "史记"
+    ]
+  },
+  "people": [
+    "person_liu_bang",
+    "person_xiang_yu"
+  ],
+  "factions": [
+    "faction_chu_army",
+    "faction_han_army"
+  ],
+  "places": [
+    "place_gaixia",
+    "place_wujiang"
+  ],
+  "result": "项羽在乌江边自刎；楚汉相争大局确定；刘邦建立汉朝的道路完全打开",
+  "importance": "项羽乌江自刎，不只是一个英雄死亡的故事。它真正重要的地方在于：天下争夺到这里，谁能重新建立新秩序已经基本分出来了。 项羽非常勇猛，也很有名，可是最后建立汉朝的人不是他，而是刘邦。这个故事能帮助孩子理解：会打仗、很勇敢、很有气势，并不一定等于最后最适合把天下重新安定下来。",
+  "child_summary": "秦朝灭亡以后，天下还没有马上安定下来。刘邦和项羽都很厉害，大家都在看最后谁能赢。李清照后来写“至今思项羽，不肯过江东”，讲的就是这个最后的时刻。 后来项羽被围住了，一直退到乌江边。有人愿意送他过江，可是项羽没有走。他觉得自己没有脸回去见江东父老，于是在乌江边结束了自己的生命。 从这里开始，我们就能更清楚地看到：楚汉之争快要结束，汉朝快要来了。",
+  "questions": [
+    "如果一个很厉害的英雄最后失败了，历史为什么还会记住他？",
+    "项羽为什么没有选择过江重新开始？",
+    "为什么项羽的结束，也意味着汉朝更快要来了？"
+  ],
+  "map_plan_id": "map_plan_202_bce_xiang_yu_wujiang",
+  "child_story_id": "story_xiang_yu_wujiang_age7",
+  "parent_note_id": "parent_note_xiang_yu_wujiang_202_bce"
+}
