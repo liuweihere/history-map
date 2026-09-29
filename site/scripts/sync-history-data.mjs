@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const root = path.resolve(__dirname, "..");
-const wikiRoot = path.resolve(root, "../little-star-history-wiki");
+const wikiRoot = path.resolve(root, "../wiki");
 const wikiJsonRoot = path.join(wikiRoot, "06_Exports/json");
 const siteJsonRoot = path.join(root, "public/data/generated");
 
