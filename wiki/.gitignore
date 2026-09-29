@@ -1,0 +1,17 @@
+.llm-wiki/
+node_modules/
+
+# macOS
+.DS_Store
+
+# Obsidian shared/local split
+.obsidian/*
+!.obsidian/app.json
+
+# Optional local editor/runtime noise
+Thumbs.db
+.obsidian/graph.json
+.obsidian/page-preview.json
+.obsidian/workspace.json
+20??-??-??.md
+未命名*.canvas

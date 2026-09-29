@@ -1,0 +1,8 @@
+{
+  "name": "little-star-history-wiki",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "export:history": "node --experimental-strip-types scripts/export-history-data.ts"
+  }
+}
