@@ -1,0 +1,172 @@
+{
+  "story_id": "story_002_han_ming_di_qiu_fa",
+  "review_status": "draft",
+  "timeline": {
+    "year": 67,
+    "label": "汉明帝求法",
+    "lesson": "好学问可以从很远的地方“请进来”，交流会让自己更丰富"
+  },
+  "event": {
+    "id": "event_han_ming_di_qiu_fa_67_ce",
+    "title": "汉明帝求法",
+    "type": "cultural_exchange",
+    "year": 67,
+    "result": "天竺高僧携经像东来，白马驮经入洛阳；白马寺建立，成为中国早期官办佛寺；佛教正式传入中国并逐步本土化",
+    "importance": "这场因梦而起的求法，是中外文化交流的典范：不是靠战争，而是\"请进来\"。佛教传入后与中华文化深度融合，影响了哲学、艺术、建筑、语言和民俗近两千年。白马寺因此被尊为中国佛教的\"祖庭\"。对孩子来说，这个故事说明：真诚地向别人学习，会让自己变得更丰富。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_han_ming_di_qiu_fa_child_retelling",
+      "source_han_ming_di_qiu_fa_historical_digest",
+      "source_han_ming_di_qiu_fa_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/67-汉明帝求法-史料提要.md",
+      "kids-narration/67-汉明帝求法-小星星讲述.md",
+      "teaching-notes/67-汉明帝求法-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "高僧传",
+      "后汉书",
+      "家长讲述",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_han_ming_di",
+      "name": "汉明帝",
+      "role": "东汉第二位皇帝"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_luoyang_eastern_han",
+      "name": "洛阳",
+      "certainty": "high"
+    },
+    {
+      "id": "place_tianzhu",
+      "name": "天竺",
+      "certainty": "low"
+    }
+  ],
+  "child_story": {
+    "id": "story_han_ming_di_qiu_fa_age7",
+    "title": "汉明帝求法：一个梦和一匹白马的故事"
+  },
+  "panel": {
+    "child_spotlight": "先找两端：天竺和洛阳，再看中间那条走了很久很久的路。",
+    "year_tags": [
+      "永平十年",
+      "白马驮经入洛阳"
+    ],
+    "map_focus": [
+      "先看地图右边的洛阳，这里是白马寺的家",
+      "再看左下方的天竺，使者从那里请回高僧",
+      "最后沿着路线走一遍，感受白马驮经走了多远"
+    ],
+    "reading_keys": [
+      {
+        "label": "皇帝的梦",
+        "value": "金人绕殿，大臣说是西方的佛"
+      },
+      {
+        "label": "白马驮经",
+        "value": "经书佛像翻山越岭到洛阳"
+      },
+      {
+        "label": "白马寺",
+        "value": "中国第一座官办佛寺"
+      }
+    ],
+    "memory_anchors": [
+      "白马驮经",
+      "白马寺",
+      "汉明帝的梦"
+    ],
+    "parent_prompt": [
+      "汉明帝为什么一定要派人去找梦里的神人？",
+      "白马寺的名字是怎么来的？",
+      "别的国家的文化来到中国，给我们带来了什么？",
+      "如果让你去别的国家学一样本领回来，你想学什么？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "皇帝的梦",
+      "value": "金人头顶放光，绕着宫殿飞"
+    },
+    {
+      "label": "大臣解梦",
+      "value": "那是西方的佛"
+    },
+    {
+      "label": "使者出发",
+      "value": "一路向西，去找梦里的智慧"
+    },
+    {
+      "label": "天竺相遇",
+      "value": "两位高僧愿意东来"
+    },
+    {
+      "label": "白马驮经",
+      "value": "经书佛像翻山越岭到洛阳"
+    },
+    {
+      "label": "白马寺",
+      "value": "中国第一座佛寺建立"
+    },
+    {
+      "label": "文化的融合",
+      "value": "从此中国的故事更丰富了"
+    }
+  ],
+  "scene": {
+    "deck": "一场梦引出一次远行，一匹白马驮来了新的文化。这张地图带你走过这段旅程。",
+    "map_headline": "白马驮经的千里旅程",
+    "map_headline_en": "The White Horse's Thousand-Mile Journey",
+    "meta_label": "文化交流",
+    "caption": "示意图：求法路线为文化传播示意，\"金人之梦\"\"白马驮经\"细节带传说色彩，正史主干为遣使求法、僧经东来。",
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "白马寺 · 洛阳",
+        "left": "60%",
+        "top": "38%"
+      },
+      {
+        "kind": "region",
+        "label": "求法目的地 · 天竺",
+        "left": "8%",
+        "top": "62%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "白马驮经路线",
+        "left": "30%",
+        "top": "46%"
+      }
+    ],
+    "legend": [
+      {
+        "key": "destination",
+        "label": "求法目的地 · 天竺"
+      },
+      {
+        "key": "arrival",
+        "label": "白马寺 · 洛阳"
+      },
+      {
+        "key": "route",
+        "label": "白马驮经路线"
+      }
+    ]
+  },
+  "map_plan": {
+    "id": "map_plan_67_ce_han_ming_di_qiu_fa",
+    "display_type": "cultural_route",
+    "certainty": "medium"
+  }
+}

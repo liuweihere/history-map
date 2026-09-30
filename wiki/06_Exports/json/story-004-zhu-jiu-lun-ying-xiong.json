@@ -1,0 +1,171 @@
+{
+  "story_id": "story_004_zhu_jiu_lun_ying_xiong",
+  "review_status": "draft",
+  "timeline": {
+    "year": 199,
+    "label": "曹操煮酒论英雄",
+    "lesson": "真正的强大，有时候是藏起来的"
+  },
+  "event": {
+    "id": "event_zhu_jiu_lun_ying_xiong_199_ce",
+    "title": "曹操煮酒论英雄",
+    "type": "dialogue",
+    "year": 199,
+    "result": "刘备借雷声掩饰惊惶，躲过试探；刘备其后借机离开许都，势力渐成；为日后三分天下埋下伏笔",
+    "importance": "这是一场教科书级的\"暗中较量\"：曹操一句话试探，刘备一瞬间的慌乱与随即的镇定，决定了两个人的关系走向。它告诉孩子：乱世里真正的强者，不一定是声音最大的那个；在最危险的时刻保持冷静、藏住锋芒，也是一种了不起的智慧。而正史一句\"失匕箸\"的简笔，经《三国演义》的青梅煮酒而千古流传，本身就是正史与文学互相成就的绝佳样本。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_zhu_jiu_lun_ying_xiong_child_retelling",
+      "source_zhu_jiu_lun_ying_xiong_historical_digest",
+      "source_zhu_jiu_lun_ying_xiong_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/199-曹操煮酒论英雄-史料提要.md",
+      "kids-narration/199-曹操煮酒论英雄-小星星讲述.md",
+      "teaching-notes/199-曹操煮酒论英雄-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "家长讲述",
+      "女儿口述",
+      "三国志"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_cao_cao",
+      "name": "曹操",
+      "role": "政治家"
+    },
+    {
+      "id": "person_liu_bei",
+      "name": "刘备",
+      "role": "蜀汉奠基者"
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction_caocao_forces",
+      "name": "曹军",
+      "color": "#4169E1"
+    }
+  ],
+  "places": [
+    {
+      "id": "place_xuchang",
+      "name": "许都",
+      "certainty": "high"
+    }
+  ],
+  "child_story": {
+    "id": "story_zhu_jiu_lun_ying_xiong_age7",
+    "title": "曹操煮酒论英雄：筷子掉地上的那一刻"
+  },
+  "panel": {
+    "child_spotlight": "先找许都，曹操和刘备就在这里煮酒论英雄。",
+    "year_tags": [
+      "建安四年",
+      "天下英雄唯使君与操"
+    ],
+    "map_focus": [
+      "先找到许都，记住这是当时曹操掌权的政治中心",
+      "再看曹操控制区的范围，理解刘备寄人篱下的处境",
+      "想一想：二十年后，种菜的人真的三分了天下"
+    ],
+    "reading_keys": [
+      {
+        "label": "寄人篱下",
+        "value": "刘备暂住曹操屋檐下，种菜藏志"
+      },
+      {
+        "label": "一句试探",
+        "value": "天下英雄，只有你和我"
+      },
+      {
+        "label": "雷声救场",
+        "value": "筷子落地，借怕雷掩饰"
+      }
+    ],
+    "memory_anchors": [
+      "天下英雄唯使君与操",
+      "筷子落地",
+      "响雷救场"
+    ],
+    "parent_prompt": [
+      "曹操为什么觉得刘备是英雄？",
+      "刘备掉筷子那一刻，心里在想什么？",
+      "雷声为什么反而是帮了刘备？",
+      "你觉得刘备\"装怕打雷\"对不对？如果是你会怎么做？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "筷子掉了",
+      "value": "一顿饭局，刘备吓得筷子落地"
+    },
+    {
+      "label": "寄人篱下",
+      "value": "刘备住在曹操处，种菜藏起大志向"
+    },
+    {
+      "label": "曹操请客",
+      "value": "青梅煮酒，聊天下谁算英雄"
+    },
+    {
+      "label": "一句试探",
+      "value": "天下英雄，只有你和我"
+    },
+    {
+      "label": "心里咯噔",
+      "value": "刘备惊慌，筷子啪嗒落地"
+    },
+    {
+      "label": "雷声救场",
+      "value": "借怕打雷，掩饰慌乱"
+    },
+    {
+      "label": "藏锋之后",
+      "value": "刘备找机会离开，日后三分天下"
+    }
+  ],
+  "scene": {
+    "deck": "一顿没有刀剑的饭局，一场高手之间的暗中试探。地图带你找到那座小亭所在的城市。",
+    "map_headline": "小亭煮酒论天下",
+    "map_headline_en": "Heroes Over Warm Wine",
+    "meta_label": "暗中较量",
+    "caption": "示意图：故事发生在许都（今河南许昌）。正史《三国志》记\"失匕箸\"细节，青梅煮酒场景为《三国演义》增饰。",
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "煮酒之地 · 许都",
+        "left": "57%",
+        "top": "44%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "寄人篱下的刘备",
+        "right": "60px",
+        "top": "130px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "许都 · 发生地"
+      },
+      {
+        "key": "caocao",
+        "label": "曹操控制区"
+      },
+      {
+        "key": "future",
+        "label": "三分天下远景"
+      }
+    ]
+  },
+  "map_plan": {
+    "id": "map_plan_199_ce_zhu_jiu_lun_ying_xiong",
+    "display_type": "dialogue_scene",
+    "certainty": "high"
+  }
+}

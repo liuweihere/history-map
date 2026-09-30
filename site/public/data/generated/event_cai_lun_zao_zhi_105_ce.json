@@ -1,0 +1,50 @@
+{
+  "id": "event_cai_lun_zao_zhi_105_ce",
+  "title": "蔡伦造纸",
+  "year": 105,
+  "period": "东汉",
+  "era": "两汉篇",
+  "type": "invention",
+  "review_status": "draft",
+  "source_refs": [
+    "后汉书",
+    "source_cai_lun_zao_zhi_historical_digest",
+    "source_cai_lun_zao_zhi_reading_note",
+    "source_cai_lun_zao_zhi_child_retelling"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_cai_lun_zao_zhi_child_retelling",
+      "source_cai_lun_zao_zhi_historical_digest",
+      "source_cai_lun_zao_zhi_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/105-蔡伦造纸-史料提要.md",
+      "kids-narration/105-蔡伦造纸-小星星讲述.md",
+      "teaching-notes/105-蔡伦造纸-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "后汉书",
+      "家长讲述",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    "person_cai_lun"
+  ],
+  "factions": [],
+  "places": [
+    "place_luoyang_eastern_han"
+  ],
+  "result": "蔡侯纸天下通行，书写成本大幅下降；知识记录与传播加速；造纸术外传成为四大发明之一",
+  "importance": "蔡伦造纸的真正意义不是\"造出一张纸\"，而是让纸从昂贵变得便宜。知识从此不再被书写材料限制，读书写字的机会向更多人打开。造纸术后来传到朝鲜、日本，又经阿拉伯传入欧洲，深刻改变了世界文明的进程，是中国对人类的重大贡献之一。 对孩子来说，这个故事展示了\"发明\"的力量：一个愿意琢磨\"怎么把东西做得更便宜更好用\"的人，可以改变所有人的生活方式。",
+  "child_summary": "很久以前，人们要把字写在竹子做的片片上，一片片串起来，一本书重得要用小车拉。也有人写在丝绸上，可是丝绸太贵了，普通人家根本用不起。 东汉的时候，皇宫里有一位管做东西的官，叫蔡伦。他想：能不能做出一种又轻又便宜的写字材料呢？他没有去买贵的东西，反而收集了树皮、麻头、破布，还有打鱼用旧的渔网。大家都觉得这是垃圾，蔡伦却用它们做出了纸！ 105 年，他把纸献给皇帝，大家都夸好。因为蔡伦后来被封为侯，人们就把这种纸叫\"蔡侯纸\"。从那以后，书变轻了，便宜了，更多更多人可以读书了。后来这项技术传遍了全世界，是我们中国的四大发明之一。",
+  "questions": [
+    "如果没有纸，你的书包会变成什么样？",
+    "为什么用\"垃圾\"做东西反而是聪明的表现？",
+    "为什么说纸变便宜了，读书的人就变多了？"
+  ],
+  "map_plan_id": "map_plan_105_ce_cai_lun_zao_zhi",
+  "child_story_id": "story_cai_lun_zao_zhi_age7",
+  "parent_note_id": "parent_note_cai_lun_zao_zhi"
+}

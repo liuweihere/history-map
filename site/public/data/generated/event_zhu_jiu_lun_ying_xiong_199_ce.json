@@ -1,0 +1,53 @@
+{
+  "id": "event_zhu_jiu_lun_ying_xiong_199_ce",
+  "title": "曹操煮酒论英雄",
+  "year": 199,
+  "period": "东汉末",
+  "era": "三国篇",
+  "type": "dialogue",
+  "review_status": "draft",
+  "source_refs": [
+    "三国志",
+    "source_zhu_jiu_lun_ying_xiong_historical_digest",
+    "source_zhu_jiu_lun_ying_xiong_reading_note",
+    "source_zhu_jiu_lun_ying_xiong_child_retelling"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_zhu_jiu_lun_ying_xiong_child_retelling",
+      "source_zhu_jiu_lun_ying_xiong_historical_digest",
+      "source_zhu_jiu_lun_ying_xiong_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/199-曹操煮酒论英雄-史料提要.md",
+      "kids-narration/199-曹操煮酒论英雄-小星星讲述.md",
+      "teaching-notes/199-曹操煮酒论英雄-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "家长讲述",
+      "女儿口述",
+      "三国志"
+    ]
+  },
+  "people": [
+    "person_cao_cao",
+    "person_liu_bei"
+  ],
+  "factions": [
+    "faction_caocao_forces"
+  ],
+  "places": [
+    "place_xuchang"
+  ],
+  "result": "刘备借雷声掩饰惊惶，躲过试探；刘备其后借机离开许都，势力渐成；为日后三分天下埋下伏笔",
+  "importance": "这是一场教科书级的\"暗中较量\"：曹操一句话试探，刘备一瞬间的慌乱与随即的镇定，决定了两个人的关系走向。它告诉孩子：乱世里真正的强者，不一定是声音最大的那个；在最危险的时刻保持冷静、藏住锋芒，也是一种了不起的智慧。而正史一句\"失匕箸\"的简笔，经《三国演义》的青梅煮酒而千古流传，本身就是正史与文学互相成就的绝佳样本。",
+  "child_summary": "今天要讲的，是一顿差点改变历史的饭局。 那时候天下大乱，英雄们各自抢地盘。有个叫刘备的人打了败仗，只好暂时住到很厉害的曹操家里。刘备心里其实藏着大志向，可他不敢让曹操看出来，每天就在院子里种菜，装作什么也不想。 有一天，曹操派人来请刘备喝酒。亭子里煮着温温的酒，盘子里装着青梅。两人一边喝，一边聊：你说，如今天下，谁算得上英雄呀？ 曹操一个一个数：袁术？不算。袁绍？不算。刘表、孙策？都不算。忽然，他手指刘备，又指指自己，慢慢地说：\"天下的英雄，只有你，和我。\" 刘备心里\"咯噔\"一下：他看出来我了！手一抖，筷子\"啪嗒\"掉在了地上。 就在这时，天上\"轰隆\"一声炸雷。刘备灵机一动，弯腰捡起筷子，笑着说：\"这雷声可真吓人呀。\" 曹操哈哈大笑：打个雷都怕，算什么英雄？从此对刘备放松了警惕。 后来，刘备找了个机会离开，一点一点发展自己的力量，最后真的和曹操、孙权三分了天下。你看，真正的强大，有时候是藏起来的。",
+  "questions": [
+    "曹操为什么说\"天下英雄只有你和我\"？",
+    "刘备的筷子为什么会掉？雷声来得多巧呀？",
+    "刘备\"装怕打雷\"是胆小鬼还是聪明人？"
+  ],
+  "map_plan_id": "map_plan_199_ce_zhu_jiu_lun_ying_xiong",
+  "child_story_id": "story_zhu_jiu_lun_ying_xiong_age7",
+  "parent_note_id": "parent_note_zhu_jiu_lun_ying_xiong"
+}

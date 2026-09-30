@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { HistoryMapStage } from "./history-map-stage";
+import { TimeScrubber } from "./time-scrubber";
+import { StoryMindMap } from "./story-mind-map";
 
 const chronicleMarks = ["I", "II", "III", "IV"];
 
@@ -23,9 +25,7 @@ function buildMilestones(entries, rail, currentYear) {
   return rail.map((milestone) => {
     const storyEntry = milestone.story_id ? entryByStoryId.get(milestone.story_id) : null;
     return {
-      year: milestone.year,
-      label: milestone.label,
-      note: milestone.note,
+      ...milestone,
       status:
         milestone.year === currentYear
           ? "active"
@@ -38,10 +38,17 @@ function buildMilestones(entries, rail, currentYear) {
   });
 }
 
+function milestoneInteractive(milestone) {
+  return Boolean(milestone && milestone.story_id && milestone.interactive);
+}
+
 export function HistoryAtlasApp({ entries, timeline }) {
   const chronicleEntries = [...entries].sort((a, b) => a.story.timeline.year - b.story.timeline.year);
   const [selectedYear, setSelectedYear] = useState(chronicleEntries[0]?.story.timeline.year ?? 0);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
+  const [drawerTab, setDrawerTab] = useState("mindmap");
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [railOpen, setRailOpen] = useState(false);
 
   const currentEntry =
     chronicleEntries.find((entry) => entry.story.timeline.year === selectedYear) ?? chronicleEntries[0];
@@ -77,134 +84,160 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const chronicleMark = chronicleMarks[currentIndex] ?? String(currentIndex + 1);
   const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], story.timeline.year);
 
+  const dockedMilestone = milestones.find((m) => m.year === selectedYear) ?? null;
+  const skeletonMode = !milestoneInteractive(dockedMilestone);
+
+  const dockToMilestone = (milestone) => {
+    if (milestoneInteractive(milestone)) {
+      setSelectedYear(milestone.storyYear);
+      setDrawerOpen(true);
+    }
+  };
+
+  const recordedCount = milestones.filter((m) => m.interactive).length;
+
+  const drawerTabs = [
+    { key: "mindmap", label: "故事导图" },
+    { key: "classic", label: "经典语句" },
+    { key: "talk", label: "讨论话题" },
+  ];
+
   return (
-    <main className="atlas-shell">
+    <main className="atlas-shell atlas-shell--cinema">
       <div className="atlas-shell__grain" />
 
-      <header className="atlas-masthead">
-        <div className="atlas-masthead__title">
-          <p className="atlas-kicker">Little Star History Atlas · Chronicle {chronicleMark}</p>
-          <div className="atlas-heading-row">
-            <span className="atlas-year-mark">{formatYear(story.timeline.year)}</span>
-            <h1>{event.title}</h1>
-          </div>
-          <p className="atlas-deck">{scene.deck}</p>
+      <header className="atlas-topbar">
+        <p className="atlas-kicker">Little Star History Atlas · Chronicle {chronicleMark}</p>
+        <div className="atlas-topbar__title">
+          <span className="atlas-year-mark">{formatYear(story.timeline.year)}</span>
+          <h1>{skeletonMode && dockedMilestone ? dockedMilestone.label : event.title}</h1>
         </div>
-
-        <div className="atlas-meta">
-          <div>
-            <span>时代 / Period</span>
-            <strong>{event.period}</strong>
-          </div>
-          <div>
-            <span>地图可信度 / Certainty</span>
-            <strong>{certaintyLabel(story.map_plan.certainty)}</strong>
-          </div>
-          <div>
-            <span>这一页在讲 / Focus</span>
-            <strong>{scene.meta_label}</strong>
-          </div>
+        <div className="atlas-topbar__badges">
+          <span className="atlas-badge">
+            时代 · {skeletonMode && dockedMilestone ? dockedMilestone.period : event.period}
+          </span>
+          <span className="atlas-badge">地图可信度 · {certaintyLabel(story.map_plan.certainty)}</span>
+          <span className="atlas-badge atlas-badge--focus">{scene.meta_label}</span>
         </div>
+        <button
+          className="atlas-topbar__drawer-toggle"
+          type="button"
+          onClick={() => setDrawerOpen((open) => !open)}
+          title={drawerOpen ? "收起故事面板" : "展开故事面板"}
+        >
+          {drawerOpen ? "▸" : "◂"}
+        </button>
       </header>
 
-      <section className="atlas-hero">
-        <article className="atlas-map-card">
-          <div className="atlas-map-card__header">
-            <div>
-              <p className="atlas-panel-kicker">历史态势图 / Historical Situation Map</p>
-              <h2>{scene.map_headline}</h2>
-              <p className="atlas-map-card__subhead">{scene.map_headline_en}</p>
-            </div>
-            <div className="atlas-map-card__badge">
-              <span>示意图</span>
-              <strong>{story.timeline.label}</strong>
-            </div>
+      <div className="atlas-cinema">
+        <div className="atlas-cinema__map">
+          <HistoryMapStage key={story.story_id} story={story} />
+          <div className="atlas-frame atlas-frame--top" />
+          <div className="atlas-frame atlas-frame--right" />
+          <div className="atlas-frame atlas-frame--bottom" />
+          <div className="atlas-frame atlas-frame--left" />
+
+          <div className="atlas-latband atlas-latband--north">北方 / North</div>
+          <div className="atlas-latband atlas-latband--south">南方 / South</div>
+          <div className="atlas-compass">
+            <span>N</span>
           </div>
 
-          <div className="atlas-map-stage">
-            <HistoryMapStage key={story.story_id} story={story} />
-            <div className="atlas-frame atlas-frame--top" />
-            <div className="atlas-frame atlas-frame--right" />
-            <div className="atlas-frame atlas-frame--bottom" />
-            <div className="atlas-frame atlas-frame--left" />
+          <div className="atlas-grid atlas-grid--vertical" />
+          <div className="atlas-grid atlas-grid--horizontal" />
 
-            <div className="atlas-latband atlas-latband--north">北方 / North</div>
-            <div className="atlas-latband atlas-latband--south">南方 / South</div>
-            <div className="atlas-compass">
-              <span>N</span>
+          {scene.annotations.map((annotation) => (
+            <div
+              key={annotation.label}
+              className={annotation.kind === "region" ? "atlas-region" : "atlas-disturbance-text"}
+              style={{
+                left: annotation.left,
+                right: annotation.right,
+                top: annotation.top,
+                bottom: annotation.bottom,
+              }}
+            >
+              {annotation.label}
             </div>
+          ))}
 
-            <div className="atlas-grid atlas-grid--vertical" />
-            <div className="atlas-grid atlas-grid--horizontal" />
-
-            {scene.annotations.map((annotation) => (
-              <div
-                key={annotation.label}
-                className={annotation.kind === "region" ? "atlas-region" : "atlas-disturbance-text"}
-                style={{
-                  left: annotation.left,
-                  right: annotation.right,
-                  top: annotation.top,
-                  bottom: annotation.bottom,
-                }}
-              >
-                {annotation.label}
-              </div>
+          <div className="atlas-stage-legend">
+            {scene.legend.map((item) => (
+              <span key={item.label}>
+                <i className={`atlas-stage-legend__swatch atlas-stage-legend__swatch--${item.key}`} />
+                {item.label}
+              </span>
             ))}
-
-            <div className="atlas-stage-legend">
-              {scene.legend.map((item) => (
-                <span key={item.label}>
-                  <i className={`atlas-stage-legend__swatch atlas-stage-legend__swatch--${item.key}`} />
-                  {item.label}
-                </span>
-              ))}
-            </div>
-
-            <div className="atlas-map-caption">
-              <p>{scene.caption}</p>
-            </div>
-          </div>
-        </article>
-
-        <aside className="atlas-side-panel">
-          <div className="dossier-card dossier-card--lead">
-            <p className="atlas-panel-kicker">今年发生了什么 / This Year</p>
-            <h3>{story.timeline.lesson}</h3>
-            <p className="dossier-card__child-summary">{event.child_summary}</p>
-            <div className="dossier-card__spotlight">
-              <span>先看地图</span>
-              <strong>{panel.child_spotlight}</strong>
-            </div>
-            <div className="dossier-inline-meta">
-              {panel.year_tags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-            <div className="dossier-inline-meta">
-              {panel.memory_anchors.map((anchor) => (
-                <span key={anchor}>{anchor}</span>
-              ))}
-            </div>
           </div>
 
-          <div className="dossier-card dossier-card--focus">
-            <p className="atlas-panel-kicker">先看地图哪里 / Read The Map First</p>
-            <ol className="focus-list">
-              {panel.map_focus.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
-            </ol>
+          <div className="atlas-map-caption">
+            <p>{scene.caption}</p>
+          </div>
 
-            <details className="parent-details">
-              <summary>给家长展开</summary>
-              <div className="parent-details__body">
-                <p className="atlas-panel-kicker">为什么重要 / Why It Matters</p>
-                <p className="dossier-card__focus-lede">{story.event.importance}</p>
+          <div className="atlas-map-headline">
+            <p className="atlas-panel-kicker">历史态势图 / Historical Situation Map</p>
+            <h2>{skeletonMode && dockedMilestone ? dockedMilestone.label : scene.map_headline}</h2>
+            <p className="atlas-map-headline__sub">
+              {skeletonMode && dockedMilestone
+                ? `${formatYear(dockedMilestone.year)} · ${dockedMilestone.period} · 骨架节点，故事录制中`
+                : scene.deck}
+            </p>
+          </div>
 
-                <div className="dossier-subsection">
-                  <p className="atlas-panel-kicker">阅读抓手 / Reading Keys</p>
-                  <ul className="signal-list">
+          <div
+            className="atlas-map-storyhint"
+            role="button"
+            tabIndex={0}
+            onClick={() => setDrawerOpen(true)}
+            onKeyDown={(e) => { if (e.key === "Enter") setDrawerOpen(true); }}
+          >
+            <span className="atlas-map-storyhint__badge">{story.child_story?.title ?? event.title}</span>
+            <span className="atlas-map-storyhint__cta">点击唤醒故事 ▸</span>
+          </div>
+        </div>
+
+        <aside className={`atlas-drawer${drawerOpen ? " is-open" : ""}`}>
+          <div className="atlas-drawer__tabs">
+            {drawerTabs.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                className={`atlas-drawer__tab${drawerTab === tab.key ? " is-active" : ""}`}
+                onClick={() => setDrawerTab(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="atlas-drawer__body">
+            {drawerTab === "mindmap" ? (
+              <div className="atlas-drawer__section">
+                <p className="atlas-panel-kicker">故事梗概 / Story Mind Map</p>
+                <h3 className="atlas-drawer__title">{event.title}</h3>
+                <StoryMindMap story={story} event={event} scene={scene} />
+                <div className="drawer-spotlight">
+                  <span>先看地图</span>
+                  <strong>{panel.child_spotlight}</strong>
+                </div>
+              </div>
+            ) : null}
+
+            {drawerTab === "classic" ? (
+              <div className="atlas-drawer__section">
+                <p className="atlas-panel-kicker">经典语句 / Words To Remember</p>
+                <h3 className="atlas-drawer__title">记住这些话</h3>
+                <ul className="classic-list">
+                  {panel.memory_anchors.map((anchor) => (
+                    <li key={anchor} className="classic-list__item">
+                      <span className="classic-list__mark">❖</span>
+                      <span>{anchor}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="classic-sub">
+                  <p className="atlas-panel-kicker">阅读抓手</p>
+                  <ul className="classic-keys">
                     {panel.reading_keys.map((signal) => (
                       <li key={signal.label}>
                         <strong>{signal.label}</strong>
@@ -214,20 +247,68 @@ export function HistoryAtlasApp({ entries, timeline }) {
                   </ul>
                 </div>
               </div>
-            </details>
+            ) : null}
+
+            {drawerTab === "talk" ? (
+              <div className="atlas-drawer__section">
+                <p className="atlas-panel-kicker">一起讨论 / Family Talk</p>
+                <h3 className="atlas-drawer__title">看地图，再问问题</h3>
+                <div className="talk-question">
+                  <span className="talk-question__badge">问题 {selectedQuestion + 1}</span>
+                  <p>{currentPrompt}</p>
+                </div>
+                <div className="talk-tabs">
+                  {promptDeck.map((question, index) => (
+                    <button
+                      key={question}
+                      className={index === selectedQuestion ? "is-active" : ""}
+                      onClick={() => setSelectedQuestion(index)}
+                      type="button"
+                    >
+                      0{index + 1}
+                    </button>
+                  ))}
+                </div>
+                <details className="parent-details">
+                  <summary>给家长展开 · 历史结果与意义</summary>
+                  <div className="parent-details__body">
+                    <p className="atlas-panel-kicker">历史结果</p>
+                    <p>{event.result}</p>
+                    <p className="atlas-panel-kicker">为什么重要</p>
+                    <p>{story.event.importance}</p>
+                  </div>
+                </details>
+              </div>
+            ) : null}
           </div>
         </aside>
-      </section>
+      </div>
 
-      <section className="atlas-lower">
-        <div className="timeline-card">
-          <div className="timeline-card__header">
-            <div>
-              <p className="atlas-panel-kicker">时间轨 / Historical Rail</p>
-              <h3>小星星历史时间轨</h3>
-            </div>
-            <span className="timeline-card__state">按顺序读下去</span>
-          </div>
+      <TimeScrubber
+        milestones={milestones}
+        docked={dockedMilestone}
+        onDock={dockToMilestone}
+        onYearChange={(milestone) => {
+          if (milestoneInteractive(milestone)) {
+            setSelectedYear(milestone.storyYear);
+          }
+        }}
+      />
+
+      <section className="atlas-story-index">
+        <button
+          className="atlas-story-index__toggle"
+          type="button"
+          onClick={() => setRailOpen((open) => !open)}
+        >
+          <span className="atlas-panel-kicker">故事目录 / Story Index</span>
+          <span className="atlas-story-index__meta">
+            {milestones.length} 个节点 · {recordedCount} 个已录制
+          </span>
+          <span className={`atlas-story-index__chevron${railOpen ? " is-open" : ""}`}>▾</span>
+        </button>
+
+        {railOpen ? (
           <div className="timeline-rail">
             {milestones.map((milestone, index) => (
               <button
@@ -244,42 +325,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
               </button>
             ))}
           </div>
-        </div>
-
-        <div className="prompt-card">
-          <div className="prompt-card__header">
-            <div>
-              <p className="atlas-panel-kicker">一起问问题 / Family Prompt Deck</p>
-              <h3>看地图，再问问题</h3>
-            </div>
-            <span>
-              {selectedQuestion + 1} / {promptDeck.length}
-            </span>
-          </div>
-
-          <div className="prompt-card__question">
-            <span className="prompt-card__badge">问题</span>
-            <p>{currentPrompt}</p>
-          </div>
-
-          <div className="prompt-card__tabs">
-            {promptDeck.map((question, index) => (
-              <button
-                key={question}
-                className={index === selectedQuestion ? "is-active" : ""}
-                onClick={() => setSelectedQuestion(index)}
-                type="button"
-              >
-                0{index + 1}
-              </button>
-            ))}
-          </div>
-
-          <div className="prompt-card__result">
-            <p className="atlas-panel-kicker">历史结果 / Historical Result</p>
-            <p>{event.result}</p>
-          </div>
-        </div>
+        ) : null}
       </section>
     </main>
   );

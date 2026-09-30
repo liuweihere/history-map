@@ -26,16 +26,27 @@ const ROOT = path.resolve(__dirname, "..");
 const PERSON_FILE_BY_ID: Record<string, string> = {
   person_liu_bang: "wiki/entities/people/刘邦.md",
   person_xiang_yu: "wiki/entities/people/项羽.md",
+  person_cai_lun: "wiki/entities/people/蔡伦.md",
+  person_han_ming_di: "wiki/entities/people/汉明帝.md",
+  person_zhang_zhong_jing: "wiki/entities/people/张仲景.md",
+  person_cao_cao: "wiki/entities/people/曹操.md",
+  person_liu_bei: "wiki/entities/people/刘备.md",
 };
 
 const FACTION_FILE_BY_ID: Record<string, string> = {
   faction_han_army: "wiki/entities/factions/汉军.md",
   faction_chu_army: "wiki/entities/factions/楚军.md",
+  faction_caocao_forces: "wiki/entities/factions/曹军.md",
 };
 
 const PLACE_FILE_BY_ID: Record<string, string> = {
   place_gaixia: "wiki/entities/places/垓下.md",
   place_wujiang: "wiki/entities/places/乌江.md",
+  place_luoyang_eastern_han: "wiki/entities/places/洛阳-东汉.md",
+  place_tianzhu: "wiki/entities/places/天竺.md",
+  place_nanyang: "wiki/entities/places/南阳.md",
+  place_changsha: "wiki/entities/places/长沙.md",
+  place_xuchang: "wiki/entities/places/许都.md",
 };
 
 const STORY_CONFIGS: StoryCompileConfig[] = [
@@ -57,6 +68,78 @@ const STORY_CONFIGS: StoryCompileConfig[] = [
     ],
     outputEventFile: "event_xiang_yu_wujiang_202_bce.json",
     outputStoryFile: "story-000-xiang-yu-wujiang.json",
+  },
+  {
+    storyId: "story_001_cai_lun_zao_zhi",
+    eventFile: "wiki/entities/events/105-蔡伦造纸.md",
+    childStoryFile: "wiki/synthesis/child-stories/105-蔡伦造纸-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/105-蔡伦造纸-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/105-蔡伦造纸-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/105-蔡伦造纸-史料提要.md",
+      "wiki/sources/105-蔡伦造纸-亲子讲述提纲.md",
+      "wiki/sources/105-蔡伦造纸-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_cai_lun_zao_zhi_historical_digest",
+      "source_cai_lun_zao_zhi_reading_note",
+    ],
+    outputEventFile: "event_cai_lun_zao_zhi_105_ce.json",
+    outputStoryFile: "story-001-cai-lun-zao-zhi.json",
+  },
+  {
+    storyId: "story_002_han_ming_di_qiu_fa",
+    eventFile: "wiki/entities/events/67-汉明帝求法.md",
+    childStoryFile: "wiki/synthesis/child-stories/67-汉明帝求法-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/67-汉明帝求法-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/67-汉明帝求法-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/67-汉明帝求法-史料提要.md",
+      "wiki/sources/67-汉明帝求法-亲子讲述提纲.md",
+      "wiki/sources/67-汉明帝求法-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_han_ming_di_qiu_fa_historical_digest",
+      "source_han_ming_di_qiu_fa_reading_note",
+    ],
+    outputEventFile: "event_han_ming_di_qiu_fa_67_ce.json",
+    outputStoryFile: "story-002-han-ming-di-qiu-fa.json",
+  },
+  {
+    storyId: "story_003_zhang_zhong_jing",
+    eventFile: "wiki/entities/events/200-名医张仲景.md",
+    childStoryFile: "wiki/synthesis/child-stories/200-名医张仲景-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/200-名医张仲景-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/200-名医张仲景-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/200-名医张仲景-史料提要.md",
+      "wiki/sources/200-名医张仲景-亲子讲述提纲.md",
+      "wiki/sources/200-名医张仲景-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_zhang_zhong_jing_historical_digest",
+      "source_zhang_zhong_jing_reading_note",
+    ],
+    outputEventFile: "event_zhang_zhong_jing_200_ce.json",
+    outputStoryFile: "story-003-zhang-zhong-jing.json",
+  },
+  {
+    storyId: "story_004_zhu_jiu_lun_ying_xiong",
+    eventFile: "wiki/entities/events/199-曹操煮酒论英雄.md",
+    childStoryFile: "wiki/synthesis/child-stories/199-曹操煮酒论英雄-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/199-曹操煮酒论英雄-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/199-曹操煮酒论英雄-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/199-曹操煮酒论英雄-史料提要.md",
+      "wiki/sources/199-曹操煮酒论英雄-亲子讲述提纲.md",
+      "wiki/sources/199-曹操煮酒论英雄-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_zhu_jiu_lun_ying_xiong_historical_digest",
+      "source_zhu_jiu_lun_ying_xiong_reading_note",
+    ],
+    outputEventFile: "event_zhu_jiu_lun_ying_xiong_199_ce.json",
+    outputStoryFile: "story-004-zhu-jiu-lun-ying-xiong.json",
   },
 ];
 
@@ -104,7 +187,7 @@ const eventFrontmatterSchema = z.object({
   period: z.string().min(1),
   era: z.string().min(1),
   event_type: z.string().min(1),
-  factions: stringArraySchema.min(1),
+  factions: stringArraySchema,
   people: stringArraySchema.min(1),
   places: stringArraySchema.min(1),
   content_mode: z.string().min(1),
@@ -153,7 +236,7 @@ const mapLayerFrontmatterSchema = z.object({
   event: z.string().min(1),
   display_type: z.string().min(1),
   certainty: z.enum(["high", "medium", "low"]),
-  geojson_file: z.string().min(1),
+  geojson_file: z.string(),
   related_factions: stringArraySchema,
   related_places: stringArraySchema,
 });
@@ -260,6 +343,12 @@ const storyBundleSchema = z.object({
     memory_anchors: z.array(z.string().min(1)).min(1),
     parent_prompt: z.array(z.string().min(1)).min(1),
   }),
+  narration_flow: z.array(
+    z.object({
+      label: z.string().min(1),
+      value: z.string().min(1),
+    }),
+  ).min(1),
   scene: z.object({
     deck: z.string().min(1),
     map_headline: z.string().min(1),
@@ -319,7 +408,7 @@ const eventBundleSchema = z.object({
     bibliography: stringArraySchema.min(1),
   }),
   people: z.array(z.string()).min(1),
-  factions: z.array(z.string()).min(1),
+  factions: z.array(z.string()),
   places: z.array(z.string()).min(1),
   result: z.string().min(1),
   importance: z.string().min(1),
@@ -774,6 +863,8 @@ async function compileStory(
   const sceneCaption = extractSingleValue(mapLayerPage.sections.get("地图注脚") ?? "");
   const sceneAnnotations = extractAnnotationItems(mapLayerPage.sections.get("地图注记") ?? "");
   const sceneLegend = extractLegendItems(mapLayerPage.sections.get("图例") ?? "");
+  const narrationFlow = extractKeyValueItems(mapLayerPage.sections.get("讲述脉络") ?? "");
+  if (narrationFlow.length === 0) throw new Error("Map layer page missing 讲述脉络 list.");
 
   if (!childSpotlight) throw new Error("Map layer page missing 先看地图 or 儿童提示语 content.");
   if (yearTags.length === 0) throw new Error("Map layer page missing 年度标签 list.");
@@ -890,6 +981,7 @@ async function compileStory(
       memory_anchors: memoryAnchors,
       parent_prompt: parentPrompt,
     },
+    narration_flow: narrationFlow,
     scene: {
       deck: sceneDeck,
       map_headline: sceneHeadline,

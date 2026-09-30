@@ -1,0 +1,53 @@
+{
+  "id": "event_han_ming_di_qiu_fa_67_ce",
+  "title": "汉明帝求法",
+  "year": 67,
+  "period": "东汉",
+  "era": "两汉篇",
+  "type": "cultural_exchange",
+  "review_status": "draft",
+  "source_refs": [
+    "后汉书",
+    "高僧传",
+    "source_han_ming_di_qiu_fa_historical_digest",
+    "source_han_ming_di_qiu_fa_reading_note",
+    "source_han_ming_di_qiu_fa_child_retelling"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_han_ming_di_qiu_fa_child_retelling",
+      "source_han_ming_di_qiu_fa_historical_digest",
+      "source_han_ming_di_qiu_fa_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/67-汉明帝求法-史料提要.md",
+      "kids-narration/67-汉明帝求法-小星星讲述.md",
+      "teaching-notes/67-汉明帝求法-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "高僧传",
+      "后汉书",
+      "家长讲述",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    "person_han_ming_di"
+  ],
+  "factions": [],
+  "places": [
+    "place_luoyang_eastern_han",
+    "place_tianzhu"
+  ],
+  "result": "天竺高僧携经像东来，白马驮经入洛阳；白马寺建立，成为中国早期官办佛寺；佛教正式传入中国并逐步本土化",
+  "importance": "这场因梦而起的求法，是中外文化交流的典范：不是靠战争，而是\"请进来\"。佛教传入后与中华文化深度融合，影响了哲学、艺术、建筑、语言和民俗近两千年。白马寺因此被尊为中国佛教的\"祖庭\"。对孩子来说，这个故事说明：真诚地向别人学习，会让自己变得更丰富。",
+  "child_summary": "很久以前，有一位皇帝叫汉明帝。一天夜里，他做了一个奇怪的梦：一位金色的神人，头顶放着光，绕着他的宫殿飞。 第二天上朝，皇帝问大臣：\"我梦见的人是谁呀？\"有位大臣说：\"那是西方的佛，很有智慧。\" 皇帝很好奇，就派使者出发，一路向西去寻找。使者走了很久很久，到了天竺——就是今天的印度。那里有两位很有学问的高僧，听说了中国皇帝的心意，愿意带着佛经佛像去中国。 他们用一匹雪白的马驮着经书，翻过高山，走过沙漠，终于到了洛阳。为了纪念这匹辛苦的白马，皇帝下令建了一座寺庙，就叫白马寺。这是中国第一座佛寺。 从那以后，佛教在中国慢慢传开，和我们的文化融合在一起。你看过的很多寺庙、佛像、壁画，故事都要从这场梦和白马路说起。",
+  "questions": [
+    "汉明帝为什么要派人去找梦里的神人？",
+    "为什么用白马驮经书？",
+    "别的国家的文化来到中国，会给中国带来什么变化？"
+  ],
+  "map_plan_id": "map_plan_67_ce_han_ming_di_qiu_fa",
+  "child_story_id": "story_han_ming_di_qiu_fa_age7",
+  "parent_note_id": "parent_note_han_ming_di_qiu_fa"
+}

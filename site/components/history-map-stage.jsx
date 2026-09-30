@@ -32,7 +32,9 @@ function createMarkerNode(kind, label, subtitle) {
   return wrapper;
 }
 
-function markerKindForPlace(placeId, storyId) {
+function markerKindForPlace(placeId, storyId, scene) {
+  const configured = scene?.markerKindByPlaceId?.[placeId];
+  if (configured) return configured;
   if (storyId === "story_000_xiang_yu_wujiang") {
     return placeId === "place_wujiang" ? "capital" : "uprising";
   }
@@ -69,9 +71,9 @@ export function HistoryMapStage({ story }) {
             },
           ],
         },
-        center: [113.5, 36.2],
-        zoom: 5.1,
-        minZoom: 4.2,
+        center: [108.5, 35.5],
+        zoom: 3.6,
+        minZoom: 2.8,
         maxZoom: 7.2,
         attributionControl: false,
         dragRotate: false,
@@ -156,7 +158,7 @@ export function HistoryMapStage({ story }) {
             id: "han-heartland-fill",
             type: "fill",
             source: "story001-overlay",
-            filter: ["==", ["get", "id"], "han-heartland"],
+            filter: ["==", ["get", "kind"], "heartland"],
             paint: {
               "fill-color": "#ceb588",
               "fill-opacity": 0.18,
@@ -167,7 +169,7 @@ export function HistoryMapStage({ story }) {
             id: "han-heartland-outline",
             type: "line",
             source: "story001-overlay",
-            filter: ["==", ["get", "id"], "han-heartland"],
+            filter: ["==", ["get", "kind"], "heartland"],
             paint: {
               "line-color": "rgba(146, 116, 64, 0.64)",
               "line-width": 1.6,
@@ -179,7 +181,7 @@ export function HistoryMapStage({ story }) {
             id: "yellow-turban-disturbance-fill",
             type: "fill",
             source: "story001-overlay",
-            filter: ["==", ["get", "id"], "yellow-turban-pressure"],
+            filter: ["==", ["get", "kind"], "disturbance"],
             paint: {
               "fill-color": "#a07533",
               "fill-opacity": 0.16,
@@ -190,7 +192,7 @@ export function HistoryMapStage({ story }) {
             id: "yellow-turban-disturbance-outline",
             type: "line",
             source: "story001-overlay",
-            filter: ["==", ["get", "id"], "yellow-turban-pressure"],
+            filter: ["==", ["get", "kind"], "disturbance"],
             paint: {
               "line-color": "rgba(160, 117, 51, 0.72)",
               "line-width": 1.6,
@@ -202,11 +204,16 @@ export function HistoryMapStage({ story }) {
             id: "yellow-river-axis-line",
             type: "line",
             source: "story001-overlay",
-            filter: ["==", ["get", "id"], "yellow-river-axis"],
+            filter: ["==", ["get", "kind"], "route"],
+            layout: {
+              "line-cap": "round",
+              "line-join": "round",
+            },
             paint: {
               "line-color": "#597487",
               "line-width": 2.3,
               "line-opacity": 0.62,
+              "line-dasharray": [2.5, 1.8],
             },
           });
 
@@ -221,7 +228,7 @@ export function HistoryMapStage({ story }) {
             .filter(Boolean);
 
           markersRef.current = placeMeta.map(({ place, coordinate, subtitle }) => {
-            const kind = markerKindForPlace(place.id, story.story_id);
+            const kind = markerKindForPlace(place.id, story.story_id, scene);
             return new maplibregl.Marker({
               element: createMarkerNode(kind, coordinate.label, subtitle),
               anchor: "left",

@@ -1,0 +1,152 @@
+{
+  "story_id": "story_001_cai_lun_zao_zhi",
+  "review_status": "draft",
+  "timeline": {
+    "year": 105,
+    "label": "蔡伦造纸",
+    "lesson": "一个让东西变便宜的发明，能改变所有人读书识字的机会"
+  },
+  "event": {
+    "id": "event_cai_lun_zao_zhi_105_ce",
+    "title": "蔡伦造纸",
+    "type": "invention",
+    "year": 105,
+    "result": "蔡侯纸天下通行，书写成本大幅下降；知识记录与传播加速；造纸术外传成为四大发明之一",
+    "importance": "蔡伦造纸的真正意义不是\"造出一张纸\"，而是让纸从昂贵变得便宜。知识从此不再被书写材料限制，读书写字的机会向更多人打开。造纸术后来传到朝鲜、日本，又经阿拉伯传入欧洲，深刻改变了世界文明的进程，是中国对人类的重大贡献之一。 对孩子来说，这个故事展示了\"发明\"的力量：一个愿意琢磨\"怎么把东西做得更便宜更好用\"的人，可以改变所有人的生活方式。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_cai_lun_zao_zhi_child_retelling",
+      "source_cai_lun_zao_zhi_historical_digest",
+      "source_cai_lun_zao_zhi_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/105-蔡伦造纸-史料提要.md",
+      "kids-narration/105-蔡伦造纸-小星星讲述.md",
+      "teaching-notes/105-蔡伦造纸-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "后汉书",
+      "家长讲述",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_cai_lun",
+      "name": "蔡伦",
+      "role": "尚方令"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_luoyang_eastern_han",
+      "name": "洛阳",
+      "certainty": "high"
+    }
+  ],
+  "child_story": {
+    "id": "story_cai_lun_zao_zhi_age7",
+    "title": "蔡伦造纸：用垃圾变出纸的聪明人"
+  },
+  "panel": {
+    "child_spotlight": "先找洛阳，这里诞生了改变世界的纸。",
+    "year_tags": [
+      "元兴元年",
+      "蔡侯纸诞生"
+    ],
+    "map_focus": [
+      "先看洛阳的位置，记住纸在这里被改进成功",
+      "再看向东的箭头，纸传到了朝鲜和日本",
+      "最后看向西的箭头，纸经过丝绸之路传向阿拉伯和欧洲"
+    ],
+    "reading_keys": [
+      {
+        "label": "原料",
+        "value": "树皮麻头破布渔网，便宜的\"垃圾\"造出好纸"
+      },
+      {
+        "label": "蔡侯纸",
+        "value": "105 年献给皇帝，天下通行"
+      },
+      {
+        "label": "四大发明",
+        "value": "造纸术从中国走向世界"
+      }
+    ],
+    "memory_anchors": [
+      "蔡侯纸",
+      "四大发明",
+      "树皮破布造出纸"
+    ],
+    "parent_prompt": [
+      "纸出现之前，人们把字写在哪里？为什么不方便？",
+      "蔡伦为什么专门挑便宜的、别人不要的材料？",
+      "为什么纸变便宜了，读书的人就变多了？",
+      "如果让你发明一种新东西帮大家，你想解决什么不方便？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "从你手里的纸说起",
+      "value": "课本、绘本、画画纸——很久以前没有纸"
+    },
+    {
+      "label": "从前怎么记事",
+      "value": "竹简要用车拉，丝绸贵得用不起"
+    },
+    {
+      "label": "聪明的蔡伦",
+      "value": "皇宫里管做东西的官，专挑便宜材料试"
+    },
+    {
+      "label": "垃圾变成纸",
+      "value": "树皮、麻头、破布、旧渔网，捣一捣煮一煮"
+    },
+    {
+      "label": "献给皇帝",
+      "value": "105 年，天下开始用\"蔡侯纸\""
+    },
+    {
+      "label": "世界的变化",
+      "value": "书变轻变便宜，更多人读书，四大发明传世界"
+    }
+  ],
+  "scene": {
+    "deck": "一张轻飘飘的纸，改变了全世界记事情的方式。这张地图带你看它从洛阳出发的旅程。",
+    "map_headline": "一张纸的诞生地",
+    "map_headline_en": "Where Paper Was Perfected",
+    "meta_label": "发明之光",
+    "caption": "示意图：造纸术改进于东汉洛阳，其后数百年逐步传向世界。本图只呈现传播方向，不代表确切年代路线。",
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "发明诞生地 · 洛阳",
+        "left": "58%",
+        "top": "40%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "造纸术传向世界",
+        "right": "60px",
+        "top": "140px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "origin",
+        "label": "发明诞生地"
+      },
+      {
+        "key": "route",
+        "label": "传播路线"
+      }
+    ]
+  },
+  "map_plan": {
+    "id": "map_plan_105_ce_cai_lun_zao_zhi",
+    "display_type": "invention_origin",
+    "certainty": "high"
+  }
+}

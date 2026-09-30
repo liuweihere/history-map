@@ -447,7 +447,7 @@
       "label": "项羽乌江自刎",
       "note": "节点零",
       "lesson": "一个英雄的结束，也意味着汉朝快要开始",
-      "story_id": null,
+      "story_id": "story_000_xiang_yu_wujiang",
       "story_status": "recorded"
     },
     {
@@ -577,11 +577,38 @@
       "story_status": "planned"
     },
     {
+      "year": 67,
+      "period": "东汉",
+      "label": "汉明帝求法",
+      "note": "白马驮经走进洛阳",
+      "lesson": "好学问可以从很远的地方“请进来”，交流会让自己更丰富",
+      "story_id": "story_002_han_ming_di_qiu_fa",
+      "story_status": "recorded"
+    },
+    {
       "year": 73,
       "period": "东汉",
       "label": "班超经营西域",
       "note": "东汉把目光再推向更远边地",
       "lesson": "同一个方向，前朝做过，后朝也可能接着做",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 105,
+      "period": "东汉",
+      "label": "蔡伦造纸",
+      "note": "用便宜材料造出好纸",
+      "lesson": "一个让东西变便宜的发明，能改变所有人读书识字的机会",
+      "story_id": "story_001_cai_lun_zao_zhi",
+      "story_status": "recorded"
+    },
+    {
+      "year": 150,
+      "period": "东汉",
+      "label": "江南可采莲",
+      "note": "南方水乡先唱进歌里",
+      "lesson": "很早以前人们就用歌记住自己生活的地方",
       "story_id": null,
       "story_status": "planned"
     },
@@ -624,9 +651,36 @@
     {
       "year": 199,
       "period": "东汉末",
+      "label": "曹操煮酒论英雄",
+      "note": "一句试探吓得筷子落地",
+      "lesson": "真正的强大，有时候是藏起来的",
+      "story_id": "story_004_zhu_jiu_lun_ying_xiong",
+      "story_status": "recorded"
+    },
+    {
+      "year": 199,
+      "period": "东汉末",
       "label": "望梅止渴",
       "note": "聪明的将领带兵走出绝境",
       "lesson": "有时候一个聪明的想法，能帮大家度过难关",
+      "story_id": null,
+      "story_status": "planned"
+    },
+    {
+      "year": 200,
+      "period": "东汉末",
+      "label": "名医张仲景",
+      "note": "医圣在乱世瘟疫里写成大书",
+      "lesson": "遇到巨大的伤心时，人可以把苦难变成帮助别人的力量",
+      "story_id": "story_003_zhang_zhong_jing",
+      "story_status": "recorded"
+    },
+    {
+      "year": 200,
+      "period": "东汉末",
+      "label": "官渡之战",
+      "note": "以少胜多改写北方格局",
+      "lesson": "人少的一方，用对了办法也能赢",
       "story_id": null,
       "story_status": "planned"
     },
