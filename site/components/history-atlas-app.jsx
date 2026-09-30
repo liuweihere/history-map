@@ -6,8 +6,6 @@ import { HistoryMapStage } from "./history-map-stage";
 import { TimeScrubber } from "./time-scrubber";
 import { StoryMindMap } from "./story-mind-map";
 
-const chronicleMarks = ["I", "II", "III", "IV"];
-
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
   return String(year);
@@ -81,7 +79,6 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const promptDeck = panel.parent_prompt?.length ? panel.parent_prompt : event.questions;
   const currentPrompt = promptDeck[selectedQuestion] ?? promptDeck[0];
   const currentIndex = chronicleEntries.findIndex((entry) => entry.story.story_id === story.story_id);
-  const chronicleMark = chronicleMarks[currentIndex] ?? String(currentIndex + 1);
   const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], story.timeline.year);
 
   const dockedMilestone = milestones.find((m) => m.year === selectedYear) ?? null;
@@ -107,7 +104,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
       <div className="atlas-shell__grain" />
 
       <header className="atlas-topbar">
-        <p className="atlas-kicker">Little Star History Atlas · Chronicle {chronicleMark}</p>
+        <p className="atlas-kicker">小星星的历史漫游 · 第 {currentIndex + 1} 集</p>
         <div className="atlas-topbar__title">
           <span className="atlas-year-mark">{formatYear(story.timeline.year)}</span>
           <h1>{skeletonMode && dockedMilestone ? dockedMilestone.label : event.title}</h1>
