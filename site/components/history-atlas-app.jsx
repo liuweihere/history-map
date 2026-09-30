@@ -11,12 +11,6 @@ function formatYear(year) {
   return String(year);
 }
 
-function certaintyLabel(level) {
-  if (level === "high") return "高";
-  if (level === "medium") return "中";
-  return "低";
-}
-
 function buildMilestones(entries, rail, currentYear) {
   const entryByStoryId = new Map(entries.map((entry) => [entry.story.story_id, entry]));
 
@@ -78,7 +72,6 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const panel = story.panel;
   const promptDeck = panel.parent_prompt?.length ? panel.parent_prompt : event.questions;
   const currentPrompt = promptDeck[selectedQuestion] ?? promptDeck[0];
-  const currentIndex = chronicleEntries.findIndex((entry) => entry.story.story_id === story.story_id);
   const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], story.timeline.year);
 
   const dockedMilestone = milestones.find((m) => m.year === selectedYear) ?? null;
@@ -104,7 +97,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
       <div className="atlas-shell__grain" />
 
       <header className="atlas-topbar">
-        <p className="atlas-kicker">小星星的历史漫游 · 第 {currentIndex + 1} 集</p>
+        <p className="atlas-kicker">小星星的历史漫游</p>
         <div className="atlas-topbar__title">
           <span className="atlas-year-mark">{formatYear(story.timeline.year)}</span>
           <h1>{skeletonMode && dockedMilestone ? dockedMilestone.label : event.title}</h1>
@@ -113,8 +106,6 @@ export function HistoryAtlasApp({ entries, timeline }) {
           <span className="atlas-badge">
             时代 · {skeletonMode && dockedMilestone ? dockedMilestone.period : event.period}
           </span>
-          <span className="atlas-badge">地图可信度 · {certaintyLabel(story.map_plan.certainty)}</span>
-          <span className="atlas-badge atlas-badge--focus">{scene.meta_label}</span>
         </div>
         <button
           className="atlas-topbar__drawer-toggle"

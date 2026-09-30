@@ -1,0 +1,310 @@
+{
+  "story_id": "story_005_wang_mei_zhi_ke",
+  "review_status": "draft",
+  "timeline": {
+    "year": 199,
+    "label": "望梅止渴",
+    "lesson": "有时候一个聪明的想法，能帮大家度过难关"
+  },
+  "event": {
+    "id": "event_wang_mei_zhi_ke_199_ce",
+    "title": "望梅止渴",
+    "type": "march",
+    "year": 199,
+    "result": "曹操以\"前方有大梅林\"传令，士卒口皆出水，军心重振；全军乘此坚持走到前方水源，脱离困境；传出\"望梅止渴\"典故，成为汉语常用成语",
+    "importance": "这是一个\"不花一分钱、不添一件物资\"的应急妙招：曹操用一句关于梅林的话，调动了士兵们自己身体里的反应——想到酸就流口水。它告诉孩子：陷入困境时，聪明的想法本身就是力量；会用心理暗示带队伍走出困境，是领导者了不起的本事。同时它也留下一个成语：后来\"望梅止渴\"多用来比喻用空想安慰自己——同一个故事，既能讲急中生智的正面，也能聊\"空想不等于现实\"的另一面。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_wang_mei_zhi_ke_child_retelling",
+      "source_wang_mei_zhi_ke_historical_digest",
+      "source_wang_mei_zhi_ke_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/199-望梅止渴-史料提要.md",
+      "kids-narration/199-望梅止渴-小星星讲述.md",
+      "teaching-notes/199-望梅止渴-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "家长讲述",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_cao_cao",
+      "name": "曹操",
+      "role": "政治家"
+    }
+  ],
+  "factions": [
+    {
+      "id": "faction_caocao_forces",
+      "name": "曹军",
+      "color": "#4169E1"
+    }
+  ],
+  "places": [
+    {
+      "id": "place_wancheng",
+      "name": "宛城",
+      "certainty": "medium",
+      "lat": 33,
+      "lng": 112.53,
+      "map_label": "宛城"
+    }
+  ],
+  "child_story": {
+    "id": "story_wang_mei_zhi_ke_age7",
+    "title": "望梅止渴：一颗梅子救了一支大军"
+  },
+  "panel": {
+    "child_spotlight": "先找宛城，曹操的军队就是在这附近又渴又累地走着。",
+    "year_tags": [
+      "建安年间",
+      "望梅止渴"
+    ],
+    "map_focus": [
+      "先找到宛城，记住这是曹操南征打仗的方向（今河南南阳附近）",
+      "沿行军走廊看曹军从北面控制区南下的路线",
+      "想一想：没有水的时候，一句\"前面有梅林\"怎么帮大家撑到水源"
+    ],
+    "reading_keys": [
+      {
+        "label": "缺水行军",
+        "value": "大太阳底下找不到水，队伍快走不动了"
+      },
+      {
+        "label": "一句传令",
+        "value": "前面有大梅林，梅子甘酸可以解渴"
+      },
+      {
+        "label": "口水救军",
+        "value": "想到酸梅嘴里出水，全军撑到水源"
+      }
+    ],
+    "memory_anchors": [
+      "前有大梅林",
+      "口皆出水",
+      "乘此得及前源"
+    ],
+    "parent_prompt": [
+      "士兵们为什么一听到\"梅林\"，嘴里就冒口水？",
+      "曹操一颗梅子都没给，这算骗人吗？为什么？",
+      "如果你是将军，队伍又渴又走不动，你会想什么办法？",
+      "\"望梅止渴\"和\"画饼充饥\"哪里像、哪里不一样？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "又渴又累",
+      "value": "大太阳下行军，水喝完了，嗓子直冒烟"
+    },
+    {
+      "label": "队伍慢了",
+      "value": "士兵们嘴唇裂开，脚步越来越慢"
+    },
+    {
+      "label": "将军想法",
+      "value": "曹操急中生智，想到酸梅的好办法"
+    },
+    {
+      "label": "一句传令",
+      "value": "前面有大梅林，梅子甘酸可以解渴"
+    },
+    {
+      "label": "嘴里出水",
+      "value": "一想到酸梅，口水真的冒出来了"
+    },
+    {
+      "label": "撑到水源",
+      "value": "大家打起精神，终于走到有水的地方"
+    },
+    {
+      "label": "记住成语",
+      "value": "望梅止渴——聪明的想法也是力量"
+    }
+  ],
+  "scene": {
+    "deck": "一句关于梅子的话，让一支又渴又累的军队走出了困境。地图带你找到那段晒得冒烟的行军路。",
+    "map_headline": "梅林在前 行军不渴",
+    "map_headline_en": "The Sour Plum Mirage",
+    "meta_label": "急中生智",
+    "caption": "示意图：行军地点按\"曹操征张绣、宛城附近\"的传统解读标注（今河南南阳一带），非典故确切地点。典故出自《世说新语·假谲》，属笔记小说，非正史。",
+    "bounds": [
+      78,
+      15.5,
+      132,
+      44.5
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "曹军南征 · 宛城一带",
+        "left": "55%",
+        "top": "58%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "缺水行军走廊",
+        "right": "56px",
+        "top": "190px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "宛城 · 行军缺水之地"
+      },
+      {
+        "key": "caocao",
+        "label": "曹操控制区"
+      },
+      {
+        "key": "route",
+        "label": "南征行军路线（示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_wancheng",
+        "subtitle": "行军缺水之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-heartland",
+            "kind": "heartland",
+            "title": "Cao Cao Controlled Zone"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  104.6,
+                  33.8
+                ],
+                [
+                  108.4,
+                  37.6
+                ],
+                [
+                  113.6,
+                  39.4
+                ],
+                [
+                  118.8,
+                  38.6
+                ],
+                [
+                  121.4,
+                  35.2
+                ],
+                [
+                  119.6,
+                  32.4
+                ],
+                [
+                  115.8,
+                  31.2
+                ],
+                [
+                  111.2,
+                  31.4
+                ],
+                [
+                  106.8,
+                  32.2
+                ],
+                [
+                  104.6,
+                  33.8
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-disturbance",
+            "kind": "disturbance",
+            "title": "Wancheng March Corridor"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  111.4,
+                  33.2
+                ],
+                [
+                  113.8,
+                  33
+                ],
+                [
+                  114.4,
+                  34.6
+                ],
+                [
+                  113.4,
+                  36.2
+                ],
+                [
+                  111.8,
+                  34.8
+                ],
+                [
+                  111.4,
+                  33.2
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "March To Wancheng"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                113.85,
+                34.03
+              ],
+              [
+                113.1,
+                34.1
+              ],
+              [
+                112.3,
+                33.7
+              ],
+              [
+                112.53,
+                33
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_199_ce_wang_mei_zhi_ke",
+    "display_type": "march_corridor",
+    "certainty": "medium"
+  }
+}

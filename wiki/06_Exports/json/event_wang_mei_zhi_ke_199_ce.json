@@ -1,0 +1,53 @@
+{
+  "id": "event_wang_mei_zhi_ke_199_ce",
+  "title": "望梅止渴",
+  "year": 199,
+  "period": "东汉末",
+  "era": "三国篇",
+  "type": "march",
+  "review_status": "draft",
+  "source_refs": [
+    "世说新语",
+    "source_wang_mei_zhi_ke_historical_digest",
+    "source_wang_mei_zhi_ke_reading_note",
+    "source_wang_mei_zhi_ke_child_retelling"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_wang_mei_zhi_ke_child_retelling",
+      "source_wang_mei_zhi_ke_historical_digest",
+      "source_wang_mei_zhi_ke_reading_note"
+    ],
+    "raw_files": [
+      "historical-digests/199-望梅止渴-史料提要.md",
+      "kids-narration/199-望梅止渴-小星星讲述.md",
+      "teaching-notes/199-望梅止渴-亲子讲述提纲.md"
+    ],
+    "bibliography": [
+      "家长讲述",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_cao_cao"
+  ],
+  "factions": [
+    "faction_caocao_forces"
+  ],
+  "places": [
+    "place_wancheng"
+  ],
+  "result": "曹操以\"前方有大梅林\"传令，士卒口皆出水，军心重振；全军乘此坚持走到前方水源，脱离困境；传出\"望梅止渴\"典故，成为汉语常用成语",
+  "importance": "这是一个\"不花一分钱、不添一件物资\"的应急妙招：曹操用一句关于梅林的话，调动了士兵们自己身体里的反应——想到酸就流口水。它告诉孩子：陷入困境时，聪明的想法本身就是力量；会用心理暗示带队伍走出困境，是领导者了不起的本事。同时它也留下一个成语：后来\"望梅止渴\"多用来比喻用空想安慰自己——同一个故事，既能讲急中生智的正面，也能聊\"空想不等于现实\"的另一面。",
+  "child_summary": "今天讲的，是一个\"说一说梅子，就救了一支军队\"的故事。 那时候天下大乱，曹操带着士兵们去很远的地方打仗，一路往南走。太阳火辣辣地晒着，走着走着，出大麻烦了——水喝完了，附近又找不到一条河、一口井。 士兵们渴得嗓子直冒烟，嘴唇都裂开了，脚步越来越慢，越来越慢……再这样下去，队伍就要走不动啦。 曹操骑在马上，心里也在着急。忽然，他想到一个主意！他传下命令：\"大家加把劲！前面有一大片梅林，梅子结得又多又密，咬一口，酸酸甜甜，特别解渴！\" 士兵们一听，脑子里马上冒出一颗颗圆圆的青梅——哎呀，一想到那个酸味儿，嘴巴里竟然真的冒出口水来了！舌头湿润了，嗓子也舒服了一点。 就这样，大家你帮我、我帮你，一步一步往前挪，终于走到了有水的地方。痛痛快快喝了个够！ 你看，曹操一颗梅子都没拿出来，只用一句话，就帮大家撑过了最难走的一段路。",
+  "questions": [
+    "士兵们为什么一听\"梅林\"嘴里就出口水？",
+    "曹操一颗梅子都没给，这算骗人吗？",
+    "如果你是将军，队伍又渴又走不动，你会想什么办法？",
+    "你有没有\"想一想某样东西，就真的有感觉\"的体验？"
+  ],
+  "map_plan_id": "map_plan_199_ce_wang_mei_zhi_ke",
+  "child_story_id": "story_wang_mei_zhi_ke_age7",
+  "parent_note_id": "parent_note_wang_mei_zhi_ke"
+}

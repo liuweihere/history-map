@@ -47,6 +47,7 @@ const PLACE_FILE_BY_ID: Record<string, string> = {
   place_nanyang: "wiki/entities/places/南阳.md",
   place_changsha: "wiki/entities/places/长沙.md",
   place_xuchang: "wiki/entities/places/许都.md",
+  place_wancheng: "wiki/entities/places/宛城.md",
 };
 
 const STORY_CONFIGS: StoryCompileConfig[] = [
@@ -140,6 +141,24 @@ const STORY_CONFIGS: StoryCompileConfig[] = [
     ],
     outputEventFile: "event_zhu_jiu_lun_ying_xiong_199_ce.json",
     outputStoryFile: "story-004-zhu-jiu-lun-ying-xiong.json",
+  },
+  {
+    storyId: "story_005_wang_mei_zhi_ke",
+    eventFile: "wiki/entities/events/199-望梅止渴.md",
+    childStoryFile: "wiki/synthesis/child-stories/199-望梅止渴-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/199-望梅止渴-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/199-望梅止渴-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/199-望梅止渴-史料提要.md",
+      "wiki/sources/199-望梅止渴-亲子讲述提纲.md",
+      "wiki/sources/199-望梅止渴-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_wang_mei_zhi_ke_historical_digest",
+      "source_wang_mei_zhi_ke_reading_note",
+    ],
+    outputEventFile: "event_wang_mei_zhi_ke_199_ce.json",
+    outputStoryFile: "story-005-wang-mei-zhi-ke.json",
   },
 ];
 
@@ -964,7 +983,12 @@ async function compileStory(
     }
   }
 
-  const timelineRow = timelineRows.find((row) => row["年份"] === String(event.year));
+  const timelineRow =
+    timelineRows.find(
+      (row) =>
+        row["年份"] === String(event.year) &&
+        stripWikiMarkup(row["事件"]?.trim() || "") === event.title,
+    ) ?? timelineRows.find((row) => row["年份"] === String(event.year));
   if (!timelineRow) {
     throw new Error(`Timeline is missing year ${event.year}.`);
   }
