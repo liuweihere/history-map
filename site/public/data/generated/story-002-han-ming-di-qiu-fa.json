@@ -44,12 +44,18 @@
     {
       "id": "place_luoyang_eastern_han",
       "name": "洛阳",
-      "certainty": "high"
+      "certainty": "high",
+      "lat": 34.62,
+      "lng": 112.45,
+      "map_label": "洛阳"
     },
     {
       "id": "place_tianzhu",
       "name": "天竺",
-      "certainty": "low"
+      "certainty": "low",
+      "lat": 22,
+      "lng": 78,
+      "map_label": "天竺"
     }
   ],
   "child_story": {
@@ -129,6 +135,12 @@
     "map_headline_en": "The White Horse's Thousand-Mile Journey",
     "meta_label": "文化交流",
     "caption": "示意图：求法路线为文化传播示意，\"金人之梦\"\"白马驮经\"细节带传说色彩，正史主干为遣使求法、僧经东来。",
+    "bounds": [
+      78,
+      15.5,
+      132,
+      44.5
+    ],
     "annotations": [
       {
         "kind": "region",
@@ -162,7 +174,175 @@
         "key": "route",
         "label": "白马驮经路线"
       }
-    ]
+    ],
+    "markers": [
+      {
+        "place_id": "place_tianzhu",
+        "subtitle": "求法起点 · 高僧东来",
+        "kind": "uprising"
+      },
+      {
+        "place_id": "place_luoyang_eastern_han",
+        "subtitle": "白马寺 · 故事落点",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-heartland",
+            "kind": "heartland",
+            "title": "Eastern Han Realm"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  103.8,
+                  34.6
+                ],
+                [
+                  106.2,
+                  38.4
+                ],
+                [
+                  110.8,
+                  40.6
+                ],
+                [
+                  116.4,
+                  40.9
+                ],
+                [
+                  121.6,
+                  39.4
+                ],
+                [
+                  122.4,
+                  36.8
+                ],
+                [
+                  121.2,
+                  31.6
+                ],
+                [
+                  118.6,
+                  26.4
+                ],
+                [
+                  112.4,
+                  24.2
+                ],
+                [
+                  108.2,
+                  21.6
+                ],
+                [
+                  104.6,
+                  23.2
+                ],
+                [
+                  102.6,
+                  27.4
+                ],
+                [
+                  101.8,
+                  31.6
+                ],
+                [
+                  103.8,
+                  34.6
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-disturbance",
+            "kind": "disturbance",
+            "title": "Western Regions Corridor"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  90.2,
+                  34.4
+                ],
+                [
+                  100.6,
+                  36.8
+                ],
+                [
+                  104.2,
+                  33.4
+                ],
+                [
+                  97.4,
+                  30.8
+                ],
+                [
+                  90.8,
+                  31.2
+                ],
+                [
+                  90.2,
+                  34.4
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "White Horse Sutra Route"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                78,
+                22
+              ],
+              [
+                82.4,
+                26.8
+              ],
+              [
+                88.6,
+                32.4
+              ],
+              [
+                95.2,
+                35.8
+              ],
+              [
+                102.4,
+                36.4
+              ],
+              [
+                108.2,
+                35.2
+              ],
+              [
+                112.45,
+                34.62
+              ]
+            ]
+          }
+        }
+      ]
+    }
   },
   "map_plan": {
     "id": "map_plan_67_ce_han_ming_di_qiu_fa",

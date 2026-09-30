@@ -145,6 +145,9 @@ const STORY_CONFIGS: StoryCompileConfig[] = [
 
 const require = createRequire(import.meta.url);
 
+// 中国全景默认视野：[west, south, east, north]，map-layer 缺 map_bounds 时使用。
+const DEFAULT_MAP_BOUNDS = [78.0, 15.5, 132.0, 44.5];
+
 function loadZod() {
   const lookupPaths = [
     path.join(ROOT, "node_modules"),
@@ -237,6 +240,10 @@ const mapLayerFrontmatterSchema = z.object({
   display_type: z.string().min(1),
   certainty: z.enum(["high", "medium", "low"]),
   geojson_file: z.string(),
+  map_bounds: z.preprocess(
+    (value) => (Array.isArray(value) ? value.map((item) => Number(item)) : value),
+    z.array(z.number()).length(4).optional(),
+  ),
   related_factions: stringArraySchema,
   related_places: stringArraySchema,
 });
@@ -259,6 +266,9 @@ const placeFrontmatterSchema = z.object({
   review_status: z.string().min(1),
   certainty: z.enum(["high", "medium", "low"]),
   source_refs: stringArraySchema.min(1),
+  lat: z.number(),
+  lng: z.number(),
+  map_label: z.string().min(1),
 });
 
 const personFrontmatterSchema = z.object({
@@ -324,6 +334,9 @@ const storyBundleSchema = z.object({
       id: z.string().min(1),
       name: z.string().min(1),
       certainty: z.enum(["high", "medium", "low"]),
+      lat: z.number(),
+      lng: z.number(),
+      map_label: z.string().min(1),
     }),
   ),
   child_story: z.object({
@@ -355,6 +368,7 @@ const storyBundleSchema = z.object({
     map_headline_en: z.string().min(1),
     meta_label: z.string().min(1),
     caption: z.string().min(1),
+    bounds: z.array(z.number()).length(4),
     annotations: z.array(
       z.object({
         kind: z.enum(["region", "disturbance"]),
@@ -371,6 +385,17 @@ const storyBundleSchema = z.object({
         label: z.string().min(1),
       }),
     ),
+    markers: z.array(
+      z.object({
+        place_id: z.string().min(1),
+        subtitle: z.string().min(1),
+        kind: z.enum(["capital", "uprising"]),
+      }),
+    ),
+    geojson: z.object({
+      type: z.literal("FeatureCollection"),
+      features: z.array(z.object({}).passthrough()),
+    }),
   }),
   map_plan: z.object({
     id: z.string().min(1),
@@ -604,6 +629,53 @@ function extractLegendItems(sectionText: string): Array<{ key: string; label: st
       return { key, label };
     })
     .filter((item): item is { key: string; label: string } => Boolean(item));
+}
+
+type SceneMarker = {
+  place_id: string;
+  subtitle: string;
+  kind: "capital" | "uprising";
+};
+
+function extractSceneMarkerItems(sectionText: string): SceneMarker[] {
+  return extractListItems(sectionText)
+    .map((item) => {
+      const [placeId, subtitle, kindRaw] = item.split("｜").map((part) => part.trim());
+      if (!placeId || !subtitle || !kindRaw) return null;
+      if (kindRaw !== "capital" && kindRaw !== "uprising") {
+        throw new Error(`Unsupported scene marker kind: ${kindRaw}`);
+      }
+      return { place_id: placeId, subtitle, kind: kindRaw };
+    })
+    .filter((item): item is SceneMarker => Boolean(item));
+}
+
+function extractSceneGeojson(sectionText: string): {
+  type: "FeatureCollection";
+  features: Array<Record<string, unknown>>;
+} {
+  const codeBlockMatch = sectionText.match(/```json\n([\s\S]*?)\n```/);
+  if (!codeBlockMatch) {
+    throw new Error("Scene geojson section missing ```json code block.");
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(codeBlockMatch[1]);
+  } catch (error) {
+    throw new Error(`Scene geojson JSON.parse failed: ${(error as Error).message}`);
+  }
+
+  if (
+    typeof parsed !== "object" ||
+    parsed === null ||
+    (parsed as { type?: unknown }).type !== "FeatureCollection" ||
+    !Array.isArray((parsed as { features?: unknown }).features)
+  ) {
+    throw new Error("Scene geojson must be a GeoJSON FeatureCollection with a features array.");
+  }
+
+  return parsed as { type: "FeatureCollection"; features: Array<Record<string, unknown>> };
 }
 
 function extractAnnotationItems(sectionText: string): Array<{
@@ -863,6 +935,9 @@ async function compileStory(
   const sceneCaption = extractSingleValue(mapLayerPage.sections.get("地图注脚") ?? "");
   const sceneAnnotations = extractAnnotationItems(mapLayerPage.sections.get("地图注记") ?? "");
   const sceneLegend = extractLegendItems(mapLayerPage.sections.get("图例") ?? "");
+  const sceneBounds = Array.isArray(mapLayer.map_bounds) ? mapLayer.map_bounds : DEFAULT_MAP_BOUNDS;
+  const sceneMarkers = extractSceneMarkerItems(mapLayerPage.sections.get("场景标记") ?? "");
+  const sceneGeojson = extractSceneGeojson(mapLayerPage.sections.get("场景几何") ?? "");
   const narrationFlow = extractKeyValueItems(mapLayerPage.sections.get("讲述脉络") ?? "");
   if (narrationFlow.length === 0) throw new Error("Map layer page missing 讲述脉络 list.");
 
@@ -878,6 +953,16 @@ async function compileStory(
   if (!sceneMetaLabel) throw new Error("Map layer page missing 焦点标签 content.");
   if (!sceneCaption) throw new Error("Map layer page missing 地图注脚 content.");
   if (sceneLegend.length === 0) throw new Error("Map layer page missing 图例 list.");
+  if (sceneMarkers.length === 0) throw new Error("Map layer page missing 场景标记 list.");
+  if (sceneGeojson.features.length === 0) throw new Error("Map layer page missing 场景几何 features.");
+
+  for (const marker of sceneMarkers) {
+    if (!event.places.includes(marker.place_id)) {
+      throw new Error(
+        `Scene marker place_id ${marker.place_id} is not listed in event places [${event.places.join(", ")}].`,
+      );
+    }
+  }
 
   const timelineRow = timelineRows.find((row) => row["年份"] === String(event.year));
   if (!timelineRow) {
@@ -964,6 +1049,9 @@ async function compileStory(
       id: place.id,
       name: place.name,
       certainty: place.certainty,
+      lat: place.lat,
+      lng: place.lng,
+      map_label: place.map_label,
     })),
     child_story: {
       id: childStory.id,
@@ -988,8 +1076,11 @@ async function compileStory(
       map_headline_en: sceneHeadlineEn,
       meta_label: sceneMetaLabel,
       caption: sceneCaption,
+      bounds: sceneBounds,
       annotations: sceneAnnotations,
       legend: sceneLegend,
+      markers: sceneMarkers,
+      geojson: sceneGeojson,
     },
     map_plan: {
       id: mapLayer.id,

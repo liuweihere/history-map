@@ -41,6 +41,7 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
 
   const pos = (i) => ((i + 0.5) / total) * 100;
 
+  // 相邻同朝代的里程碑合并成 span：仅用于计算朝代名文字标签的位置，不再渲染背景色块
   const eraSpans = [];
   milestones.forEach((milestone, index) => {
     const lastSpan = eraSpans[eraSpans.length - 1];
@@ -51,11 +52,11 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
     }
   });
   const eraLabelVisible = (span) => (span.last - span.first + 1) / total >= 0.045;
+  const eraMidPos = (span) => (((span.first + span.last + 1) / 2 / total) * 100);
 
   return (
     <div className={`time-scrubber${isDragging ? " time-scrubber--dragging" : ""}`}>
       <div
-        ref={trackRef}
         className="time-scrubber__track"
         role="slider"
         aria-label="历史时间滑杆"
@@ -64,20 +65,6 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
         aria-valuenow={activeIndex}
         aria-valuetext={`${formatYear(milestones[previewIndex].year)} ${milestones[previewIndex].label}`}
         tabIndex={0}
-        onPointerDown={(event) => {
-          event.currentTarget.setPointerCapture(event.pointerId);
-          dragTo(event.clientX);
-        }}
-        onPointerMove={(event) => {
-          if (dragIndex !== null) {
-            dragTo(event.clientX);
-          } else {
-            setHoverIndex(indexFromClientX(event.clientX));
-          }
-        }}
-        onPointerUp={endDrag}
-        onPointerCancel={() => setDragIndex(null)}
-        onPointerLeave={() => setHoverIndex(null)}
         onKeyDown={(event) => {
           if (event.key === "ArrowLeft") {
             event.preventDefault();
@@ -88,68 +75,83 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
             onDock(milestones[Math.min(total - 1, activeIndex + 1)], true);
           }
         }}
+        onPointerDown={(event) => {
+          event.currentTarget.setPointerCapture(event.pointerId);
+          dragTo(event.clientX);
+        }}
+        onPointerUp={endDrag}
+        onPointerCancel={() => setDragIndex(null)}
       >
-        {eraSpans.map((span, spanIndex) => (
-          <div
-            key={`${span.period}-${span.first}`}
-            className={`time-scrubber__era${
-              spanIndex % 2 === 0 ? " time-scrubber__era--alt" : ""
-            }`}
-            style={{
-              left: `${(span.first / total) * 100}%`,
-              width: `${((span.last - span.first + 1) / total) * 100}%`,
-            }}
-            title={span.period}
-          >
-            {eraLabelVisible(span) ? (
-              <span className="time-scrubber__era-label">{span.period}</span>
-            ) : null}
-          </div>
-        ))}
-
-        <div className="time-scrubber__rail" />
-        <div className="time-scrubber__rail time-scrubber__rail--shadow" />
-
-        {milestones.map((milestone, index) => (
-          <span
-            key={`${milestone.year}-${milestone.label}`}
-            className={[
-              "time-scrubber__tick",
-              milestone.interactive ? "time-scrubber__tick--recorded" : "",
-              index === activeIndex ? "is-active" : "",
-              index === previewIndex ? "is-preview" : "",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            style={{ left: `${pos(index)}%` }}
-            title={`${formatYear(milestone.year)} ${milestone.label}（${milestone.period}）`}
-          />
-        ))}
-
+        {/* 测量/定位层：扣除轨道容器左右 padding 后的净宽区域 */}
         <div
-          className={`time-scrubber__pin${isDragging ? " time-scrubber__pin--dragging" : ""}`}
-          style={{ left: `${pos(previewIndex)}%` }}
+          ref={trackRef}
+          className="time-scrubber__inner"
+          onPointerMove={(event) => {
+            if (dragIndex !== null) {
+              dragTo(event.clientX);
+            } else {
+              setHoverIndex(indexFromClientX(event.clientX));
+            }
+          }}
+          onPointerLeave={() => setHoverIndex(null)}
         >
-          <span className="time-scrubber__flag">{formatYear(milestones[previewIndex].year)}</span>
-          <span className="time-scrubber__stem" />
-          <span
-            className={`time-scrubber__thumb${isDragging ? " is-grabbing" : ""}`}
-            role="button"
-            aria-label={`拖动时间滑块，当前 ${formatYear(milestones[previewIndex].year)} ${milestones[previewIndex].label}`}
-            onPointerDown={(event) => {
-              event.currentTarget.setPointerCapture(event.pointerId);
-              setDragIndex(previewIndex);
-            }}
-            onPointerMove={(event) => {
-              if (dragIndex !== null) {
-                dragTo(event.clientX);
-              }
-            }}
-            onPointerUp={endDrag}
-            onPointerCancel={() => setDragIndex(null)}
+          {/* 贯穿中轴线：全宽 2px 细线，垂直居中 */}
+          <div className="time-scrubber__rail" aria-hidden="true" />
+
+          {/* 刻度点层：钉在轴线上（top:50% 居中），悬停显示年份+故事名+朝代 */}
+          {milestones.map((milestone, index) => (
+            <span
+              key={`${milestone.year}-${milestone.label}`}
+              className={[
+                "time-scrubber__tick",
+                milestone.interactive ? "time-scrubber__tick--recorded" : "",
+                index === activeIndex ? "is-active" : "",
+                index === previewIndex ? "is-preview" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              style={{ left: `${pos(index)}%` }}
+              title={`${formatYear(milestone.year)} ${milestone.label}（${milestone.period}）`}
+            />
+          ))}
+
+          {/* 朝代名文字层：轴线下方、span 中点水平居中，仅显示足够宽的朝代 */}
+          {eraSpans.filter(eraLabelVisible).map((span) => (
+            <span
+              key={`${span.period}-${span.first}`}
+              className="time-scrubber__era-label"
+              style={{ left: `${eraMidPos(span)}%` }}
+            >
+              {span.period}
+            </span>
+          ))}
+
+          {/* 滑块：44px 透明热区 + 20px 圆点 + 正上方暗色年份气泡 */}
+          <div
+            className={`time-scrubber__pin${isDragging ? " time-scrubber__pin--dragging" : ""}`}
+            style={{ left: `${pos(previewIndex)}%` }}
           >
-            <span className="time-scrubber__headpin" />
-          </span>
+            <span className="time-scrubber__flag" aria-hidden="true">
+              {formatYear(milestones[previewIndex].year)}
+            </span>
+            <span
+              className={`time-scrubber__thumb${isDragging ? " is-grabbing" : ""}`}
+              aria-label={`拖动时间滑块，当前 ${formatYear(milestones[previewIndex].year)} ${milestones[previewIndex].label}`}
+              onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
+                setDragIndex(previewIndex);
+              }}
+              onPointerMove={(event) => {
+                if (dragIndex !== null) {
+                  dragTo(event.clientX);
+                }
+              }}
+              onPointerUp={endDrag}
+              onPointerCancel={() => setDragIndex(null)}
+            >
+              <span className="time-scrubber__headpin" aria-hidden="true" />
+            </span>
+          </div>
         </div>
       </div>
     </div>

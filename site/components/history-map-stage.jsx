@@ -2,11 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-import {
-  placeCoordinates,
-  storyMapScenes,
-} from "../lib/story-map-geo";
-
 function createMarkerNode(kind, label, subtitle) {
   const wrapper = document.createElement("div");
   wrapper.className = `map-marker map-marker--${kind}`;
@@ -30,15 +25,6 @@ function createMarkerNode(kind, label, subtitle) {
   anchor.append(halo, dot, sigil);
   wrapper.append(anchor, labelBox);
   return wrapper;
-}
-
-function markerKindForPlace(placeId, storyId, scene) {
-  const configured = scene?.markerKindByPlaceId?.[placeId];
-  if (configured) return configured;
-  if (storyId === "story_000_xiang_yu_wujiang") {
-    return placeId === "place_wujiang" ? "capital" : "uprising";
-  }
-  return placeId === "place_luoyang" ? "capital" : "uprising";
 }
 
 export function HistoryMapStage({ story }) {
@@ -84,9 +70,9 @@ export function HistoryMapStage({ story }) {
       mapRef.current = map;
 
       map.on("load", () => {
-        const scene = storyMapScenes[story.story_id];
-        if (!scene) {
-          throw new Error(`No map scene configured for ${story.story_id}.`);
+        const scene = story.scene;
+        if (!scene?.geojson) {
+          throw new Error(`No map scene geojson exported for ${story.story_id}.`);
         }
 
         const chinaBackdropPromise = fetch("/data/static/china-base.geojson").then((response) => {
@@ -97,10 +83,17 @@ export function HistoryMapStage({ story }) {
           return response.json();
         });
 
-        map.fitBounds(scene.bounds, {
-          padding: scene.fitPadding ?? { top: 80, right: 90, bottom: 80, left: 90 },
-          duration: 0,
-        });
+        const [west, south, east, north] = scene.bounds;
+        map.fitBounds(
+          [
+            [west, south],
+            [east, north],
+          ],
+          {
+            padding: { top: 52, right: 56, bottom: 52, left: 56 },
+            duration: 0,
+          },
+        );
 
         chinaBackdropPromise.then((chinaBackdrop) => {
           if (!mapRef.current) return;
@@ -109,12 +102,7 @@ export function HistoryMapStage({ story }) {
             type: "geojson",
             data: {
               type: "FeatureCollection",
-              features: [
-                ...chinaBackdrop.features,
-                scene.features.heartland,
-                scene.features.disturbance,
-                scene.features.route,
-              ],
+              features: [...chinaBackdrop.features, ...scene.geojson.features],
             },
           });
 
@@ -217,25 +205,20 @@ export function HistoryMapStage({ story }) {
             },
           });
 
-          const placeMeta = story.places
-            .map((place) => {
-              const coordinate = placeCoordinates[place.id];
-              if (!coordinate) return null;
-              const subtitle = scene.markerSubtitleByPlaceId?.[place.id];
-              if (!subtitle) return null;
-              return { place, coordinate, subtitle };
+          const placeById = new Map(story.places.map((place) => [place.id, place]));
+
+          markersRef.current = (scene.markers ?? [])
+            .map((marker) => {
+              const place = placeById.get(marker.place_id);
+              if (!place) return null;
+              return new maplibregl.Marker({
+                element: createMarkerNode(marker.kind, place.map_label, marker.subtitle),
+                anchor: "left",
+              })
+                .setLngLat([place.lng, place.lat])
+                .addTo(map);
             })
             .filter(Boolean);
-
-          markersRef.current = placeMeta.map(({ place, coordinate, subtitle }) => {
-            const kind = markerKindForPlace(place.id, story.story_id, scene);
-            return new maplibregl.Marker({
-              element: createMarkerNode(kind, coordinate.label, subtitle),
-              anchor: "left",
-            })
-              .setLngLat([coordinate.lng, coordinate.lat])
-              .addTo(map);
-          });
         });
       });
     }

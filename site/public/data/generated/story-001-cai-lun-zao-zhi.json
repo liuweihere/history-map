@@ -43,7 +43,10 @@
     {
       "id": "place_luoyang_eastern_han",
       "name": "洛阳",
-      "certainty": "high"
+      "certainty": "high",
+      "lat": 34.62,
+      "lng": 112.45,
+      "map_label": "洛阳"
     }
   ],
   "child_story": {
@@ -119,6 +122,12 @@
     "map_headline_en": "Where Paper Was Perfected",
     "meta_label": "发明之光",
     "caption": "示意图：造纸术改进于东汉洛阳，其后数百年逐步传向世界。本图只呈现传播方向，不代表确切年代路线。",
+    "bounds": [
+      78,
+      15.5,
+      132,
+      44.5
+    ],
     "annotations": [
       {
         "kind": "region",
@@ -142,7 +151,182 @@
         "key": "route",
         "label": "传播路线"
       }
-    ]
+    ],
+    "markers": [
+      {
+        "place_id": "place_luoyang_eastern_han",
+        "subtitle": "发明诞生地 · 蔡侯纸",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-heartland",
+            "kind": "heartland",
+            "title": "Eastern Han Realm"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  103.8,
+                  34.6
+                ],
+                [
+                  106.2,
+                  38.4
+                ],
+                [
+                  110.8,
+                  40.6
+                ],
+                [
+                  116.4,
+                  40.9
+                ],
+                [
+                  121.6,
+                  39.4
+                ],
+                [
+                  122.4,
+                  36.8
+                ],
+                [
+                  121.2,
+                  31.6
+                ],
+                [
+                  118.6,
+                  26.4
+                ],
+                [
+                  112.4,
+                  24.2
+                ],
+                [
+                  108.2,
+                  21.6
+                ],
+                [
+                  104.6,
+                  23.2
+                ],
+                [
+                  102.6,
+                  27.4
+                ],
+                [
+                  101.8,
+                  31.6
+                ],
+                [
+                  103.8,
+                  34.6
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-disturbance",
+            "kind": "disturbance",
+            "title": "Where Paper Was Perfected"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  110.6,
+                  33.2
+                ],
+                [
+                  114.8,
+                  33.9
+                ],
+                [
+                  115.6,
+                  35.8
+                ],
+                [
+                  112.6,
+                  36.4
+                ],
+                [
+                  110.2,
+                  35.2
+                ],
+                [
+                  110.6,
+                  33.2
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Paper Spreads From Luoyang"
+          },
+          "geometry": {
+            "type": "MultiLineString",
+            "coordinates": [
+              [
+                [
+                  112.45,
+                  34.62
+                ],
+                [
+                  119.6,
+                  35.4
+                ],
+                [
+                  124.8,
+                  39.6
+                ],
+                [
+                  127.4,
+                  40.4
+                ]
+              ],
+              [
+                [
+                  112.45,
+                  34.62
+                ],
+                [
+                  106.2,
+                  35.6
+                ],
+                [
+                  98.4,
+                  38.6
+                ],
+                [
+                  88.2,
+                  41.4
+                ],
+                [
+                  80.6,
+                  42.8
+                ]
+              ]
+            ]
+          }
+        }
+      ]
+    }
   },
   "map_plan": {
     "id": "map_plan_105_ce_cai_lun_zao_zhi",

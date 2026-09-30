@@ -1,6 +1,6 @@
 # Little Star History Wiki
 
-This repository is the content workspace for the Little Star History project.
+This directory is the content workspace (knowledge source) of the Little Star History project, inside the `history-map` monorepo (`wiki/` + `site/`).
 
 It is the source-of-truth repo for:
 
@@ -52,8 +52,10 @@ Think of this repo as a knowledge compiler workspace.
 - 时代：例如 `西汉`
 - 标题：`周亚夫治军`
 - 文件名前缀：`前154-周亚夫治军`
-- story id：`story_001_zhou_yafu_zhijun`
+- story id：`story_005_zhou_yafu_zhijun`
 - event id：`event_zhou_yafu_zhijun_154_bce`
+
+编号规则：story 编号从 `story_000` 开始递增，`story_000`–`story_004` 已被占用（项羽乌江自刎 / 蔡伦造纸 / 汉明帝求法 / 张仲景 / 煮酒论英雄），新故事永远取当前最大编号 +1，本文示例用 `story_005`。
 
 命名一旦定了，后面所有文件都跟着这套走，不要中途换叫法。
 
@@ -118,9 +120,67 @@ raw 文件准备好后，在 `wiki/sources/` 下为每份原始材料建立对�
 这 4 个页面分别承担的职责：
 
 - `event`：历史事实骨架、因果、意义、人物地点势力引用
-- `map-layer`：地图怎么讲、先看哪里、图例和阅读抓手
+- `map-layer`：地图怎么讲、先看哪里、图例和阅读抓手，以及地图场景数据（bounds、标记、几何）
 - `child-story`：真正给孩子读的短故事
 - `parent-note`：家长怎么追问、怎么解释、怎么纠偏
+
+#### map-layer 页必备小节清单
+
+map-layer 页必须包含以下全部小节，缺一个 exporter 都会报错：
+
+原有内容小节：`地图目标`、`页首导语`、`地图标题`、`地图标题英文`、`焦点标签`、`年度标签`、`先看地图`、`阅读抓手`、`地图阅读步骤`、`记忆锚点`、`讲述脉络`、`地图注脚`、`图例`、`地图注记`、`显示元素`、`不显示`、`儿童提示语`
+
+数据小节（新增，AI agent 录入新故事时**必须生成地图与场景数据**，site 前端不存任何故事内容，地图全靠这里导出）：
+
+- `场景标记`：每个地图标记一行，格式 `place_id｜副标题｜marker kind`，kind 只能是 `capital`（主要落点）或 `uprising`（次要/起源点）。place_id 必须出现在 event 页的 `places` 列表里
+- `场景几何`：内嵌 ```json 代码块，存 GeoJSON FeatureCollection，features 带 `properties.kind`（`heartland` 大区域底色 / `disturbance` 扰动区 / `route` 路线）和英文 `title`，geometry 用 Polygon 或 LineString/MultiLineString
+
+示例（摘自前202 项羽乌江自刎地图计划）：
+
+```markdown
+## 场景标记
+
+- place_gaixia｜被围困之地｜uprising
+- place_wujiang｜最后选择点｜capital
+
+## 场景几何
+
+\`\`\`json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "id": "story-heartland", "kind": "heartland", "title": "Chu Han Contest Zone" },
+      "geometry": { "type": "Polygon", "coordinates": [[[107.4, 36.2], ...same first point...]] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": "story-route", "kind": "route", "title": "Gaixia To Wujiang Retreat" },
+      "geometry": { "type": "LineString", "coordinates": [[117.354, 33.008], [118.497, 31.727]] }
+    }
+  ]
+}
+\`\`\`
+```
+
+frontmatter 还需要：
+
+- `map_bounds: [78.0, 15.5, 132.0, 44.5]`：数字数组 `[west, south, east, north]`，缺省时 exporter 用中国全景默认值
+- `geojson_file: ""`：保持空字符串，场景几何一律走「场景几何」小节
+
+#### 地点页（places）必备字段
+
+故事用到的每个地点，`wiki/entities/places/` 页 frontmatter 必须写全：
+
+- `lat` / `lng`：纬度在前、经度在后（中国范围 lat 约 18–54，lng 约 73–135，写反了地图会飞出去）
+- `map_label`：地图上显示的短名字，如 `map_label: 洛阳`
+
+```yaml
+lat: 34.62
+lng: 112.45
+map_label: 洛阳
+```
 
 ### Step 5: 补必要实体
 
@@ -150,10 +210,10 @@ raw 文件准备好后，在 `wiki/sources/` 下为每份原始材料建立对�
 - `outputEventFile`
 - `outputStoryFile`
 
-`周亚夫治军` 的注册项建议按现有格式新增一条，放在 `项羽乌江自刎` 后面，编号递增，比如：
+`周亚夫治军` 的注册项建议按现有格式新增一条，放在最后一个故事后面，编号递增（当前已用到 `story_004`，下一个是 `story_005`）：
 
-- `storyId: "story_001_zhou_yafu_zhijun"`
-- `outputStoryFile: "story-001-zhou-yafu-zhijun.json"`
+- `storyId: "story_005_zhou_yafu_zhijun"`
+- `outputStoryFile: "story-005-zhou-yafu-zhijun.json"`
 
 ### Step 7: 点亮时间线
 
@@ -165,21 +225,21 @@ raw 文件准备好后，在 `wiki/sources/` 下为每份原始材料建立对�
 这时把时间线那一行改成：
 
 - `故事状态 = recorded`
-- `story_id = story_001_zhou_yafu_zhijun`
+- `story_id = story_005_zhou_yafu_zhijun`
 
 ### Step 8: 运行导出和站点同步
 
 先在本仓库运行：
 
 ```bash
-cd /Users/mialiu/repository/llm-wiki/little-star-history-wiki
+cd /Users/mialiu/repository/history-map/wiki
 npm run export:history
 ```
 
-再去站点仓库运行：
+再去前端目录运行：
 
 ```bash
-cd /Users/mialiu/repository/llm-wiki/little-star-history-site
+cd /Users/mialiu/repository/history-map/site
 npm run sync:data
 ```
 
@@ -197,7 +257,7 @@ npm run build
 - `story_status` 已经是 `recorded`
 - `story_id` 已经连到真实故事
 - `06_Exports/json/` 里出现新的 `event_*.json` 和 `story-*.json`
-- `little-star-history-site/public/data/generated/` 里也有同步后的 JSON
+- `../site/public/data/generated/` 里也有同步后的 JSON
 - 网页上能读到新内容，而不是旧的静态文案
 
 ## Minimal Deliverables For One New Story
@@ -207,12 +267,14 @@ npm run build
 - 3 到 4 个 raw 文件
 - 3 到 4 个 `wiki/sources/` 文件
 - 1 个 `event`
-- 1 个 `map-layer`
+- 1 个 `map-layer`（含「场景标记」「场景几何」两个数据小节 + frontmatter `map_bounds`，必备，缺了地图渲染不出来）
 - 1 个 `child-story`
 - 1 个 `parent-note`
-- 必要时若干人物 / 地点 / 势力页
+- 必要时若干人物 / 地点 / 势力页（地点页必须带 `lat`/`lng`/`map_label`）
 - 1 条时间线更新
 - 1 条 `STORY_CONFIGS` 注册项
+
+地图与场景数据是录入必备项，不是可选项：AI agent 录入新故事时必须同时生成——地点坐标（places 页 `lat`/`lng`/`map_label`）、`map_bounds`、场景标记（`场景标记` 小节）、场景几何（`场景几何` 小节的 heartland/disturbance/route GeoJSON）。格式示例见上文 Step 4。
 
 ## Recommended Order For 周亚夫治军
 
@@ -239,6 +301,7 @@ npm run export:history
 
 ## Related Repository
 
-The frontend runtime lives in the sibling repository:
+本项目是 `history-map` monorepo 的一部分：
 
-- `little-star-history-site`
+- `wiki/`（本目录）：知识源，所有故事内容与地图场景数据的唯一来源
+- `../site/`：Next.js 15 前端，纯渲染引擎，不存任何具体故事内容，一切数据由 `npm run export:history` + `npm run sync:data` 生成同步

@@ -215,7 +215,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
               <div className="atlas-drawer__section">
                 <p className="atlas-panel-kicker">故事梗概 / Story Mind Map</p>
                 <h3 className="atlas-drawer__title">{event.title}</h3>
-                <StoryMindMap story={story} event={event} scene={scene} />
+                <StoryMindMap story={story} />
                 <div className="drawer-spotlight">
                   <span>先看地图</span>
                   <strong>{panel.child_spotlight}</strong>

@@ -1594,73 +1594,16 @@ button {
   text-align: center;
 }
 
-.mindmap {
-  display: flex;
-  justify-content: center;
+.narration-flow--empty {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
-.mindmap__svg {
-  width: 100%;
-  max-width: 560px;
-  height: auto;
-}
-
-.mindmap__hub-ring {
-  fill: rgba(145, 83, 61, 0.06);
-  stroke: rgba(124, 61, 45, 0.28);
-  stroke-width: 1;
-}
-
-.mindmap__hub-ring--outer {
-  fill: none;
-  stroke-dasharray: 3 5;
-  opacity: 0.55;
-}
-
-.mindmap__hub-dot {
-  fill: var(--capital);
-}
-
-.mindmap__hub-title {
-  font-family: Baskerville, "Times New Roman", serif;
-  font-size: 15px;
-  font-weight: 590;
-  fill: var(--ink);
-}
-
-.mindmap__hub-sub {
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  fill: var(--ink-soft);
-}
-
-.mindmap__link {
-  fill: none;
-  stroke-width: 1.4;
-  opacity: 0.66;
-}
-
-.mindmap__link--people { stroke: #8a5a2b; }
-.mindmap__link--place { stroke: #607989; }
-.mindmap__link--turn { stroke: #9a6f2f; }
-.mindmap__link--ending { stroke: #7c3d2d; }
-
-.mindmap__node { stroke: #fff8f0; stroke-width: 1.5; }
-.mindmap__node--people { fill: #8a5a2b; }
-.mindmap__node--place { fill: #607989; }
-.mindmap__node--turn { fill: #9a6f2f; }
-.mindmap__node--ending { fill: #7c3d2d; }
-
-.mindmap__branch-label {
-  font-size: 12px;
-  font-weight: 590;
-  letter-spacing: 0.24em;
-  fill: var(--ink-soft);
-}
-
-.mindmap__leaf {
-  font-size: 12.5px;
-  fill: var(--ink);
+.narration-flow--empty .narration-flow__hint {
+  margin-top: 0;
+  padding: 18px 14px;
+  letter-spacing: 0.08em;
 }
 
 /* ----- 经典语句 ----- */
@@ -1830,22 +1773,21 @@ button {
 /* ===== Time Scrubber 时间滑杆 ===== */
 
 .time-scrubber {
-  margin: 0 0 20px;
-  padding: 10px 22px;
-  border-radius: 18px;
-  background:
-    linear-gradient(180deg, rgba(255, 252, 246, 0.92), rgba(244, 233, 214, 0.86)),
-    var(--card-strong);
-  border: 1px solid rgba(72, 48, 28, 0.12);
+  margin: 24px 0 20px;
+  user-select: none;
 }
 
+/* 轨道容器：羊皮纸底色、高 64px、左右 32px 内距、圆角 */
 .time-scrubber__track {
   position: relative;
-  height: 96px;
-  border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(250, 243, 231, 0.9), rgba(236, 224, 200, 0.82));
-  border: 1px solid rgba(72, 48, 28, 0.1);
+  height: 64px;
+  padding: 0 32px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  background: #f5efe6;
+  border: 1px solid rgba(72, 48, 28, 0.12);
   cursor: pointer;
   touch-action: none;
   outline: none;
@@ -1857,137 +1799,104 @@ button {
   box-shadow: 0 0 0 3px rgba(124, 61, 45, 0.12);
 }
 
-.time-scrubber__era {
-  position: absolute;
-  top: 34px;
-  height: 32px;
-  border-radius: 4px;
-  background: rgba(206, 181, 136, 0.34);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+/* 定位/测量层：扣除轨道容器左右 padding 后的净宽区域 */
+.time-scrubber__inner {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
 }
 
-.time-scrubber__era--alt {
-  background: rgba(206, 181, 136, 0.5);
-}
-
-.time-scrubber__era-label {
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  color: var(--ink-soft);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  padding: 0 2px;
-}
-
+/* 贯穿中轴线：全宽 2px 细线，垂直居中 */
 .time-scrubber__rail {
   position: absolute;
-  left: 4px;
-  right: 4px;
-  top: 50px;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    rgba(145, 83, 61, 0.4),
-    rgba(72, 48, 28, 0.22)
-  );
-}
-
-.time-scrubber__rail--shadow {
-  top: 52px;
-  height: 3px;
-  filter: blur(2px);
-  opacity: 0.32;
-}
-
-.time-scrubber__tick {
-  position: absolute;
-  top: 46.5px;
-  width: 6px;
-  height: 6px;
-  margin-left: -3px;
-  border-radius: 50%;
-  background: rgba(72, 48, 28, 0.4);
-  transform: translateY(0);
-  transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.time-scrubber__tick--recorded {
-  top: 43px;
-  width: 14px;
-  height: 14px;
-  margin-left: -7px;
-  background: radial-gradient(circle at 35% 32%, #a05a40, #6b3828);
-  border: 1px solid rgba(255, 248, 240, 0.85);
-  box-shadow: 0 3px 8px rgba(107, 56, 40, 0.3);
-}
-
-.time-scrubber__tick.is-preview {
-  transform: translateY(-2px) scale(1.25);
-  background: var(--capital);
-}
-
-.time-scrubber__tick--recorded.is-preview,
-.time-scrubber__tick--recorded.is-active {
-  transform: translateY(0) scale(1.15);
-}
-
-.time-scrubber__pin {
-  position: absolute;
-  top: 8px;
-  bottom: 18px;
-  width: 0;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+  background: #8b5a2b;
   pointer-events: none;
 }
 
-.time-scrubber__pin .time-scrubber__thumb {
-  pointer-events: auto;
+/* 刻度点：全部钉在轴线上（top:50% + 自身 translateY(-50%) 居中） */
+.time-scrubber__tick {
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(72, 48, 28, 0.32);
+  transform: translate(-50%, -50%);
+  transition: transform 140ms ease, box-shadow 140ms ease;
+}
+
+/* interactive/recorded 节点：实心稍大 + 浅色 halo 突出 */
+.time-scrubber__tick--recorded {
+  width: 8px;
+  height: 8px;
+  background: #8b5a2b;
+  box-shadow: 0 0 0 3px rgba(139, 90, 43, 0.16);
+}
+
+/* 当前停靠节点高亮 */
+.time-scrubber__tick.is-active {
+  background: #c85a28;
+  box-shadow: 0 0 0 3px rgba(200, 90, 40, 0.22);
+}
+
+.time-scrubber__tick--recorded.is-active {
+  box-shadow: 0 0 0 4px rgba(200, 90, 40, 0.28);
+}
+
+.time-scrubber__tick.is-preview {
+  transform: translate(-50%, -50%) scale(1.35);
+}
+
+/* 朝代名文字：轴线下方（top:60%），span 中点水平居中 */
+.time-scrubber__era-label {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft, #8a6f4d);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* 滑块定位容器：0 宽度指针锚点，非拖拽时轻微缓动跟随 */
+.time-scrubber__pin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  pointer-events: none;
+  transition: left 90ms ease-out;
 }
 
 .time-scrubber__pin--dragging {
-  transition: left 120ms ease-out;
+  transition: none;
 }
 
+/* 年份气泡：暗色圆角小标签，悬在滑块正上方（热区顶边上方 8px） */
 .time-scrubber__flag {
   position: absolute;
-  top: 0;
   left: 0;
+  bottom: calc(50% + 30px);
   transform: translateX(-50%);
   padding: 3px 10px;
   border-radius: 8px;
-  background: linear-gradient(180deg, #91533d, #6b3828);
-  color: #fff8f0;
-  font-size: 0.86rem;
+  background: rgba(43, 33, 23, 0.92);
+  color: #f5efe6;
+  font-size: 12px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  box-shadow: 0 6px 14px rgba(107, 56, 40, 0.28);
-}
-
-.time-scrubber__flag::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -4px;
-  transform: translateX(-50%);
-  border: 4px solid transparent;
-  border-top-color: #6b3828;
-  border-bottom: 0;
-}
-
-.time-scrubber__stem {
-  position: absolute;
-  top: 26px;
-  bottom: 16px;
-  left: -1px;
-  width: 2px;
-  background: linear-gradient(
-    180deg,
-    rgba(145, 83, 61, 0.7),
-    rgba(145, 83, 61, 0.28)
-  );
+  box-shadow: 0 4px 10px rgba(43, 33, 23, 0.22);
+  pointer-events: none;
 }
 
 .time-scrubber--dragging,
@@ -1996,13 +1905,14 @@ button {
   -webkit-user-select: none !important;
 }
 
+/* Thumb：44px 透明热区（兼容 iPad 触摸），内部 20px 实心圆点 */
 .time-scrubber__thumb {
   position: absolute;
-  bottom: 0;
   left: 0;
+  top: 50%;
   width: 44px;
   height: 44px;
-  transform: translate(-50%, 22%);
+  transform: translate(-50%, -50%);
   display: grid;
   place-items: center;
   background: transparent;
@@ -2026,41 +1936,36 @@ button {
 
 .time-scrubber__thumb .time-scrubber__headpin {
   position: static;
-  width: 22px;
-  height: 22px;
-  background: radial-gradient(circle at 50% 42%, #fdf3df 0%, #f3dfb6 38%, var(--capital) 39%);
-  border: 3px solid #fff8f0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c85a28;
   box-shadow:
-    0 3px 10px rgba(107, 56, 40, 0.4),
-    0 0 0 4px rgba(181, 138, 76, 0.18);
+    0 2px 6px rgba(107, 56, 40, 0.35),
+    0 0 0 4px rgba(245, 239, 230, 0.85);
   transition: transform 140ms ease-out, box-shadow 140ms ease-out;
 }
 
 .time-scrubber__thumb:hover .time-scrubber__headpin {
-  transform: scale(1.12);
+  transform: scale(1.1);
 }
 
 .time-scrubber__thumb.is-grabbing .time-scrubber__headpin {
-  transform: scale(1.22);
+  transform: scale(1.15);
   box-shadow:
-    0 5px 14px rgba(107, 56, 40, 0.5),
-    0 0 0 7px rgba(181, 138, 76, 0.26);
-}
-
-.time-scrubber__foot {
-  display: none;
+    0 4px 10px rgba(107, 56, 40, 0.45),
+    0 0 0 5px rgba(245, 239, 230, 0.85);
 }
 
 @media (max-width: 760px) {
-  .time-scrubber {
-    padding: 14px 14px 10px;
+  .time-scrubber__track {
+    height: 60px;
+    padding: 0 16px;
+    border-radius: 14px;
   }
 
-  .time-scrubber__readout-year {
-    font-size: 2rem;
-  }
-
-  .time-scrubber__hint {
-    display: none;
+  .time-scrubber__flag {
+    padding: 2px 8px;
+    font-size: 11px;
   }
 }

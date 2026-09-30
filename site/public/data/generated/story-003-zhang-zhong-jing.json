@@ -43,12 +43,18 @@
     {
       "id": "place_changsha",
       "name": "长沙",
-      "certainty": "medium"
+      "certainty": "medium",
+      "lat": 28.23,
+      "lng": 112.94,
+      "map_label": "长沙"
     },
     {
       "id": "place_nanyang",
       "name": "南阳",
-      "certainty": "high"
+      "certainty": "high",
+      "lat": 32.99,
+      "lng": 112.53,
+      "map_label": "南阳"
     }
   ],
   "child_story": {
@@ -124,6 +130,12 @@
     "map_headline_en": "The Journey of the Sage of Medicine",
     "meta_label": "仁心仁术",
     "caption": "示意图：张仲景生平细节史料有限，长沙坐堂行医为后世传说，地图仅示意其人生轨迹的地理背景。",
+    "bounds": [
+      78,
+      15.5,
+      132,
+      44.5
+    ],
     "annotations": [
       {
         "kind": "region",
@@ -157,7 +169,159 @@
         "key": "backdrop",
         "label": "东汉末年"
       }
-    ]
+    ],
+    "markers": [
+      {
+        "place_id": "place_nanyang",
+        "subtitle": "医圣故乡",
+        "kind": "capital"
+      },
+      {
+        "place_id": "place_changsha",
+        "subtitle": "坐堂行医（相传）",
+        "kind": "uprising"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-heartland",
+            "kind": "heartland",
+            "title": "Eastern Han Realm"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  103.8,
+                  34.6
+                ],
+                [
+                  106.2,
+                  38.4
+                ],
+                [
+                  110.8,
+                  40.6
+                ],
+                [
+                  116.4,
+                  40.9
+                ],
+                [
+                  121.6,
+                  39.4
+                ],
+                [
+                  122.4,
+                  36.8
+                ],
+                [
+                  121.2,
+                  31.6
+                ],
+                [
+                  118.6,
+                  26.4
+                ],
+                [
+                  112.4,
+                  24.2
+                ],
+                [
+                  108.2,
+                  21.6
+                ],
+                [
+                  104.6,
+                  23.2
+                ],
+                [
+                  102.6,
+                  27.4
+                ],
+                [
+                  101.8,
+                  31.6
+                ],
+                [
+                  103.8,
+                  34.6
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-disturbance",
+            "kind": "disturbance",
+            "title": "Plague Stricken Central Plains"
+          },
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  108.6,
+                  30.4
+                ],
+                [
+                  115.2,
+                  31.2
+                ],
+                [
+                  117.8,
+                  34.6
+                ],
+                [
+                  114.2,
+                  37.8
+                ],
+                [
+                  109.2,
+                  36.4
+                ],
+                [
+                  108.6,
+                  30.4
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Nanyang To Changsha"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                112.53,
+                32.99
+              ],
+              [
+                112.68,
+                31.4
+              ],
+              [
+                112.94,
+                28.23
+              ]
+            ]
+          }
+        }
+      ]
+    }
   },
   "map_plan": {
     "id": "map_plan_200_ce_zhang_zhong_jing",
