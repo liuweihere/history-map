@@ -2,7 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
-function createMarkerNode(kind, label, subtitle, onClick) {
+function formatYear(year) {
+  if (year < 0) return `前${Math.abs(year)}`;
+  return String(year);
+}
+
+function createMarkerNode(kind, label, subtitle, year, onClick) {
   const wrapper = document.createElement("div");
   wrapper.className = `map-marker map-marker--${kind}`;
 
@@ -20,8 +25,9 @@ function createMarkerNode(kind, label, subtitle, onClick) {
 
   const labelBox = document.createElement("span");
   labelBox.className = "map-marker__label";
-  labelBox.innerHTML = `<strong>${label}</strong><em>${subtitle}</em>`;
-
+  labelBox.innerHTML =
+    `<strong>${label}</strong><em>${subtitle}</em>` +
+    (year === null || year === undefined ? "" : `<small>${formatYear(year)}</small>`);
   anchor.append(halo, dot, sigil);
   wrapper.append(anchor, labelBox);
 
@@ -69,7 +75,7 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
               id: "parchment-base",
               type: "background",
               paint: {
-                "background-color": "#F4EBE1",
+                "background-color": "#E8F3F7",
               },
             },
           ],
@@ -133,8 +139,8 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
             source: "story001-overlay",
             filter: ["==", ["get", "id"], "china-backdrop"],
             paint: {
-              "fill-color": "#EDE0CB",
-              "fill-opacity": 0.9,
+              "fill-color": "#F8F2E8",
+              "fill-opacity": 1,
             },
           });
 
@@ -144,10 +150,10 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
             source: "story001-overlay",
             filter: ["==", ["get", "id"], "china-backdrop"],
             paint: {
-              "line-color": "rgba(79, 54, 24, 0.18)",
-              "line-width": 6,
+              "line-color": "#D8C8B5",
+              "line-width": 3,
               "line-blur": 2,
-              "line-opacity": 0.48,
+              "line-opacity": 0.3,
             },
           });
 
@@ -157,9 +163,9 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
             source: "story001-overlay",
             filter: ["==", ["get", "id"], "china-backdrop"],
             paint: {
-              "line-color": "rgba(111, 81, 42, 0.86)",
-              "line-width": 2.4,
-              "line-opacity": 0.94,
+              "line-color": "#D8C8B5",
+              "line-width": 1,
+              "line-opacity": 0.9,
             },
           });
 
@@ -176,7 +182,7 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
               filter: buildDynastyFilter(currentYear),
               paint: {
                 "fill-color": ["get", "color"],
-                "fill-opacity": 0.35,
+                "fill-opacity": 0.3,
               },
             });
 
@@ -186,8 +192,9 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
               source: "dynasty-boundaries",
               filter: buildDynastyFilter(currentYear),
               paint: {
-                "line-color": ["get", "color"],
-                "line-width": 1.5,
+                "line-color": "#C4B49A",
+                "line-width": 1.2,
+                "line-opacity": 0.6,
                 "line-dasharray": [2, 1],
               },
             });
@@ -199,8 +206,8 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
             source: "story001-overlay",
             filter: ["==", ["get", "kind"], "heartland"],
             paint: {
-              "fill-color": ["coalesce", ["get", "color"], "#CEB588"],
-              "fill-opacity": 0.35,
+              "fill-color": ["coalesce", ["get", "color"], "#EEDC9A"],
+              "fill-opacity": 0.3,
             },
           });
 
@@ -250,10 +257,10 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
               "line-join": "round",
             },
             paint: {
-              "line-color": ["coalesce", ["get", "color"], "#8B5A2B"],
-              "line-width": 2.3,
-              "line-opacity": 0.62,
-              "line-dasharray": [2.5, 1.8],
+              "line-color": ["coalesce", ["get", "color"], "#8B6A4A"],
+              "line-width": 2,
+              "line-opacity": 0.72,
+              "line-dasharray": [3, 2],
             },
           });
 
@@ -277,7 +284,7 @@ export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
               };
 
               return new maplibregl.Marker({
-                element: createMarkerNode(marker.kind, place.map_label, marker.subtitle, handleSelect),
+                element: createMarkerNode(marker.kind, place.map_label, marker.subtitle, story.timeline.year, handleSelect),
                 anchor: "left",
               })
                 .setLngLat([place.lng, place.lat])

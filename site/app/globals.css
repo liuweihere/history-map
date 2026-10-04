@@ -264,7 +264,7 @@ button {
   inset: 25px;
   border-radius: 18px;
   overflow: hidden;
-  background: #F4EBE1;
+  background: #E8F3F7;
 }
 
 .history-map-canvas::after {
@@ -276,8 +276,8 @@ button {
   background: radial-gradient(
     ellipse at center,
     transparent 52%,
-    rgba(72, 48, 28, 0.06) 74%,
-    rgba(72, 48, 28, 0.14) 100%
+    rgba(72, 48, 28, 0.03) 74%,
+    rgba(72, 48, 28, 0.07) 100%
   );
 }
 
@@ -286,7 +286,7 @@ button {
 }
 
 .history-map-canvas .maplibregl-canvas {
-  filter: sepia(0.14) saturate(0.86) brightness(1.02) contrast(0.96);
+  filter: none;
 }
 
 .history-map-canvas .maplibregl-ctrl-bottom-left,
@@ -377,7 +377,7 @@ button {
   background: rgba(255, 250, 244, 0.86);
   display: grid;
   place-items: center;
-  color: var(--capital);
+  color: #5C4A3E;
   font-family:
     Baskerville,
     "Times New Roman",
@@ -390,7 +390,7 @@ button {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--ink-faint);
+  color: rgba(92, 74, 62, 0.5);
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -633,8 +633,8 @@ button {
   width: 26px;
   height: 26px;
   border-radius: 999px;
-  background: rgba(255, 248, 236, 0.44);
-  box-shadow: 0 0 0 6px rgba(72, 48, 28, 0.08);
+  background: rgba(255, 248, 236, 0.26);
+  box-shadow: 0 0 0 6px rgba(72, 48, 28, 0.05);
   animation: markerPulse 2.8s ease-in-out infinite;
 }
 
@@ -643,7 +643,8 @@ button {
   height: 17px;
   border-radius: 999px;
   border: 3px solid rgba(255, 251, 243, 0.98);
-  box-shadow: 0 0 0 5px rgba(72, 48, 28, 0.16);
+  background: #C25953;
+  box-shadow: 0 0 0 5px rgba(72, 48, 28, 0.1);
 }
 
 .map-marker__sigil {
@@ -695,6 +696,14 @@ button {
   font-size: 0.74rem;
   font-style: normal;
   letter-spacing: 0.02em;
+}
+
+.map-marker__label small {
+  color: #5C4A3E;
+  font-size: 10px;
+  font-family: Georgia, "Songti SC", "STSong", serif;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
 }
 
 .atlas-map-caption p {
@@ -1253,7 +1262,7 @@ button {
 }
 
 .atlas-cinema__map .maplibregl-canvas {
-  filter: sepia(0.14) saturate(0.86) brightness(1.02) contrast(0.96);
+  filter: none;
 }
 
 /* 地图标题（悬浮左上） */
