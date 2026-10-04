@@ -119,7 +119,12 @@ export function HistoryAtlasApp({ entries, timeline }) {
 
       <div className="atlas-cinema">
         <div className="atlas-cinema__map">
-          <HistoryMapStage key={story.story_id} story={story} />
+          <HistoryMapStage
+            key={story.story_id}
+            story={story}
+            currentYear={selectedYear}
+            onSelectPlace={() => setDrawerOpen(true)}
+          />
           <div className="atlas-frame atlas-frame--top" />
           <div className="atlas-frame atlas-frame--right" />
           <div className="atlas-frame atlas-frame--bottom" />

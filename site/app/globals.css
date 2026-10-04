@@ -264,7 +264,25 @@ button {
   inset: 25px;
   border-radius: 18px;
   overflow: hidden;
-  background: #efe3cf;
+  background: #F4EBE1;
+}
+
+.history-map-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 52%,
+    rgba(72, 48, 28, 0.06) 74%,
+    rgba(72, 48, 28, 0.14) 100%
+  );
+}
+
+.history-map-canvas .maplibregl-marker {
+  z-index: 3;
 }
 
 .history-map-canvas .maplibregl-canvas {
@@ -586,6 +604,14 @@ button {
   align-items: center;
   gap: 12px;
   transform: translateY(-50%);
+  transition: transform 0.25s ease;
+  cursor: pointer;
+}
+
+.map-marker:hover,
+.map-marker:focus-visible {
+  transform: translateY(-50%) scale(1.08);
+  z-index: 5;
 }
 
 .map-marker__anchor {
@@ -656,6 +682,8 @@ button {
   background: rgba(255, 251, 245, 0.95);
   border: 1px solid rgba(72, 48, 28, 0.14);
   box-shadow: 0 12px 24px rgba(72, 48, 28, 0.1);
+  font-family: Georgia, "Songti SC", "STSong", serif;
+  color: #6B5B45;
 }
 
 .map-marker__label strong {

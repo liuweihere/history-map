@@ -61,6 +61,8 @@ Think of this repo as a knowledge compiler workspace.
 
 ### Step 1: 先补时间线占位
 
+录入前先检查时间线里是否已有该故事的 `planned` 占位行；有则复用这一行（录入完成后点亮它），没有才新增占位行，不要加出重复行。
+
 先在 [`wiki/synthesis/curriculum/小星星历史时间线.md`](./wiki/synthesis/curriculum/小星星历史时间线.md) 里加一行：
 
 - 把事件名写成孩子会记住的故事名
@@ -130,10 +132,14 @@ map-layer 页必须包含以下全部小节，缺一个 exporter 都会报错：
 
 原有内容小节：`地图目标`、`页首导语`、`地图标题`、`地图标题英文`、`焦点标签`、`年度标签`、`先看地图`、`阅读抓手`、`地图阅读步骤`、`记忆锚点`、`讲述脉络`、`地图注脚`、`图例`、`地图注记`、`显示元素`、`不显示`、`儿童提示语`
 
+其中`讲述脉络`的格式是硬要求：6-8 行，每行「四字标签｜一句话」，用全角`｜`分隔（exporter 用 `extractKeyValueItems` 解析，写成纯文本会失败），按孩子复述顺序排列（开头困境 → 高潮 → 收尾 → 成语点题）。
+
 数据小节（新增，AI agent 录入新故事时**必须生成地图与场景数据**，site 前端不存任何故事内容，地图全靠这里导出）：
 
 - `场景标记`：每个地图标记一行，格式 `place_id｜副标题｜marker kind`，kind 只能是 `capital`（主要落点）或 `uprising`（次要/起源点）。place_id 必须出现在 event 页的 `places` 列表里
 - `场景几何`：内嵌 ```json 代码块，存 GeoJSON FeatureCollection，features 带 `properties.kind`（`heartland` 大区域底色 / `disturbance` 扰动区 / `route` 路线）和英文 `title`，geometry 用 Polygon 或 LineString/MultiLineString
+
+尺度参考：`heartland` 覆盖势力主体区域（约 300-800 km 量级）；`disturbance` 聚焦故事发生的走廊/区域（约 100-300 km）；`route` 是起终点折线（3-6 个顶点，可微弯）。同一势力同期复用同一 `heartland`，保持系列地图视觉一致。
 
 示例（摘自前202 项羽乌江自刎地图计划）：
 
@@ -192,6 +198,11 @@ map_label: 洛阳
 
 原则是只补“故事真正会用到”的实体，不要为了完整而泛滥建页。
 
+如果人物/地点/势力页已经存在，必须同步维护，不要只新建不更新：
+
+- person 页：`events` 列表加上新 event id、`keywords` 补上故事关键词、正文事件列表补 `[[文件名]]` 链接
+- place 页：「历史事件」小节补上新事件的链接
+
 ### Step 6: 注册到导出器
 
 这是最容易漏的一步。
@@ -209,6 +220,10 @@ map_label: 洛阳
 - `requiredMapSourceIds`
 - `outputEventFile`
 - `outputStoryFile`
+
+`storyId` 编号须与 Target Example 的编号规则一致：取现有最大编号 +1。
+
+除了 `STORY_CONFIGS`，新用到的 person/faction/place id 还必须同步登记到脚本顶部的 `PERSON_FILE_BY_ID` / `FACTION_FILE_BY_ID` / `PLACE_FILE_BY_ID` 三张映射表，格式为 `id: "wiki/entities/...文件路径"`。三张表是硬编码的，漏登导出必失败（报错 `No file mapping configured`）。
 
 `周亚夫治军` 的注册项建议按现有格式新增一条，放在最后一个故事后面，编号递增（当前已用到 `story_004`，下一个是 `story_005`）：
 
@@ -258,6 +273,8 @@ npm run build
 - `story_id` 已经连到真实故事
 - `06_Exports/json/` 里出现新的 `event_*.json` 和 `story-*.json`
 - `../site/public/data/generated/` 里也有同步后的 JSON
+- 打开生成的 `story-*.json`，确认 `timeline.label`/`lesson` 与本故事的时间线行一致（同年有多个故事时尤其要查）
+- site 为单页应用，不存在独立故事详情路由，验证方式：`curl localhost:3000 | grep 故事名`
 - 网页上能读到新内容，而不是旧的静态文案
 
 ## Minimal Deliverables For One New Story

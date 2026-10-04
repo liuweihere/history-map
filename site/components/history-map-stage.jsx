@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-function createMarkerNode(kind, label, subtitle) {
+function createMarkerNode(kind, label, subtitle, onClick) {
   const wrapper = document.createElement("div");
   wrapper.className = `map-marker map-marker--${kind}`;
 
@@ -24,13 +24,30 @@ function createMarkerNode(kind, label, subtitle) {
 
   anchor.append(halo, dot, sigil);
   wrapper.append(anchor, labelBox);
+
+  if (typeof onClick === "function") {
+    wrapper.addEventListener("click", (event) => {
+      event.stopPropagation();
+      onClick();
+    });
+  }
+
   return wrapper;
 }
 
-export function HistoryMapStage({ story }) {
+function buildDynastyFilter(year) {
+  return [
+    "all",
+    ["<=", ["get", "start_year"], year],
+    [">=", ["get", "end_year"], year],
+  ];
+}
+
+export function HistoryMapStage({ story, currentYear, onSelectPlace }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const [dynastyLayersReady, setDynastyLayersReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -52,7 +69,7 @@ export function HistoryMapStage({ story }) {
               id: "parchment-base",
               type: "background",
               paint: {
-                "background-color": "#efe3cf",
+                "background-color": "#F4EBE1",
               },
             },
           ],
@@ -83,6 +100,10 @@ export function HistoryMapStage({ story }) {
           return response.json();
         });
 
+        const dynastiesPromise = fetch("/data/static/dynasties.geojson")
+          .then((response) => (response.ok ? response.json() : null))
+          .catch(() => null);
+
         const [west, south, east, north] = scene.bounds;
         map.fitBounds(
           [
@@ -95,8 +116,8 @@ export function HistoryMapStage({ story }) {
           },
         );
 
-        chinaBackdropPromise.then((chinaBackdrop) => {
-          if (!mapRef.current) return;
+        Promise.all([chinaBackdropPromise, dynastiesPromise]).then(([chinaBackdrop, dynasties]) => {
+          if (cancelled || !mapRef.current) return;
 
           map.addSource("story001-overlay", {
             type: "geojson",
@@ -112,8 +133,8 @@ export function HistoryMapStage({ story }) {
             source: "story001-overlay",
             filter: ["==", ["get", "id"], "china-backdrop"],
             paint: {
-              "fill-color": "#ead7af",
-              "fill-opacity": 0.14,
+              "fill-color": "#EDE0CB",
+              "fill-opacity": 0.9,
             },
           });
 
@@ -142,14 +163,44 @@ export function HistoryMapStage({ story }) {
             },
           });
 
+          if (dynasties && Array.isArray(dynasties.features) && dynasties.features.length > 0) {
+            map.addSource("dynasty-boundaries", {
+              type: "geojson",
+              data: dynasties,
+            });
+
+            map.addLayer({
+              id: "dynasties-fill",
+              type: "fill",
+              source: "dynasty-boundaries",
+              filter: buildDynastyFilter(currentYear),
+              paint: {
+                "fill-color": ["get", "color"],
+                "fill-opacity": 0.35,
+              },
+            });
+
+            map.addLayer({
+              id: "dynasties-line",
+              type: "line",
+              source: "dynasty-boundaries",
+              filter: buildDynastyFilter(currentYear),
+              paint: {
+                "line-color": ["get", "color"],
+                "line-width": 1.5,
+                "line-dasharray": [2, 1],
+              },
+            });
+          }
+
           map.addLayer({
             id: "han-heartland-fill",
             type: "fill",
             source: "story001-overlay",
             filter: ["==", ["get", "kind"], "heartland"],
             paint: {
-              "fill-color": "#ceb588",
-              "fill-opacity": 0.18,
+              "fill-color": ["coalesce", ["get", "color"], "#CEB588"],
+              "fill-opacity": 0.35,
             },
           });
 
@@ -159,9 +210,10 @@ export function HistoryMapStage({ story }) {
             source: "story001-overlay",
             filter: ["==", ["get", "kind"], "heartland"],
             paint: {
-              "line-color": "rgba(146, 116, 64, 0.64)",
+              "line-color": ["coalesce", ["get", "color"], "rgba(146, 116, 64, 0.8)"],
               "line-width": 1.6,
               "line-opacity": 0.78,
+              "line-dasharray": [2, 2],
             },
           });
 
@@ -171,8 +223,8 @@ export function HistoryMapStage({ story }) {
             source: "story001-overlay",
             filter: ["==", ["get", "kind"], "disturbance"],
             paint: {
-              "fill-color": "#a07533",
-              "fill-opacity": 0.16,
+              "fill-color": ["coalesce", ["get", "color"], "#A07533"],
+              "fill-opacity": 0.25,
             },
           });
 
@@ -182,7 +234,7 @@ export function HistoryMapStage({ story }) {
             source: "story001-overlay",
             filter: ["==", ["get", "kind"], "disturbance"],
             paint: {
-              "line-color": "rgba(160, 117, 51, 0.72)",
+              "line-color": ["coalesce", ["get", "color"], "rgba(160, 117, 51, 0.72)"],
               "line-width": 1.6,
               "line-opacity": 0.88,
             },
@@ -198,12 +250,14 @@ export function HistoryMapStage({ story }) {
               "line-join": "round",
             },
             paint: {
-              "line-color": "#597487",
+              "line-color": ["coalesce", ["get", "color"], "#8B5A2B"],
               "line-width": 2.3,
               "line-opacity": 0.62,
               "line-dasharray": [2.5, 1.8],
             },
           });
+
+          setDynastyLayersReady(true);
 
           const placeById = new Map(story.places.map((place) => [place.id, place]));
 
@@ -211,8 +265,19 @@ export function HistoryMapStage({ story }) {
             .map((marker) => {
               const place = placeById.get(marker.place_id);
               if (!place) return null;
+
+              const handleSelect = () => {
+                if (!mapRef.current) return;
+                mapRef.current.flyTo({
+                  center: [place.lng, place.lat],
+                  zoom: 6.5,
+                  duration: 1500,
+                });
+                onSelectPlace?.(place);
+              };
+
               return new maplibregl.Marker({
-                element: createMarkerNode(marker.kind, place.map_label, marker.subtitle),
+                element: createMarkerNode(marker.kind, place.map_label, marker.subtitle, handleSelect),
                 anchor: "left",
               })
                 .setLngLat([place.lng, place.lat])
@@ -233,8 +298,22 @@ export function HistoryMapStage({ story }) {
         mapRef.current.remove();
         mapRef.current = null;
       }
+      setDynastyLayersReady(false);
     };
   }, [story]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !dynastyLayersReady) return;
+
+    const filter = buildDynastyFilter(currentYear);
+    if (map.getLayer("dynasties-fill")) {
+      map.setFilter("dynasties-fill", filter);
+    }
+    if (map.getLayer("dynasties-line")) {
+      map.setFilter("dynasties-line", filter);
+    }
+  }, [currentYear, dynastyLayersReady]);
 
   return <div className="history-map-canvas" ref={mapNodeRef} />;
 }
