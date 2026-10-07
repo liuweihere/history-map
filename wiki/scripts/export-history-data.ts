@@ -31,6 +31,17 @@ const PERSON_FILE_BY_ID: Record<string, string> = {
   person_zhang_zhong_jing: "wiki/entities/people/张仲景.md",
   person_cao_cao: "wiki/entities/people/曹操.md",
   person_liu_bei: "wiki/entities/people/刘备.md",
+  person_cao_zhi: "wiki/entities/people/曹植.md",
+  person_wang_rong: "wiki/entities/people/王戎.md",
+  person_ji_shao: "wiki/entities/people/嵇绍.md",
+  person_guan_ning: "wiki/entities/people/管宁.md",
+  person_hua_xin: "wiki/entities/people/华歆.md",
+  person_xie_daoyun: "wiki/entities/people/谢道韫.md",
+  person_wang_xizhi: "wiki/entities/people/王羲之.md",
+  person_gu_kai_zhi: "wiki/entities/people/顾恺之.md",
+  person_zu_ti: "wiki/entities/people/祖逖.md",
+  person_wang_huizhi: "wiki/entities/people/王徽之.md",
+  person_yang_xiu: "wiki/entities/people/杨修.md",
 };
 
 const FACTION_FILE_BY_ID: Record<string, string> = {
@@ -48,6 +59,15 @@ const PLACE_FILE_BY_ID: Record<string, string> = {
   place_changsha: "wiki/entities/places/长沙.md",
   place_xuchang: "wiki/entities/places/许都.md",
   place_wancheng: "wiki/entities/places/宛城.md",
+  place_yecheng: "wiki/entities/places/邺城.md",
+  place_luoyang: "wiki/entities/places/洛阳.md",
+  place_beihai: "wiki/entities/places/北海.md",
+  place_jiankang: "wiki/entities/places/建康.md",
+  place_jingkou: "wiki/entities/places/京口.md",
+  place_shanyin: "wiki/entities/places/山阴.md",
+  place_shanxian: "wiki/entities/places/剡县.md",
+  place_lanting: "wiki/entities/places/兰亭.md",
+  place_shangyu: "wiki/entities/places/上虞.md",
 };
 
 const STORY_CONFIGS: StoryCompileConfig[] = [
@@ -159,6 +179,182 @@ const STORY_CONFIGS: StoryCompileConfig[] = [
     ],
     outputEventFile: "event_wang_mei_zhi_ke_199_ce.json",
     outputStoryFile: "story-005-wang-mei-zhi-ke.json",
+  },
+  {
+    storyId: "story_006_cao_zhi_qi_bu_cheng_shi",
+    eventFile: "wiki/entities/events/220-曹植七步成诗.md",
+    childStoryFile: "wiki/synthesis/child-stories/220-曹植七步成诗-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/220-曹植七步成诗-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/220-曹植七步成诗-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/220-曹植七步成诗-史料提要.md",
+      "wiki/sources/220-曹植七步成诗-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_cao_zhi_qi_bu_cheng_shi_historical_digest",
+    ],
+    outputEventFile: "event_cao_zhi_qi_bu_cheng_shi_220_ce.json",
+    outputStoryFile: "story-006-cao-zhi-qi-bu-cheng-shi.json",
+  },
+  {
+    storyId: "story_007_wang_rong_dao_bian_ku_li",
+    eventFile: "wiki/entities/events/245-王戎道边苦李.md",
+    childStoryFile: "wiki/synthesis/child-stories/245-王戎道边苦李-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/245-王戎道边苦李-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/245-王戎道边苦李-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/245-王戎道边苦李-史料提要.md",
+      "wiki/sources/245-王戎道边苦李-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_wang_rong_dao_bian_ku_li_historical_digest",
+    ],
+    outputEventFile: "event_wang_rong_dao_bian_ku_li_245_ce.json",
+    outputStoryFile: "story-007-wang-rong-dao-bian-ku-li.json",
+  },
+  {
+    storyId: "story_008_ji_shao_he_li_ji_qun",
+    eventFile: "wiki/entities/events/280-嵇绍鹤立鸡群.md",
+    childStoryFile: "wiki/synthesis/child-stories/280-嵇绍鹤立鸡群-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/280-嵇绍鹤立鸡群-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/280-嵇绍鹤立鸡群-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/280-嵇绍鹤立鸡群-史料提要.md",
+      "wiki/sources/280-嵇绍鹤立鸡群-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_ji_shao_he_li_ji_qun_historical_digest",
+    ],
+    outputEventFile: "event_ji_shao_he_li_ji_qun_280_ce.json",
+    outputStoryFile: "story-008-ji-shao-he-li-ji-qun.json",
+  },
+  {
+    storyId: "story_009_guan_ning_ge_xi",
+    eventFile: "wiki/entities/events/190-管宁割席.md",
+    childStoryFile: "wiki/synthesis/child-stories/190-管宁割席-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/190-管宁割席-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/190-管宁割席-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/190-管宁割席-史料提要.md",
+      "wiki/sources/190-管宁割席-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_guan_ning_ge_xi_historical_digest",
+    ],
+    outputEventFile: "event_guan_ning_ge_xi_190_ce.json",
+    outputStoryFile: "story-009-guan-ning-ge-xi.json",
+  },
+  {
+    storyId: "story_010_xie_daoyun_yong_xue",
+    eventFile: "wiki/entities/events/375-谢道韫咏雪.md",
+    childStoryFile: "wiki/synthesis/child-stories/375-谢道韫咏雪-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/375-谢道韫咏雪-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/375-谢道韫咏雪-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/375-谢道韫咏雪-史料提要.md",
+      "wiki/sources/375-谢道韫咏雪-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_xie_daoyun_yong_xue_historical_digest",
+    ],
+    outputEventFile: "event_xie_daoyun_yong_xue_375_ce.json",
+    outputStoryFile: "story-010-xie-daoyun-yong-xue.json",
+  },
+  {
+    storyId: "story_011_wang_xizhi_tan_fu_dong_chuang",
+    eventFile: "wiki/entities/events/330-王羲之坦腹东床.md",
+    childStoryFile: "wiki/synthesis/child-stories/330-王羲之坦腹东床-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/330-王羲之坦腹东床-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/330-王羲之坦腹东床-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/330-王羲之坦腹东床-史料提要.md",
+      "wiki/sources/330-王羲之坦腹东床-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_wang_xizhi_tan_fu_dong_chuang_historical_digest",
+    ],
+    outputEventFile: "event_wang_xizhi_tan_fu_dong_chuang_330_ce.json",
+    outputStoryFile: "story-011-wang-xizhi-tan-fu-dong-chuang.json",
+  },
+  {
+    storyId: "story_012_gu_kai_zhi_jian_zhi_jia_jing",
+    eventFile: "wiki/entities/events/380-顾恺之渐至佳境.md",
+    childStoryFile: "wiki/synthesis/child-stories/380-顾恺之渐至佳境-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/380-顾恺之渐至佳境-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/380-顾恺之渐至佳境-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/380-顾恺之渐至佳境-史料提要.md",
+      "wiki/sources/380-顾恺之渐至佳境-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_gu_kai_zhi_jian_zhi_jia_jing_historical_digest",
+    ],
+    outputEventFile: "event_gu_kai_zhi_jian_zhi_jia_jing_380_ce.json",
+    outputStoryFile: "story-012-gu-kai-zhi-jian-zhi-jia-jing.json",
+  },
+  {
+    storyId: "story_013_zu_ti_wen_ji_qi_wu",
+    eventFile: "wiki/entities/events/313-祖逖闻鸡起舞.md",
+    childStoryFile: "wiki/synthesis/child-stories/313-祖逖闻鸡起舞-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/313-祖逖闻鸡起舞-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/313-祖逖闻鸡起舞-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/313-祖逖闻鸡起舞-史料提要.md",
+      "wiki/sources/313-祖逖闻鸡起舞-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_zu_ti_wen_ji_qi_wu_historical_digest",
+    ],
+    outputEventFile: "event_zu_ti_wen_ji_qi_wu_313_ce.json",
+    outputStoryFile: "story-013-zu-ti-wen-ji-qi-wu.json",
+  },
+  {
+    storyId: "story_014_wang_huizhi_xue_ye_fang_dai",
+    eventFile: "wiki/entities/events/360-王徽之雪夜访戴.md",
+    childStoryFile: "wiki/synthesis/child-stories/360-王徽之雪夜访戴-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/360-王徽之雪夜访戴-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/360-王徽之雪夜访戴-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/360-王徽之雪夜访戴-史料提要.md",
+      "wiki/sources/360-王徽之雪夜访戴-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_wang_huizhi_xue_ye_fang_dai_historical_digest",
+    ],
+    outputEventFile: "event_wang_huizhi_xue_ye_fang_dai_360_ce.json",
+    outputStoryFile: "story-014-wang-huizhi-xue-ye-fang-dai.json",
+  },
+  {
+    storyId: "story_015_yang_xiu_jue_miao_hao_ci",
+    eventFile: "wiki/entities/events/199-杨修绝妙好辞.md",
+    childStoryFile: "wiki/synthesis/child-stories/199-杨修绝妙好辞-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/199-杨修绝妙好辞-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/199-杨修绝妙好辞-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/199-杨修绝妙好辞-史料提要.md",
+      "wiki/sources/199-杨修绝妙好辞-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_yang_xiu_jue_miao_hao_ci_historical_digest",
+    ],
+    outputEventFile: "event_yang_xiu_jue_miao_hao_ci_199_ce.json",
+    outputStoryFile: "story-015-yang-xiu-jue-miao-hao-ci.json",
+  },
+  {
+    storyId: "story_016_wang_xizhi_lan_ting_ya_ji",
+    eventFile: "wiki/entities/events/353-王羲之兰亭雅集.md",
+    childStoryFile: "wiki/synthesis/child-stories/353-王羲之兰亭雅集-age7.md",
+    parentNoteFile: "wiki/synthesis/parent-notes/353-王羲之兰亭雅集-家长说明.md",
+    mapLayerFile: "wiki/entities/map-layers/353-王羲之兰亭雅集-地图计划.md",
+    sourcePageFiles: [
+      "wiki/sources/353-王羲之兰亭雅集-史料提要.md",
+      "wiki/sources/353-王羲之兰亭雅集-小星星讲述.md",
+    ],
+    requiredMapSourceIds: [
+      "source_wang_xizhi_lan_ting_ya_ji_historical_digest",
+    ],
+    outputEventFile: "event_wang_xizhi_lan_ting_ya_ji_353_ce.json",
+    outputStoryFile: "story-016-wang-xizhi-lan-ting-ya-ji.json",
   },
 ];
 
@@ -387,6 +583,9 @@ const storyBundleSchema = z.object({
     map_headline_en: z.string().min(1),
     meta_label: z.string().min(1),
     caption: z.string().min(1),
+    // 按需叠加的历史政权边界（public/data/historical/<id>.geojson）。
+    // null = 纯净 8 大区底座（传记类故事）；有值 = 战争/割据故事淡入政权色块。
+    overlay_boundary: z.enum(["chuhan", "sanguo"]).nullable().optional(),
     bounds: z.array(z.number()).length(4),
     annotations: z.array(
       z.object({
@@ -433,6 +632,7 @@ const timelineRailSchema = z.object({
       lesson: z.string().min(1),
       story_id: z.string().nullable(),
       story_status: z.enum(["recorded", "planned"]),
+      region_id: z.string().nullable().default(null),
     }),
   ).min(1),
 });
@@ -1100,6 +1300,9 @@ async function compileStory(
       map_headline_en: sceneHeadlineEn,
       meta_label: sceneMetaLabel,
       caption: sceneCaption,
+      // 政权叠加声明：wiki 地图计划「政权叠加」区块填写 chuhan/sanguo；
+      // 未填写 → null（纯净 8 大区底座）
+      overlay_boundary: extractSingleValue(mapLayerPage.sections.get("政权叠加") ?? "").trim() || null,
       bounds: sceneBounds,
       annotations: sceneAnnotations,
       legend: sceneLegend,
@@ -1153,6 +1356,8 @@ async function exportTimelineRail(
 
     const storyId = row["story_id"]?.trim() || null;
     const storyStatusRaw = row["故事状态"]?.trim() || (storyId ? "recorded" : "planned");
+    // region_id 为可选列：表格暂不加列时字段缺省 null，站点种子表兜底（plan.md）
+    const regionId = row["region_id"]?.trim() || null;
 
     return {
       year,
@@ -1162,6 +1367,7 @@ async function exportTimelineRail(
       lesson: stripWikiMarkup(row["孩子要理解"]?.trim() || row["结果"]?.trim() || "理解这个历史节点的位置"),
       story_id: storyId,
       story_status: storyStatusRaw,
+      region_id: regionId,
     };
   });
 

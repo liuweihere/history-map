@@ -148,6 +148,7 @@
     "map_headline_en": "The retreat narrows and the Chu-Han struggle nears its end",
     "meta_label": "楚汉终局",
     "caption": "先看楚汉争夺区域，再看垓下到乌江的退路线。地图不是复盘每一支军队，而是帮助孩子理解“项羽走向结局，汉朝快要到来”的历史状态。",
+    "overlay_boundary": "chuhan",
     "bounds": [
       78,
       15.5,
@@ -213,116 +214,6 @@
     "geojson": {
       "type": "FeatureCollection",
       "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-heartland",
-            "kind": "heartland",
-            "title": "Chu Han Contest Zone"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  107.4,
-                  36.2
-                ],
-                [
-                  111.2,
-                  37.4
-                ],
-                [
-                  116.3,
-                  37.2
-                ],
-                [
-                  120.3,
-                  35.4
-                ],
-                [
-                  121.7,
-                  32.8
-                ],
-                [
-                  120.2,
-                  30.3
-                ],
-                [
-                  116.4,
-                  29.2
-                ],
-                [
-                  111.1,
-                  29.8
-                ],
-                [
-                  107.8,
-                  31.7
-                ],
-                [
-                  106.6,
-                  34.1
-                ],
-                [
-                  107.4,
-                  36.2
-                ]
-              ]
-            ]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-disturbance",
-            "kind": "disturbance",
-            "title": "Retreat Pressure"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  115.1,
-                  33.7
-                ],
-                [
-                  117.5,
-                  33.8
-                ],
-                [
-                  119.2,
-                  33.2
-                ],
-                [
-                  119.7,
-                  32
-                ],
-                [
-                  119,
-                  31.1
-                ],
-                [
-                  117.4,
-                  30.9
-                ],
-                [
-                  115.8,
-                  31.4
-                ],
-                [
-                  114.9,
-                  32.5
-                ],
-                [
-                  115.1,
-                  33.7
-                ]
-              ]
-            ]
-          }
-        },
         {
           "type": "Feature",
           "properties": {

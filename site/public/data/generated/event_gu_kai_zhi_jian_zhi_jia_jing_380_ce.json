@@ -1,0 +1,47 @@
+{
+  "id": "event_gu_kai_zhi_jian_zhi_jia_jing_380_ce",
+  "title": "顾恺之渐至佳境",
+  "year": 380,
+  "period": "东晋",
+  "era": "魏晋篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_gu_kai_zhi_jian_zhi_jia_jing_historical_digest",
+    "source_gu_kai_zhi_jian_zhi_jia_jing_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_gu_kai_zhi_jian_zhi_jia_jing_child_retelling",
+      "source_gu_kai_zhi_jian_zhi_jia_jing_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/380-顾恺之渐至佳境-史料提要.md",
+      "kids-narration/380-顾恺之渐至佳境-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_gu_kai_zhi"
+  ],
+  "factions": [],
+  "places": [
+    "place_jiankang"
+  ],
+  "result": "顾恺之答：\"渐至佳境。\"；\"渐入佳境\"成为乐观长期主义的经典成语",
+  "importance": "这是一堂最好的\"心态课\"：同样一根甘蔗，从甜头吃起的人，越吃越淡；从淡处吃起的人，越吃越甜。人生很多事都是这样——练琴、练球、学一门本事，开始总是最难的，坚持着坚持着，就会\"渐至佳境\"。把苦放前面，甜就在后面等着你。",
+  "child_summary": "今天讲的，是一个\"吃甘蔗的大学问\"的故事。 很久以前，有位特别有名的大画家，叫顾恺之。他画画的本事天下第一，有趣的是——他吃甘蔗也跟别人不一样！ 甘蔗你吃过吧？一节一节的，有的地方甜，有的地方不太甜。一般人吃甘蔗，都先咬最甜的那头，先甜个够！ 可是顾恺之呢？偏偏先吃不甜的那头！ 朋友看见了，很奇怪：\"哎呀，你怎么倒着吃呀？先吃不甜的，多亏呀！\" 顾恺之笑眯眯地说：\"你不懂——我这样吃，越吃越甜，一口比一口甜！这叫'渐入佳境'，好日子在后面呢！\" 朋友一听，哈哈大笑：原来吃甘蔗还藏着这样的道理呀！ 小朋友，你想一想：要是先吃最甜的，后面就一口比一口不甜，越吃越没劲；先吃不甜的呢，越吃越甜，越来越开心！ 学本领也是一样哦：刚开始练字、练球的时候，最难、最累——那就像甘蔗不甜的那头。可是一天一天坚持下去，你就会越练越好，像甘蔗一样，一口比一口甜！",
+  "questions": [
+    "你愿意先吃甜的那头还是不甜的那头？为什么？",
+    "有没有一件事，你从一开始的\"不甜\"坚持到了后来的\"甜\"？",
+    "下次觉得练习很苦的时候，可以对自己说哪句话？（渐入佳境，甜在后面！）"
+  ],
+  "map_plan_id": "map_plan_380_ce_gu_kai_zhi_jia_jing",
+  "child_story_id": "story_gu_kai_zhi_jian_zhi_jia_jing_age7",
+  "parent_note_id": "note_gu_kai_zhi_jian_zhi_jia_jing_380"
+}

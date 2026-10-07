@@ -130,6 +130,7 @@
     "map_headline_en": "The Journey of the Sage of Medicine",
     "meta_label": "仁心仁术",
     "caption": "示意图：张仲景生平细节史料有限，长沙坐堂行医为后世传说，地图仅示意其人生轨迹的地理背景。",
+    "overlay_boundary": null,
     "bounds": [
       78,
       15.5,
@@ -137,18 +138,6 @@
       44.5
     ],
     "annotations": [
-      {
-        "kind": "region",
-        "label": "医圣故乡 · 南阳",
-        "left": "55%",
-        "top": "46%"
-      },
-      {
-        "kind": "region",
-        "label": "坐堂行医 · 长沙（相传）",
-        "left": "60%",
-        "top": "64%"
-      },
       {
         "kind": "disturbance",
         "label": "乱世瘟疫的年代",
@@ -164,10 +153,6 @@
       {
         "key": "practice",
         "label": "行医 · 长沙"
-      },
-      {
-        "key": "backdrop",
-        "label": "东汉末年"
       }
     ],
     "markers": [
@@ -185,116 +170,6 @@
     "geojson": {
       "type": "FeatureCollection",
       "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-heartland",
-            "kind": "heartland",
-            "title": "Eastern Han Realm"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  103.8,
-                  34.6
-                ],
-                [
-                  106.2,
-                  38.4
-                ],
-                [
-                  110.8,
-                  40.6
-                ],
-                [
-                  116.4,
-                  40.9
-                ],
-                [
-                  121.6,
-                  39.4
-                ],
-                [
-                  122.4,
-                  36.8
-                ],
-                [
-                  121.2,
-                  31.6
-                ],
-                [
-                  118.6,
-                  26.4
-                ],
-                [
-                  112.4,
-                  24.2
-                ],
-                [
-                  108.2,
-                  21.6
-                ],
-                [
-                  104.6,
-                  23.2
-                ],
-                [
-                  102.6,
-                  27.4
-                ],
-                [
-                  101.8,
-                  31.6
-                ],
-                [
-                  103.8,
-                  34.6
-                ]
-              ]
-            ]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-disturbance",
-            "kind": "disturbance",
-            "title": "Plague Stricken Central Plains"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  108.6,
-                  30.4
-                ],
-                [
-                  115.2,
-                  31.2
-                ],
-                [
-                  117.8,
-                  34.6
-                ],
-                [
-                  114.2,
-                  37.8
-                ],
-                [
-                  109.2,
-                  36.4
-                ],
-                [
-                  108.6,
-                  30.4
-                ]
-              ]
-            ]
-          }
-        },
         {
           "type": "Feature",
           "properties": {

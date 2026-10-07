@@ -1,0 +1,196 @@
+{
+  "story_id": "story_012_gu_kai_zhi_jian_zhi_jia_jing",
+  "review_status": "draft",
+  "timeline": {
+    "year": 380,
+    "label": "顾恺之渐至佳境",
+    "lesson": "把苦放前面，甜就在后面等着你"
+  },
+  "event": {
+    "id": "event_gu_kai_zhi_jian_zhi_jia_jing_380_ce",
+    "title": "顾恺之渐至佳境",
+    "type": "daily",
+    "year": 380,
+    "result": "顾恺之答：\"渐至佳境。\"；\"渐入佳境\"成为乐观长期主义的经典成语",
+    "importance": "这是一堂最好的\"心态课\"：同样一根甘蔗，从甜头吃起的人，越吃越淡；从淡处吃起的人，越吃越甜。人生很多事都是这样——练琴、练球、学一门本事，开始总是最难的，坚持着坚持着，就会\"渐至佳境\"。把苦放前面，甜就在后面等着你。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_gu_kai_zhi_jian_zhi_jia_jing_child_retelling",
+      "source_gu_kai_zhi_jian_zhi_jia_jing_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/380-顾恺之渐至佳境-史料提要.md",
+      "kids-narration/380-顾恺之渐至佳境-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_gu_kai_zhi",
+      "name": "顾恺之",
+      "role": "画家"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_jiankang",
+      "name": "建康",
+      "certainty": "high",
+      "lat": 32.06,
+      "lng": 118.8,
+      "map_label": "建康"
+    }
+  ],
+  "child_story": {
+    "id": "story_gu_kai_zhi_jian_zhi_jia_jing_age7",
+    "title": "顾恺之渐至佳境：倒着吃甘蔗的大学问"
+  },
+  "panel": {
+    "child_spotlight": "先找建康，最会画画也最会\"吃甘蔗\"的人就住在这里。",
+    "year_tags": [
+      "东晋太元年间",
+      "渐至佳境"
+    ],
+    "map_focus": [
+      "找到建康（今南京），东晋都城",
+      "看\"甘蔗节节\"递进线，想象一口比一口甜",
+      "聊一聊：学本领哪里是\"不甜的那头\"？"
+    ],
+    "reading_keys": [
+      {
+        "label": "倒吃甘蔗",
+        "value": "别人先吃甜头，他偏从不甜吃起"
+      },
+      {
+        "label": "一句妙答",
+        "value": "越吃越甜，渐至佳境"
+      },
+      {
+        "label": "人生道理",
+        "value": "把苦放前面，甜在后面等"
+      }
+    ],
+    "memory_anchors": [
+      "渐至佳境",
+      "先食尾",
+      "越吃越甜"
+    ],
+    "parent_prompt": [
+      "你愿意先吃甜的那头还是不甜的那头？为什么？",
+      "有没有一件事从\"不甜\"坚持到了\"甜\"？",
+      "练习觉得苦的时候，对自己说哪句话？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "大画家日常",
+      "value": "顾恺之画技天下第一，趣事多"
+    },
+    {
+      "label": "甘蔗新吃法",
+      "value": "从不甜的梢头吃起"
+    },
+    {
+      "label": "朋友疑问",
+      "value": "先吃苦的，多亏呀"
+    },
+    {
+      "label": "妙答",
+      "value": "我这样越吃越甜，渐至佳境"
+    },
+    {
+      "label": "道理",
+      "value": "练习先苦后甜，甜在后面"
+    }
+  ],
+  "scene": {
+    "deck": "一根甘蔗两种吃法：先甜后淡，或先淡后甜。地图带你找到这位\"倒吃甘蔗\"的大画家生活的城市：建康。",
+    "map_headline": "渐至佳境 越吃越甜",
+    "map_headline_en": "Sweeter With Every Bite",
+    "meta_label": "乐观长期主义",
+    "caption": "示意图：故事锚定于建康（顾恺之主要活动地）。典故出自《世说新语·排调》。",
+    "overlay_boundary": null,
+    "bounds": [
+      106,
+      24,
+      126,
+      36
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "建康 · 画家日常",
+        "left": "62%",
+        "top": "38%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "甘蔗哲学",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "建康 · 渐至佳境之地"
+      },
+      {
+        "key": "route",
+        "label": "甘蔗一节节（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_jiankang",
+        "subtitle": "渐至佳境之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Sweeter Step By Step"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                118.76,
+                32.04
+              ],
+              [
+                118.79,
+                32.05
+              ],
+              [
+                118.82,
+                32.06
+              ],
+              [
+                118.85,
+                32.07
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_380_ce_gu_kai_zhi_jia_jing",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

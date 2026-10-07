@@ -1,0 +1,47 @@
+{
+  "id": "event_wang_xizhi_tan_fu_dong_chuang_330_ce",
+  "title": "王羲之坦腹东床",
+  "year": 330,
+  "period": "东晋",
+  "era": "魏晋篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_wang_xizhi_tan_fu_dong_chuang_historical_digest",
+    "source_wang_xizhi_tan_fu_dong_chuang_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_wang_xizhi_tan_fu_dong_chuang_child_retelling",
+      "source_wang_xizhi_tan_fu_dong_chuang_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/330-王羲之坦腹东床-史料提要.md",
+      "kids-narration/330-王羲之坦腹东床-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_wang_xizhi"
+  ],
+  "factions": [],
+  "places": [
+    "place_jiankang"
+  ],
+  "result": "唯王羲之坦腹卧于东床、啃胡饼如故；郗鉴闻之曰：\"正此佳婿邪！\"遂以女妻之；\"东床坦腹\"成为女婿的代称",
+  "importance": "所有人都想\"演\"出最好的样子，王羲之却懒得演。真实自然的松弛感，反而成了最打动人的地方——因为那背后是底气：我不需要靠装来赢得认可。告诉孩子：大大方方做自己的人，自带光芒；紧张装出来的完美，反而容易露馅。",
+  "child_summary": "今天讲的，是一个\"躺着啃饼被选中\"的故事。 很久以前，有个大官叫郗鉴，他想在王家给女儿挑一个女婿。于是他派了一个人去王家看看：这些年轻人里，谁最出色呀？ 消息传开，王家的年轻人全都紧张起来啦！有的赶紧换上最漂亮的衣服，有的把头发梳得整整齐齐，有的端端正正坐好，努力装出很有学问的样子——都想给来人留个好印象。 可是有一个人，特别奇怪。 他躺在东边的一张床上，露着圆滚滚的肚皮，手里还拿着一块饼，啊呜啊呜地啃着，好像根本不知道有这回事！ 回去以后，那个人汇报说：\"王家的年轻人都不错，个个都挺精神。只有一个，躺在东床上露着肚子吃饼，一点不在乎的样子。\" 你猜郗鉴怎么说？他一拍桌子：\"好！就选这个吃饼的！\" 大家都惊呆了——为什么呀？ 郗鉴笑着说：\"这么大的事，别人都慌慌张张装样子，只有他一点都不慌——说明这孩子心里有底气，是块真材料！\" 这个啃饼的年轻人，就是后来天下第一大书法家——王羲之！ 小朋友，你看：装出来的样子容易露馅，大大方方做自己的样子，反而最招人喜欢！",
+  "questions": [
+    "要是你知道明天有人来\"挑选\"，你会紧张吗？会想装样子吗？",
+    "为什么\"真实的自己\"反而最打动人？",
+    "王羲之的底气从哪里来？（平时的积累和本事）"
+  ],
+  "map_plan_id": "map_plan_330_ce_wang_xizhi_tan_fu",
+  "child_story_id": "story_wang_xizhi_tan_fu_dong_chuang_age7",
+  "parent_note_id": "note_wang_xizhi_tan_fu_dong_chuang_330"
+}

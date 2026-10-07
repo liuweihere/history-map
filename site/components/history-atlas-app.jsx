@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { HistoryMapStage } from "./history-map-stage";
 import { TimeScrubber } from "./time-scrubber";
 import { StoryMindMap } from "./story-mind-map";
+import {
+  regionIdForStory,
+  milestoneRegionId,
+} from "../lib/history-regions";
 
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
@@ -16,6 +20,7 @@ function buildMilestones(entries, rail, currentYear) {
 
   return rail.map((milestone) => {
     const storyEntry = milestone.story_id ? entryByStoryId.get(milestone.story_id) : null;
+    const regionId = milestoneRegionId(milestone);
     return {
       ...milestone,
       status:
@@ -23,9 +28,12 @@ function buildMilestones(entries, rail, currentYear) {
           ? "active"
           : storyEntry
             ? "available"
-            : "upcoming",
+            : regionId
+              ? "preview"
+              : "upcoming",
       interactive: Boolean(storyEntry),
       storyYear: storyEntry?.story.timeline.year ?? null,
+      regionId,
     };
   });
 }
@@ -41,6 +49,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const [drawerTab, setDrawerTab] = useState("mindmap");
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(false);
+  const [focusRegion, setFocusRegion] = useState(null);
 
   const currentEntry =
     chronicleEntries.find((entry) => entry.story.timeline.year === selectedYear) ?? chronicleEntries[0];
@@ -64,23 +73,29 @@ export function HistoryAtlasApp({ entries, timeline }) {
     deck: event.child_summary,
     map_headline: story.timeline.label,
     map_headline_en: "Story Map",
-    meta_label: story.panel.year_tags?.[0] ?? event.period,
+    meta_label: story.panel?.year_tags?.[0] ?? event.period,
     annotations: [],
     legend: [],
-    caption: story.panel.child_spotlight,
+    caption: story.panel?.child_spotlight,
   };
   const panel = story.panel;
   const promptDeck = panel.parent_prompt?.length ? panel.parent_prompt : event.questions;
   const currentPrompt = promptDeck[selectedQuestion] ?? promptDeck[0];
   const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], story.timeline.year);
 
-  const dockedMilestone = milestones.find((m) => m.year === selectedYear) ?? null;
+  // 同年多节点时优先命中 interactive 的故事节点（如 220 三国鼎立/曹植七步成诗）
+  const dockedMilestone =
+    milestones.find((m) => m.year === selectedYear && m.interactive) ??
+    milestones.find((m) => m.year === selectedYear) ??
+    null;
   const skeletonMode = !milestoneInteractive(dockedMilestone);
 
   const dockToMilestone = (milestone) => {
     if (milestoneInteractive(milestone)) {
       setSelectedYear(milestone.storyYear);
       setDrawerOpen(true);
+      // 切换故事时重置大区聚焦（plan.md）
+      setFocusRegion(null);
     }
   };
 
@@ -122,8 +137,9 @@ export function HistoryAtlasApp({ entries, timeline }) {
           <HistoryMapStage
             key={story.story_id}
             story={story}
-            currentYear={selectedYear}
             onSelectPlace={() => setDrawerOpen(true)}
+            focusRegion={focusRegion}
+            onRegionClick={() => {}}
           />
           <div className="atlas-frame atlas-frame--top" />
           <div className="atlas-frame atlas-frame--right" />
@@ -303,20 +319,33 @@ export function HistoryAtlasApp({ entries, timeline }) {
 
         {railOpen ? (
           <div className="timeline-rail">
-            {milestones.map((milestone, index) => (
-              <button
-                key={`${milestone.year}-${milestone.label}`}
-                className={`timeline-stop timeline-stop--${milestone.status}`}
-                disabled={!milestone.interactive}
-                onClick={() => milestone.interactive && milestone.storyYear !== null && setSelectedYear(milestone.storyYear)}
-                type="button"
-              >
-                <span className="timeline-stop__year">{formatYear(milestone.year)}</span>
-                <span className="timeline-stop__label">{milestone.label}</span>
-                <span className="timeline-stop__note">{milestone.note}</span>
-                {index < milestones.length - 1 ? <i className="timeline-stop__bar" /> : null}
-              </button>
-            ))}
+            {milestones.map((milestone, index) => {
+              const previewable = !milestone.interactive && Boolean(milestone.regionId);
+              return (
+                <button
+                  key={`${milestone.year}-${milestone.label}`}
+                  className={`timeline-stop timeline-stop--${milestone.status}`}
+                  disabled={!milestone.interactive && !previewable}
+                  onClick={() => {
+                    if (milestone.interactive) {
+                      if (milestone.storyYear !== null) setSelectedYear(milestone.storyYear);
+                    } else if (previewable) {
+                      // planned 里程碑：仅 flyTo + 高亮大区，不改选中故事（plan.md）
+                      setFocusRegion({ id: milestone.regionId, nonce: Date.now() });
+                    }
+                  }}
+                  type="button"
+                >
+                  <span className="timeline-stop__year">{formatYear(milestone.year)}</span>
+                  <span className="timeline-stop__label">{milestone.label}</span>
+                  <span className="timeline-stop__note">
+                    {milestone.note}
+                    {previewable ? " · 可先看大区" : ""}
+                  </span>
+                  {index < milestones.length - 1 ? <i className="timeline-stop__bar" /> : null}
+                </button>
+              );
+            })}
           </div>
         ) : null}
       </section>

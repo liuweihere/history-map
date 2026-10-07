@@ -1,0 +1,192 @@
+{
+  "story_id": "story_010_xie_daoyun_yong_xue",
+  "review_status": "draft",
+  "timeline": {
+    "year": 375,
+    "label": "谢道韫咏雪",
+    "lesson": "好的比喻能让平常的东西一下子变活"
+  },
+  "event": {
+    "id": "event_xie_daoyun_yong_xue_375_ce",
+    "title": "谢道韫咏雪",
+    "type": "daily",
+    "year": 375,
+    "result": "侄子答\"撒盐空中差可拟\"，谢道韫答\"未若柳絮因风起\"；谢安大笑乐，\"咏絮之才\"成为才女代称",
+    "importance": "同样一场雪，\"撒盐\"和\"柳絮\"都是白色的小东西，为什么柳絮赢了？盐粒重，落得快，是死的；柳絮轻，随风舞，是活的。好的比喻让平常的东西一下子\"活\"起来——这是文学之美，也是想象力的胜利。\"咏絮之才\"从此专指聪慧的女子。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_xie_daoyun_yong_xue_child_retelling",
+      "source_xie_daoyun_yong_xue_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/375-谢道韫咏雪-史料提要.md",
+      "kids-narration/375-谢道韫咏雪-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_xie_daoyun",
+      "name": "谢道韫",
+      "role": "才女"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_jiankang",
+      "name": "建康",
+      "certainty": "high",
+      "lat": 32.06,
+      "lng": 118.8,
+      "map_label": "建康"
+    }
+  ],
+  "child_story": {
+    "id": "story_xie_daoyun_yong_xue_age7",
+    "title": "谢道韫咏雪：一场雪，比出一个大才女"
+  },
+  "panel": {
+    "child_spotlight": "先找建康，东晋的都城，谢家的孩子们在雪天比赛作诗。",
+    "year_tags": [
+      "东晋太元年间",
+      "咏絮之才"
+    ],
+    "map_focus": [
+      "找到建康（今南京），东晋都城",
+      "想象大雪落在秦淮河两岸的样子",
+      "想一想：你会把雪花比作什么？"
+    ],
+    "reading_keys": [
+      {
+        "label": "雪天雅集",
+        "value": "谢安把孩子们聚在一起"
+      },
+      {
+        "label": "一问一答",
+        "value": "大雪像什么？撒盐？柳絮？"
+      },
+      {
+        "label": "柳絮胜出",
+        "value": "轻盈飞舞，把雪花写活了"
+      }
+    ],
+    "memory_anchors": [
+      "白雪纷纷何所似",
+      "未若柳絮因风起",
+      "咏絮之才"
+    ],
+    "parent_prompt": [
+      "要是谢安问你\"大雪像什么\"，你会说什么？",
+      "盐和柳絮都是白色小东西，为什么一个\"死\"一个\"活\"？",
+      "除了雪，还能给什么打比喻（云、星星、落叶）？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "大雪天",
+      "value": "谢安把子侄辈聚到一起讲诗"
+    },
+    {
+      "label": "出题",
+      "value": "纷纷白雪，像什么呀？"
+    },
+    {
+      "label": "撒盐",
+      "value": "哥哥抢答：像空中撒盐"
+    },
+    {
+      "label": "柳絮",
+      "value": "谢道韫轻语：不如柳絮乘风起"
+    },
+    {
+      "label": "大笑乐",
+      "value": "好比喻让雪花活起来了"
+    }
+  ],
+  "scene": {
+    "deck": "同样一场雪，撒盐和柳絮，哪个比方好？地图带你找到这场家庭诗会的举办地：建康的谢家。",
+    "map_headline": "咏雪之才 柳絮因风",
+    "map_headline_en": "Willow Catkins on the Wind",
+    "meta_label": "想象力之美",
+    "caption": "示意图：故事锚定于建康（东晋都城，今南京）。典故出自《世说新语·言语》。",
+    "overlay_boundary": null,
+    "bounds": [
+      106,
+      24,
+      126,
+      36
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "建康 · 谢家诗会",
+        "left": "62%",
+        "top": "42%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "柳絮飞雪",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "建康 · 咏雪之地"
+      },
+      {
+        "key": "route",
+        "label": "雪中诗会（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_jiankang",
+        "subtitle": "咏雪之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Snow Over Jiankang"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                118.78,
+                32.06
+              ],
+              [
+                118.8,
+                32.05
+              ],
+              [
+                118.82,
+                32.04
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_375_ce_xie_daoyun_yong_xue",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

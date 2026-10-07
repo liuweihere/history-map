@@ -135,6 +135,7 @@
     "map_headline_en": "The White Horse's Thousand-Mile Journey",
     "meta_label": "文化交流",
     "caption": "示意图：求法路线为文化传播示意，\"金人之梦\"\"白马驮经\"细节带传说色彩，正史主干为遣使求法、僧经东来。",
+    "overlay_boundary": null,
     "bounds": [
       78,
       15.5,
@@ -190,116 +191,6 @@
     "geojson": {
       "type": "FeatureCollection",
       "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-heartland",
-            "kind": "heartland",
-            "title": "Eastern Han Realm"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  103.8,
-                  34.6
-                ],
-                [
-                  106.2,
-                  38.4
-                ],
-                [
-                  110.8,
-                  40.6
-                ],
-                [
-                  116.4,
-                  40.9
-                ],
-                [
-                  121.6,
-                  39.4
-                ],
-                [
-                  122.4,
-                  36.8
-                ],
-                [
-                  121.2,
-                  31.6
-                ],
-                [
-                  118.6,
-                  26.4
-                ],
-                [
-                  112.4,
-                  24.2
-                ],
-                [
-                  108.2,
-                  21.6
-                ],
-                [
-                  104.6,
-                  23.2
-                ],
-                [
-                  102.6,
-                  27.4
-                ],
-                [
-                  101.8,
-                  31.6
-                ],
-                [
-                  103.8,
-                  34.6
-                ]
-              ]
-            ]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-disturbance",
-            "kind": "disturbance",
-            "title": "Western Regions Corridor"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  90.2,
-                  34.4
-                ],
-                [
-                  100.6,
-                  36.8
-                ],
-                [
-                  104.2,
-                  33.4
-                ],
-                [
-                  97.4,
-                  30.8
-                ],
-                [
-                  90.8,
-                  31.2
-                ],
-                [
-                  90.2,
-                  34.4
-                ]
-              ]
-            ]
-          }
-        },
         {
           "type": "Feature",
           "properties": {

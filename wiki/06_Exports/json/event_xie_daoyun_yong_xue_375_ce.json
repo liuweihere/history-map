@@ -1,0 +1,47 @@
+{
+  "id": "event_xie_daoyun_yong_xue_375_ce",
+  "title": "谢道韫咏雪",
+  "year": 375,
+  "period": "东晋",
+  "era": "魏晋篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_xie_daoyun_yong_xue_historical_digest",
+    "source_xie_daoyun_yong_xue_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_xie_daoyun_yong_xue_child_retelling",
+      "source_xie_daoyun_yong_xue_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/375-谢道韫咏雪-史料提要.md",
+      "kids-narration/375-谢道韫咏雪-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_xie_daoyun"
+  ],
+  "factions": [],
+  "places": [
+    "place_jiankang"
+  ],
+  "result": "侄子答\"撒盐空中差可拟\"，谢道韫答\"未若柳絮因风起\"；谢安大笑乐，\"咏絮之才\"成为才女代称",
+  "importance": "同样一场雪，\"撒盐\"和\"柳絮\"都是白色的小东西，为什么柳絮赢了？盐粒重，落得快，是死的；柳絮轻，随风舞，是活的。好的比喻让平常的东西一下子\"活\"起来——这是文学之美，也是想象力的胜利。\"咏絮之才\"从此专指聪慧的女子。",
+  "child_summary": "今天讲的，是一个\"用一句话赢了全家\"的聪明女孩的故事。 很久以前，有个大家庭，姓谢。有一天下大雪啦——雪花一朵一朵从天上飘下来，把院子铺得白白的。 家里的大家长谢安爷爷，把孩子们都叫到一起，笑着问：\"你们说说，这纷纷扬扬的大雪，像什么呀？\" 一个男孩子抢着说：\"像把盐撒在空中！\"——嗯……盐也是白白的、一粒一粒的。 这时候，一个女孩轻轻说话了：\"不如说，像柳絮乘着风飞起来。\" 哇！谢安爷爷一听，哈哈大笑，特别高兴！ 为什么呢？你想想看：盐撒出去，\"哗\"地一下就直直落地了，多没意思呀。可是柳絮呢？轻轻的、软软的，风一吹就打者转儿、飘呀飘，满天飞舞——雪花生机勃勃的样子，一下子就出来啦！ 这个女孩叫谢道韫。后来，人们就用\"咏絮之才\"来夸特别会写诗、特别聪明的女孩子。 小朋友，下次下雪的时候，你也想一想：雪花还像什么呀？你的比喻，说不定比柳絮还棒呢！",
+  "questions": [
+    "要是谢安爷爷问你\"大雪像什么\"，你会说什么？",
+    "盐和柳絮都是白的小东西，为什么一个比喻\"死\"一个比喻\"活\"？",
+    "除了雪，生活中还有什么东西可以打好玩的比喻（云、星星、落叶）？"
+  ],
+  "map_plan_id": "map_plan_375_ce_xie_daoyun_yong_xue",
+  "child_story_id": "story_xie_daoyun_yong_xue_age7",
+  "parent_note_id": "note_xie_daoyun_yong_xue_375"
+}

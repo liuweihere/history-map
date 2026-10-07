@@ -1,0 +1,46 @@
+{
+  "id": "event_cao_zhi_qi_bu_cheng_shi_220_ce",
+  "title": "曹植七步成诗",
+  "year": 220,
+  "period": "三国",
+  "era": "三国篇",
+  "type": "court",
+  "review_status": "draft",
+  "source_refs": [
+    "source_cao_zhi_qi_bu_cheng_shi_historical_digest",
+    "source_cao_zhi_qi_bu_cheng_shi_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_cao_zhi_qi_bu_cheng_shi_child_retelling",
+      "source_cao_zhi_qi_bu_cheng_shi_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/220-曹植七步成诗-史料提要.md",
+      "kids-narration/220-曹植七步成诗-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_cao_zhi"
+  ],
+  "factions": [],
+  "places": [
+    "place_yecheng"
+  ],
+  "result": "曹植七步之内作出《七步诗》，\"本是同根生，相煎何太急\"流传千古；兄弟相争的故事成为\"骨肉相残\"的警世典故",
+  "importance": "亲兄弟之间，因为权力和嫉妒，也会互相为难。曹植用一首诗保住了性命，也用豆子的比喻告诉哥哥：我们是一根藤上的瓜，何必互相煎熬？这首诗让孩子理解：才华是护身的力量，而\"本是同根生\"是对亲情最痛的提醒。",
+  "child_summary": "今天讲的，是一个\"用一首诗救了自己\"的故事。 很久以前，有个特别会写诗的王子，叫曹植。他聪明极了，写的诗人人都夸。可是他的哥哥曹丕当了皇帝以后，心里有点讨厌这个弟弟——\"你这么有才华，会不会想抢我的皇位呀？\" 有一天，哥哥把曹植叫来，板着脸说：\"都说你有本事，那现在就考考你：走七步路的时间里，作出一首诗来！作不出来，就要受罚！\" 七步？那么短的时间！周围的人都替曹植捏了一把汗。 曹植心里又难过又委屈。他看见院子里有一口大锅，正咕嘟咕嘟煮着豆子，锅下面烧的，是豆子的秸秆。他眼睛一热，一边走，一边念了出来： \"煮豆燃豆萁，豆在釜中泣。本是同根生，相煎何太急？\" 意思是说：煮豆子的时候，烧的是豆秸——它们本来是同一根上长出来的亲兄弟呀，为什么要这样互相煎熬呢？ 哥哥一听，脸红了。他想起了自己和曹植，也是同一个爸爸生的亲兄弟啊……他没再为难曹植。 就这样，一首诗救了一条命。这首《七步诗》，也一直传到了今天。",
+  "questions": [
+    "曹植为什么能在七步之内作出诗来？（平时积累的才华，关键时刻能救命）",
+    "豆子和豆秸\"本是同根生\"，曹植在提醒哥哥什么？",
+    "如果家里兄弟姐妹之间闹别扭，这首诗给我们什么启发？"
+  ],
+  "map_plan_id": "map_plan_220_ce_cao_zhi_qi_bu",
+  "child_story_id": "story_cao_zhi_qi_bu_cheng_shi_age7",
+  "parent_note_id": "note_cao_zhi_qi_bu_cheng_shi_220"
+}

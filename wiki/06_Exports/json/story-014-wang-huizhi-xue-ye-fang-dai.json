@@ -1,0 +1,224 @@
+{
+  "story_id": "story_014_wang_huizhi_xue_ye_fang_dai",
+  "review_status": "draft",
+  "timeline": {
+    "year": 360,
+    "label": "王徽之雪夜访戴",
+    "lesson": "做一件事，开心在路上，不一定非要到达终点"
+  },
+  "event": {
+    "id": "event_wang_huizhi_xue_ye_fang_dai_360_ce",
+    "title": "王徽之雪夜访戴",
+    "type": "daily",
+    "year": 360,
+    "result": "连夜乘小船沿剡溪行一宿至戴家门口；却不入门，命船返回：\"乘兴而行，兴尽而返，何必见戴？\"；成为魏晋风度\"重过程体验\"的经典意象",
+    "importance": "做事情，我们总盯着\"结果\"——非要到达、非要完成。王徽之告诉我们另一件事：路上的快乐本身就是目的。一整夜的雪、月亮、小船、心里想着朋友——那份想念和兴味已经圆满了，见不见到反而不要紧。这是中国文人最潇洒的\"留白\"。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_wang_huizhi_xue_ye_fang_dai_child_retelling",
+      "source_wang_huizhi_xue_ye_fang_dai_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/360-王徽之雪夜访戴-史料提要.md",
+      "kids-narration/360-王徽之雪夜访戴-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_wang_huizhi",
+      "name": "王徽之",
+      "role": "名士"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_shanxian",
+      "name": "剡县",
+      "certainty": "high",
+      "lat": 29.59,
+      "lng": 120.82,
+      "map_label": "剡县"
+    },
+    {
+      "id": "place_shanyin",
+      "name": "山阴",
+      "certainty": "high",
+      "lat": 30,
+      "lng": 120.58,
+      "map_label": "山阴"
+    }
+  ],
+  "child_story": {
+    "id": "story_wang_huizhi_xue_ye_fang_dai_age7",
+    "title": "王徽之雪夜访戴：到了门口不进去"
+  },
+  "panel": {
+    "child_spotlight": "先找山阴（今绍兴），王徽之的船从这里出发，月亮跟着船走。",
+    "year_tags": [
+      "东晋升平年间",
+      "乘兴而行"
+    ],
+    "map_focus": [
+      "找到山阴（今绍兴），再往南找剡县（今嵊州）",
+      "沿水路路线想象雪夜的月亮和小船",
+      "聊一聊：路上的快乐和到达的快乐，哪个更重要？"
+    ],
+    "reading_keys": [
+      {
+        "label": "夜雪初霁",
+        "value": "半夜醒来，天地白茫茫亮堂堂"
+      },
+      {
+        "label": "忽然想你",
+        "value": "想戴逵了，现在就去！"
+      },
+      {
+        "label": "一夜水路",
+        "value": "小船摇啊摇，走了一整夜"
+      },
+      {
+        "label": "到门不入",
+        "value": "兴致已尽，回家吧——何必见戴"
+      }
+    ],
+    "memory_anchors": [
+      "乘兴而行",
+      "兴尽而返",
+      "何必见戴"
+    ],
+    "parent_prompt": [
+      "划了一整夜却不进门，王徽之傻还是潇洒？",
+      "你有没有\"路上的快乐比目的地还好玩\"的经历？",
+      "想念朋友时，你会用哪种方式表达？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "雪夜醒来",
+      "value": "推窗见月色雪景，美如画"
+    },
+    {
+      "label": "忽然想念",
+      "value": "好友戴逵在剡县，现在就去"
+    },
+    {
+      "label": "连夜行船",
+      "value": "小船在剡溪上摇了一整夜"
+    },
+    {
+      "label": "到门不前",
+      "value": "天亮到门口，却不进去了"
+    },
+    {
+      "label": "潇洒一语",
+      "value": "乘兴而行，兴尽而返"
+    }
+  ],
+  "scene": {
+    "deck": "一整夜的雪、月亮和小船，到了门口却不进去。地图带你走一遍这条最有中国画意境的水路。",
+    "map_headline": "雪夜访戴 兴尽而返",
+    "map_headline_en": "A Snowy Night Voyage",
+    "meta_label": "过程的快乐",
+    "caption": "示意图：山阴（今浙江绍兴）至剡县（今浙江嵊州）沿剡溪水路为传统说法的示意走向。典故出自《世说新语·任诞》。",
+    "overlay_boundary": null,
+    "bounds": [
+      118.5,
+      28,
+      122.5,
+      31.5
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "会稽山阴 · 出发",
+        "left": "44%",
+        "top": "34%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "剡溪雪夜水路",
+        "right": "56px",
+        "top": "180px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "山阴 · 雪夜出发"
+      },
+      {
+        "key": "uprising",
+        "label": "剡县 · 到门不入"
+      },
+      {
+        "key": "route",
+        "label": "雪夜水路（山阴→剡县）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_shanyin",
+        "subtitle": "雪夜出发",
+        "kind": "capital"
+      },
+      {
+        "place_id": "place_shanxian",
+        "subtitle": "到门不入",
+        "kind": "uprising"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Snowy Night On Shan Creek"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                120.58,
+                30
+              ],
+              [
+                120.63,
+                29.9
+              ],
+              [
+                120.68,
+                29.82
+              ],
+              [
+                120.74,
+                29.72
+              ],
+              [
+                120.78,
+                29.65
+              ],
+              [
+                120.82,
+                29.59
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_360_ce_wang_huizhi_xue_ye",
+    "display_type": "waterway_journey",
+    "certainty": "low"
+  }
+}

@@ -137,6 +137,7 @@
     "map_headline_en": "Heroes Over Warm Wine",
     "meta_label": "暗中较量",
     "caption": "示意图：故事发生在许都（今河南许昌）。正史《三国志》记\"失匕箸\"细节，青梅煮酒场景为《三国演义》增饰。",
+    "overlay_boundary": null,
     "bounds": [
       78,
       15.5,
@@ -181,100 +182,6 @@
     "geojson": {
       "type": "FeatureCollection",
       "features": [
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-heartland",
-            "kind": "heartland",
-            "title": "Cao Cao Controlled Zone"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  104.6,
-                  33.8
-                ],
-                [
-                  108.4,
-                  37.6
-                ],
-                [
-                  113.6,
-                  39.4
-                ],
-                [
-                  118.8,
-                  38.6
-                ],
-                [
-                  121.4,
-                  35.2
-                ],
-                [
-                  119.6,
-                  32.4
-                ],
-                [
-                  115.8,
-                  31.2
-                ],
-                [
-                  111.2,
-                  31.4
-                ],
-                [
-                  106.8,
-                  32.2
-                ],
-                [
-                  104.6,
-                  33.8
-                ]
-              ]
-            ]
-          }
-        },
-        {
-          "type": "Feature",
-          "properties": {
-            "id": "story-disturbance",
-            "kind": "disturbance",
-            "title": "Xudu Power Center"
-          },
-          "geometry": {
-            "type": "Polygon",
-            "coordinates": [
-              [
-                [
-                  112.6,
-                  33.2
-                ],
-                [
-                  115.6,
-                  33.8
-                ],
-                [
-                  116.2,
-                  35.4
-                ],
-                [
-                  113.4,
-                  36.2
-                ],
-                [
-                  111.8,
-                  34.8
-                ],
-                [
-                  112.6,
-                  33.2
-                ]
-              ]
-            ]
-          }
-        },
         {
           "type": "Feature",
           "properties": {

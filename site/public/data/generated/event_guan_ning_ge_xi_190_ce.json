@@ -1,0 +1,48 @@
+{
+  "id": "event_guan_ning_ge_xi_190_ce",
+  "title": "管宁割席",
+  "year": 190,
+  "period": "东汉末",
+  "era": "三国篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_guan_ning_ge_xi_historical_digest",
+    "source_guan_ning_ge_xi_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_guan_ning_ge_xi_child_retelling",
+      "source_guan_ning_ge_xi_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/190-管宁割席-史料提要.md",
+      "kids-narration/190-管宁割席-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "三国志",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_guan_ning",
+    "person_hua_xin"
+  ],
+  "factions": [],
+  "places": [
+    "place_beihai"
+  ],
+  "result": "管宁割席分坐：\"子非吾友也\"；\"管宁割席\"成为选择朋友、保持专注的经典典故",
+  "importance": "管宁割席不是\"绝交\"那么简单——他是用一把刀告诉朋友：读书时要有一颗安静的心。这个故事给孩子的礼物有两层：一是专注（学习时不受热闹的干扰），二是择友（和真正在乎学习的人做朋友）。可以和孩子聊聊：华歆后来其实也成了很有本事的大臣，管宁割席割的是\"读书的态度\"，不是否定这个人。",
+  "child_summary": "今天讲的，是一个\"把席子割成两半\"的故事。 很久以前，有两个少年在一起读书，一个叫管宁，一个叫华歆。他们坐在同一张席子上——那时候的人不坐椅子，就坐在铺在地上的席子上看书。 两个人正读着书，门外忽然传来\"铛铛铛\"的锣声——哇，是一位大官的马车经过，车装饰得可漂亮啦！ 管宁呢？头都没抬，眼睛还在书上，继续读。 华歆呢？\"噌\"地一下站起来，跑出去看热闹啦！看了好半天才回来。 管宁看了看他，拿起一把刀，\"嘶啦\"一声，把席子从中间割成了两半！ 他说：\"你读书的时候心里想着热闹，我的朋友应该和他不一样。从现在起，你坐你那半边，我坐我这半边。\" 后来，人们就用\"割席\"来表示：好朋友之间，发现对方做事的态度和自己不一样，就分开各自走各自的路。 小朋友，你写作业的时候，听到外面有好玩的动静，会不会也想跑出去看呀？管宁教给我们一个小本领：学习的时候，心里安安静静，热闹来了也不动心——这可是很厉害的功夫哦！",
+  "questions": [
+    "你写作业或练球的时候，旁边有好看好玩的，你能像管宁一样不动心吗？",
+    "管宁割席是不是不喜欢华歆了？（是不同意他\"读书分心\"的做法，不是讨厌这个人）",
+    "什么样的朋友能帮你变得更专心？"
+  ],
+  "map_plan_id": "map_plan_190_ce_guan_ning_ge_xi",
+  "child_story_id": "story_guan_ning_ge_xi_age7",
+  "parent_note_id": "note_guan_ning_ge_xi_190"
+}

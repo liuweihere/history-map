@@ -264,7 +264,17 @@ button {
   inset: 25px;
   border-radius: 18px;
   overflow: hidden;
-  background: #E8F3F7;
+  background: #F6F3EB;
+}
+
+/* 底图色由 style.load 的 setPaintProperty 接管（浅蓝海洋/米白陆地），
+   canvas 只留轻微柔化，避免 sepia 干扰马卡龙水彩 */
+.history-map-canvas .maplibregl-canvas {
+  filter: contrast(0.97) brightness(1.01);
+}
+
+.history-map-canvas.map--basemap-off .maplibregl-canvas {
+  filter: none;
 }
 
 .history-map-canvas::after {
@@ -283,10 +293,6 @@ button {
 
 .history-map-canvas .maplibregl-marker {
   z-index: 3;
-}
-
-.history-map-canvas .maplibregl-canvas {
-  filter: none;
 }
 
 .history-map-canvas .maplibregl-ctrl-bottom-left,
@@ -1090,6 +1096,113 @@ button {
   background: linear-gradient(90deg, rgba(145, 83, 61, 0.34), rgba(72, 48, 28, 0.14));
 }
 
+/* planned 里程碑 · preview 态：可点击看大区（虚线圆圈样式，plan.md） */
+.timeline-stop--preview {
+  opacity: 0.82;
+}
+
+.timeline-stop--preview .timeline-stop__year {
+  border-style: dashed;
+  border-color: rgba(122, 104, 85, 0.42);
+  background: rgba(250, 246, 238, 0.82);
+}
+
+.timeline-stop--preview:hover .timeline-stop__year {
+  transform: translateY(-1px);
+  background: rgba(247, 240, 226, 0.96);
+  box-shadow: 0 10px 24px rgba(72, 48, 28, 0.1);
+}
+
+.timeline-stop--preview .timeline-stop__note {
+  color: rgba(122, 104, 85, 0.9);
+}
+
+/* 常驻历史地理大区名（纯文字标签，无卡片框：透明背景、无描边卡纸、无阴影） */
+.region-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 0;
+  background: transparent !important;
+  border: none;
+  box-shadow: none !important;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  font-family:
+    "Iowan Old Style",
+    "Palatino Linotype",
+    "Book Antiqua",
+    Palatino,
+    serif;
+  transition: transform 140ms ease;
+}
+
+.region-label:hover {
+  transform: translateY(-1px);
+}
+
+.region-label__name {
+  /* 2026-10-07 视觉全面对齐：深灰棕 #3D352E + 白色半透明 halo，
+     直接印在马卡龙水彩块上方，无任何卡片背景 */
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  color: #3d352e;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 4px rgba(255, 255, 255, 0.85),
+    0 0 6px rgba(255, 255, 255, 0.7);
+}
+
+.region-label__subtitle {
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(61, 53, 46, 0.72);
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 4px rgba(255, 255, 255, 0.8);
+}
+
+/* 政权标签（魏/蜀/吴/汉/西楚）：叠加层主角，字更大更重 */
+.faction-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  text-align: center;
+  font-family:
+    "Iowan Old Style",
+    "Palatino Linotype",
+    "Book Antiqua",
+    Palatino,
+    serif;
+}
+
+.faction-label__name {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  color: #4a3b28;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 5px rgba(255, 255, 255, 0.9),
+    0 0 8px rgba(255, 255, 255, 0.75);
+}
+
+.faction-label__capital {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(74, 59, 40, 0.78);
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.95),
+    0 0 4px rgba(255, 255, 255, 0.85);
+}
+
 .prompt-card {
   background:
     linear-gradient(180deg, rgba(255, 252, 246, 0.92), rgba(244, 233, 214, 0.86)),
@@ -1262,7 +1375,7 @@ button {
 }
 
 .atlas-cinema__map .maplibregl-canvas {
-  filter: none;
+  filter: contrast(0.97) brightness(1.01);
 }
 
 /* 地图标题（悬浮左上） */

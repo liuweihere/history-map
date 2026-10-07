@@ -1,0 +1,46 @@
+{
+  "id": "event_wang_rong_dao_bian_ku_li_245_ce",
+  "title": "王戎道边苦李",
+  "year": 245,
+  "period": "三国至西晋",
+  "era": "三国篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_wang_rong_dao_bian_ku_li_historical_digest",
+    "source_wang_rong_dao_bian_ku_li_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_wang_rong_dao_bian_ku_li_child_retelling",
+      "source_wang_rong_dao_bian_ku_li_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/245-王戎道边苦李-史料提要.md",
+      "kids-narration/245-王戎道边苦李-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_wang_rong"
+  ],
+  "factions": [],
+  "places": [
+    "place_luoyang"
+  ],
+  "result": "王戎推理\"道边李必苦\"，众人一尝果然；\"道边苦李\"成为逻辑推理的经典启蒙故事",
+  "importance": "这是一个给孩子最好的逻辑启蒙故事：不用尝，靠\"想\"就能知道答案。王戎的推理链条是——大路边人来人往 + 李子还挂满枝头 = 甜李早被摘光 = 留下的必是苦李。观察现象、找出原因、推出结论，这就是逻辑的力量。",
+  "child_summary": "今天讲的，是一个\"不用尝就知道李子是苦的\"的聪明小孩的故事。 有个小朋友叫王戎，才七岁，聪明得不得了。有一天，他和小伙伴们出门玩，走着走着，看见路边有一棵李子树——哇，树上结满了李子，红彤彤、圆滚滚，把树枝都压弯了！ 小朋友们呼啦一下全跑过去摘，你抢我抢，可开心了。 只有王戎，站在原地一动不动。 有人问他：\"王戎，你怎么不来摘呀？这么多李子，晚了就没了！\" 王戎说：\"你们想想看：这棵树长在大马路边，来来往往那么多人。要是李子是甜的，早就被人摘光啦！现在树上还挂得满满的——说明什么？说明这李子呀，一定是苦的！没人爱摘！\" 小朋友们不信，摘下来一咬——\"呸呸呸！\"苦得舌头都麻了！ 果然被王戎说中了。 你看，王戎一颗李子都没吃，就靠\"动脑筋想一想\"，知道了答案。这就是会推理的小朋友——观察一件事情，想一想为什么，就能猜出别人不知道的秘密！",
+  "questions": [
+    "要是不尝一口，怎么知道李子是甜是苦？王戎是怎么\"想\"出来的？",
+    "生活中还有什么事情，可以靠观察和推理猜答案？",
+    "要是那棵李树长在没人去的深山里，果子还会是苦的吗？"
+  ],
+  "map_plan_id": "map_plan_245_ce_wang_rong_ku_li",
+  "child_story_id": "story_wang_rong_dao_bian_ku_li_age7",
+  "parent_note_id": "note_wang_rong_dao_bian_ku_li_245"
+}

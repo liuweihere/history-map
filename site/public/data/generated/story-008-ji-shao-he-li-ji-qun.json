@@ -1,0 +1,192 @@
+{
+  "story_id": "story_008_ji_shao_he_li_ji_qun",
+  "review_status": "draft",
+  "timeline": {
+    "year": 280,
+    "label": "嵇绍鹤立鸡群",
+    "lesson": "真正的气质是从心里长出来的自信"
+  },
+  "event": {
+    "id": "event_ji_shao_he_li_ji_qun_280_ce",
+    "title": "嵇绍鹤立鸡群",
+    "type": "court",
+    "year": 280,
+    "result": "有人赞叹\"昂昂然如野鹤之在鸡群\"；\"鹤立鸡群\"成为形容气质出众的成语",
+    "importance": "一个人的气质，是内心的样子长在了身体上。嵇绍的挺拔不只是个子高——他的父亲嵇康就是以风骨著称的名士，家风给了他从容自信的底气。\"鹤立鸡群\"告诉孩子：真正让人一眼记住的，不是衣服和打扮，而是从心里长出来的自信和精神气。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_ji_shao_he_li_ji_qun_child_retelling",
+      "source_ji_shao_he_li_ji_qun_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/280-嵇绍鹤立鸡群-史料提要.md",
+      "kids-narration/280-嵇绍鹤立鸡群-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_ji_shao",
+      "name": "嵇绍",
+      "role": "名士"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_luoyang",
+      "name": "洛阳",
+      "certainty": "high",
+      "lat": 34.66,
+      "lng": 112.45,
+      "map_label": "洛阳"
+    }
+  ],
+  "child_story": {
+    "id": "story_ji_shao_he_li_ji_qun_age7",
+    "title": "嵇绍鹤立鸡群：像仙鹤一样的年轻人"
+  },
+  "panel": {
+    "child_spotlight": "先找洛阳，西晋的都城，嵇绍就是在这里被人们一眼认出的。",
+    "year_tags": [
+      "西晋太康年间",
+      "鹤立鸡群"
+    ],
+    "map_focus": [
+      "找到洛阳，西晋的首都",
+      "看入城小路线，想象嵇绍走进人群的样子",
+      "想一想：让人一眼记住的，是什么？"
+    ],
+    "reading_keys": [
+      {
+        "label": "名士之子",
+        "value": "嵇绍是嵇康的儿子，家风传承"
+      },
+      {
+        "label": "挺拔入城",
+        "value": "个子高、背挺直、眼睛亮"
+      },
+      {
+        "label": "一眼认出",
+        "value": "像仙鹤站在小鸡中间"
+      }
+    ],
+    "memory_anchors": [
+      "昂昂然",
+      "如野鹤之在鸡群",
+      "气质出众"
+    ],
+    "parent_prompt": [
+      "仙鹤和小鸡的差别在哪里？让人一眼记住的到底是什么？",
+      "为什么说嵇绍的挺拔是\"从心里长出来的\"？",
+      "试试挺胸抬头走一段路，心情和呼吸有什么变化？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "名门之后",
+      "value": "父亲嵇康是有骨气的大名士"
+    },
+    {
+      "label": "来到洛阳",
+      "value": "嵇绍年轻挺拔，走进都城人群"
+    },
+    {
+      "label": "所有人看他",
+      "value": "大家忍不住扭头：这人好精神！"
+    },
+    {
+      "label": "仙鹤比喻",
+      "value": "像仙鹤站在小鸡中间"
+    },
+    {
+      "label": "从心生长",
+      "value": "气质是内心的正气长在身上"
+    }
+  ],
+  "scene": {
+    "deck": "一个人走进人群，所有人都忍不住看他。地图带你找到这座城：西晋的都城洛阳。",
+    "map_headline": "鹤立鸡群 气质出众",
+    "map_headline_en": "A Crane Among Chickens",
+    "meta_label": "气质与自信",
+    "caption": "示意图：故事锚定于洛阳（西晋都城），人群场景为想象性示意。典故出自《世说新语·容止》与《晋书·嵇绍传》。",
+    "overlay_boundary": null,
+    "bounds": [
+      102,
+      28,
+      126,
+      42
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "西晋都城 · 洛阳",
+        "left": "56%",
+        "top": "40%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "仙鹤入城",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "洛阳 · 鹤立鸡群之地"
+      },
+      {
+        "key": "route",
+        "label": "嵇绍入城（示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_luoyang",
+        "subtitle": "鹤立鸡群之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Entering Luoyang"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                112.43,
+                34.64
+              ],
+              [
+                112.45,
+                34.65
+              ],
+              [
+                112.47,
+                34.66
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_280_ce_ji_shao_he_li",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "story_id": "story_006_cao_zhi_qi_bu_cheng_shi",
+  "review_status": "draft",
+  "timeline": {
+    "year": 220,
+    "label": "曹植七步成诗",
+    "lesson": "亲兄弟之间，才华护身，相煎何急"
+  },
+  "event": {
+    "id": "event_cao_zhi_qi_bu_cheng_shi_220_ce",
+    "title": "曹植七步成诗",
+    "type": "court",
+    "year": 220,
+    "result": "曹植七步之内作出《七步诗》，\"本是同根生，相煎何太急\"流传千古；兄弟相争的故事成为\"骨肉相残\"的警世典故",
+    "importance": "亲兄弟之间，因为权力和嫉妒，也会互相为难。曹植用一首诗保住了性命，也用豆子的比喻告诉哥哥：我们是一根藤上的瓜，何必互相煎熬？这首诗让孩子理解：才华是护身的力量，而\"本是同根生\"是对亲情最痛的提醒。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_cao_zhi_qi_bu_cheng_shi_child_retelling",
+      "source_cao_zhi_qi_bu_cheng_shi_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/220-曹植七步成诗-史料提要.md",
+      "kids-narration/220-曹植七步成诗-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_cao_zhi",
+      "name": "曹植",
+      "role": "文学家"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_yecheng",
+      "name": "邺城",
+      "certainty": "medium",
+      "lat": 36.34,
+      "lng": 114.62,
+      "map_label": "邺城"
+    }
+  ],
+  "child_story": {
+    "id": "story_cao_zhi_qi_bu_cheng_shi_age7",
+    "title": "曹植七步成诗：走七步路，救一条命"
+  },
+  "panel": {
+    "child_spotlight": "先找邺城，故事就发生在魏国的这座宫城里。",
+    "year_tags": [
+      "黄初元年",
+      "七步成诗"
+    ],
+    "map_focus": [
+      "打开魏国色块，找到北方的邺城（今河北临漳）",
+      "看邺城旁的\"七步\"小路线，感受七步有多短",
+      "想一想：为什么一首诗能救曹植的命？"
+    ],
+    "reading_keys": [
+      {
+        "label": "兄弟相争",
+        "value": "哥哥当了皇帝，却忌惮弟弟的才华"
+      },
+      {
+        "label": "七步为限",
+        "value": "走完七步，必须作出一首诗"
+      },
+      {
+        "label": "煮豆燃萁",
+        "value": "同根生的豆子和豆秸，何必相煎"
+      }
+    ],
+    "memory_anchors": [
+      "本是同根生",
+      "相煎何太急",
+      "七步成诗"
+    ],
+    "parent_prompt": [
+      "七步之内作出一首诗有多难？曹植平时下了什么功夫？",
+      "豆子和豆秸\"本是同根生\"，曹植想提醒哥哥什么？",
+      "兄弟姐妹或好朋友闹别扭时，这首诗给我们什么启发？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "父亲去世",
+      "value": "曹操离世，哥哥曹丕继位称帝"
+    },
+    {
+      "label": "心存忌惮",
+      "value": "哥哥怕弟弟的才华威胁自己"
+    },
+    {
+      "label": "七步为限",
+      "value": "限七步成诗，作不出就罚"
+    },
+    {
+      "label": "锅中煮豆",
+      "value": "曹植看见煮豆的锅，触发灵感"
+    },
+    {
+      "label": "一诗救命",
+      "value": "本是同根生，相煎何太急"
+    },
+    {
+      "label": "哥哥羞愧",
+      "value": "亲兄弟，何必互相为难"
+    }
+  ],
+  "scene": {
+    "deck": "走七步路的工夫，一首诗救了一条命。地图带你找到这场宫廷\"考试\"的发生地：邺城。",
+    "map_headline": "七步成诗 骨肉相争",
+    "map_headline_en": "Seven Steps to Save a Life",
+    "meta_label": "才华护身",
+    "caption": "示意图：邺城按曹魏邺城故址标注（今河北临漳县）。七步诗典故出自《世说新语·文学》，正史不载，属传说性质。",
+    "overlay_boundary": "sanguo",
+    "bounds": [
+      100,
+      28,
+      126,
+      44
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "魏国腹地 · 邺城",
+        "left": "62%",
+        "top": "30%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "兄弟相争",
+        "right": "60px",
+        "top": "170px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "邺城 · 七步成诗之地"
+      },
+      {
+        "key": "wei",
+        "label": "魏国（曹丕称帝）"
+      },
+      {
+        "key": "route",
+        "label": "七步之距（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_yecheng",
+        "subtitle": "七步成诗之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Seven Steps"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                114.618,
+                36.342
+              ],
+              [
+                114.621,
+                36.344
+              ],
+              [
+                114.624,
+                36.343
+              ],
+              [
+                114.627,
+                36.345
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_220_ce_cao_zhi_qi_bu",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

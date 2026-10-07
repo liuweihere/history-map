@@ -1,0 +1,195 @@
+{
+  "story_id": "story_007_wang_rong_dao_bian_ku_li",
+  "review_status": "draft",
+  "timeline": {
+    "year": 245,
+    "label": "王戎道边苦李",
+    "lesson": "会推理的小朋友：观察、想为什么、猜出秘密"
+  },
+  "event": {
+    "id": "event_wang_rong_dao_bian_ku_li_245_ce",
+    "title": "王戎道边苦李",
+    "type": "daily",
+    "year": 245,
+    "result": "王戎推理\"道边李必苦\"，众人一尝果然；\"道边苦李\"成为逻辑推理的经典启蒙故事",
+    "importance": "这是一个给孩子最好的逻辑启蒙故事：不用尝，靠\"想\"就能知道答案。王戎的推理链条是——大路边人来人往 + 李子还挂满枝头 = 甜李早被摘光 = 留下的必是苦李。观察现象、找出原因、推出结论，这就是逻辑的力量。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_wang_rong_dao_bian_ku_li_child_retelling",
+      "source_wang_rong_dao_bian_ku_li_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/245-王戎道边苦李-史料提要.md",
+      "kids-narration/245-王戎道边苦李-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_wang_rong",
+      "name": "王戎",
+      "role": "竹林七贤"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_luoyang",
+      "name": "洛阳",
+      "certainty": "high",
+      "lat": 34.66,
+      "lng": 112.45,
+      "map_label": "洛阳"
+    }
+  ],
+  "child_story": {
+    "id": "story_wang_rong_dao_bian_ku_li_age7",
+    "title": "王戎道边苦李：不用尝，就知道答案"
+  },
+  "panel": {
+    "child_spotlight": "先找洛阳，王戎和小伙伴们就在城外的大路边玩耍。",
+    "year_tags": [
+      "魏晋之际",
+      "道边苦李"
+    ],
+    "map_focus": [
+      "找到洛阳，想象城外的大路",
+      "看趣味小路线：小伙伴们跑向李树，王戎原地不动",
+      "想一想：不用尝，怎么知道李子是苦的？"
+    ],
+    "reading_keys": [
+      {
+        "label": "满树果子",
+        "value": "路边李树，果子压弯枝头"
+      },
+      {
+        "label": "一人不动",
+        "value": "大家抢着摘，只有王戎站着"
+      },
+      {
+        "label": "一想便知",
+        "value": "路边的甜李早被摘光，剩下的必是苦的"
+      }
+    ],
+    "memory_anchors": [
+      "树在道边而多子",
+      "此必苦李",
+      "取之信然"
+    ],
+    "parent_prompt": [
+      "不尝一口，王戎怎么知道李子是苦的？让他带你复述推理链",
+      "生活中还有什么可以靠观察推理猜出答案的例子？",
+      "要是李树长在没人去的深山里，果子还会是苦的吗？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "出门玩耍",
+      "value": "七岁的王戎和小伙伴们出城玩"
+    },
+    {
+      "label": "发现李树",
+      "value": "路边一棵李树，果子累累"
+    },
+    {
+      "label": "大家争抢",
+      "value": "小朋友们跑过去抢着摘"
+    },
+    {
+      "label": "一人不动",
+      "value": "只有王戎站在原地"
+    },
+    {
+      "label": "说出道理",
+      "value": "道边多子，此必苦李"
+    },
+    {
+      "label": "一尝果然",
+      "value": "咬一口，苦得皱眉"
+    }
+  ],
+  "scene": {
+    "deck": "路边一棵结满果子的李树，七岁的王戎为什么一口都不摘？地图带你找到这棵\"苦李树\"的所在地：洛阳。",
+    "map_headline": "道边苦李 一想便知",
+    "map_headline_en": "The Bitter Plums by the Road",
+    "meta_label": "逻辑启蒙",
+    "caption": "示意图：故事锚定于洛阳（王戎七岁在魏晋之际），李树位置为示意。典故出自《世说新语·雅量》。",
+    "overlay_boundary": null,
+    "bounds": [
+      102,
+      28,
+      126,
+      42
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "洛阳郊野 · 道边李树",
+        "left": "56%",
+        "top": "42%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "推理小课堂",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "洛阳 · 道边苦李之地"
+      },
+      {
+        "key": "route",
+        "label": "小伙伴跑向李树（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_luoyang",
+        "subtitle": "道边苦李之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Race To The Plum Tree"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                112.45,
+                34.66
+              ],
+              [
+                112.47,
+                34.67
+              ],
+              [
+                112.49,
+                34.68
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_245_ce_wang_rong_ku_li",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

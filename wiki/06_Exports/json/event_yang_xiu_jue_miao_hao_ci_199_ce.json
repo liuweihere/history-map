@@ -1,0 +1,48 @@
+{
+  "id": "event_yang_xiu_jue_miao_hao_ci_199_ce",
+  "title": "杨修绝妙好辞",
+  "year": 199,
+  "period": "东汉末",
+  "era": "三国篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_yang_xiu_jue_miao_hao_ci_historical_digest",
+    "source_yang_xiu_jue_miao_hao_ci_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_yang_xiu_jue_miao_hao_ci_child_retelling",
+      "source_yang_xiu_jue_miao_hao_ci_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/199-杨修绝妙好辞-史料提要.md",
+      "kids-narration/199-杨修绝妙好辞-小星星讲述.md"
+    ],
+    "bibliography": [
+      "后汉书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_cao_cao",
+    "person_yang_xiu"
+  ],
+  "factions": [],
+  "places": [
+    "place_shangyu"
+  ],
+  "result": "杨修即刻解出，曹操行三十里方悟——\"绝妙好辞\"；成为汉字拆解游戏的经典范本",
+  "importance": "这是最适合和孩子玩的汉字游戏：一个字拆开是谜面，合起来是谜底。黄绢不是布，是\"色+丝\"；外孙不是亲戚，是\"女+子\"——汉字的部件里藏着无尽的乐趣。杨修赢在\"捷悟\"：知识一样多的时候，反应快、看得透的人先到终点。",
+  "child_summary": "\"黄绢\"= 有颜色的丝 = 色字旁加个丝 = **绝**；\"幼妇\"= 年轻的女孩 = 少字加个女 = **妙**；\"外孙\"= 女儿的孩子 = 女字加个子 = **好**；\"齑臼\"= 放辣东西的舂米碗 = 受辛两个字合起来 = **辤**（辞）",
+  "questions": [
+    "\"外孙=女子\"这个字谜妙在哪里？（女儿的儿子，女+子=好）",
+    "你能自己编一个汉字小谜语吗？（如：一口咬掉牛尾巴=告）",
+    "杨修\"捷悟\"的本事是怎么来的？（读得多、拆得多、玩得多）"
+  ],
+  "map_plan_id": "map_plan_199_ce_yang_xiu_zi_mi",
+  "child_story_id": "story_yang_xiu_jue_miao_hao_ci_age7",
+  "parent_note_id": "note_yang_xiu_jue_miao_hao_ci_199"
+}

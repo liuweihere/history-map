@@ -1,0 +1,201 @@
+{
+  "story_id": "story_009_guan_ning_ge_xi",
+  "review_status": "draft",
+  "timeline": {
+    "year": 190,
+    "label": "管宁割席",
+    "lesson": "交朋友时，看清对方真正在乎什么很重要"
+  },
+  "event": {
+    "id": "event_guan_ning_ge_xi_190_ce",
+    "title": "管宁割席",
+    "type": "daily",
+    "year": 190,
+    "result": "管宁割席分坐：\"子非吾友也\"；\"管宁割席\"成为选择朋友、保持专注的经典典故",
+    "importance": "管宁割席不是\"绝交\"那么简单——他是用一把刀告诉朋友：读书时要有一颗安静的心。这个故事给孩子的礼物有两层：一是专注（学习时不受热闹的干扰），二是择友（和真正在乎学习的人做朋友）。可以和孩子聊聊：华歆后来其实也成了很有本事的大臣，管宁割席割的是\"读书的态度\"，不是否定这个人。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_guan_ning_ge_xi_child_retelling",
+      "source_guan_ning_ge_xi_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/190-管宁割席-史料提要.md",
+      "kids-narration/190-管宁割席-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "三国志",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_guan_ning",
+      "name": "管宁",
+      "role": "隐士"
+    },
+    {
+      "id": "person_hua_xin",
+      "name": "华歆",
+      "role": "名臣"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_beihai",
+      "name": "北海",
+      "certainty": "low",
+      "lat": 36.7,
+      "lng": 119.1,
+      "map_label": "北海"
+    }
+  ],
+  "child_story": {
+    "id": "story_guan_ning_ge_xi_age7",
+    "title": "管宁割席：一张席子分成两半"
+  },
+  "panel": {
+    "child_spotlight": "先找北海，管宁和华歆就是在这里的同一张席子上读书的。",
+    "year_tags": [
+      "东汉末",
+      "管宁割席"
+    ],
+    "map_focus": [
+      "找到北海（今山东潍坊一带），想象海边的郡国",
+      "看门外马车的趣味短线，想象\"铛铛\"的锣声",
+      "想一想：学习的时候，怎样管住自己的心？"
+    ],
+    "reading_keys": [
+      {
+        "label": "同席读书",
+        "value": "两个少年，一张席子"
+      },
+      {
+        "label": "车马喧哗",
+        "value": "门外大官经过，热闹非凡"
+      },
+      {
+        "label": "一动一静",
+        "value": "华歆跑出去看，管宁头也不抬"
+      },
+      {
+        "label": "割席分坐",
+        "value": "你坐你那边，我坐我这边"
+      }
+    ],
+    "memory_anchors": [
+      "子非吾友也",
+      "割席分坐",
+      "专注"
+    ],
+    "parent_prompt": [
+      "写作业时旁边有好玩的，你能像管宁一样不动心吗？",
+      "管宁割席是不喜欢华歆了吗？（割的是态度不是人）",
+      "什么样的朋友能帮你变得更专心？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "同席读书",
+      "value": "管宁华歆，少年同窗"
+    },
+    {
+      "label": "车马经过",
+      "value": "门外大官车驾，好不气派"
+    },
+    {
+      "label": "一静一动",
+      "value": "管宁读如故，华歆跑出去看"
+    },
+    {
+      "label": "割席明志",
+      "value": "一刀两半：读书要专心"
+    },
+    {
+      "label": "各自成器",
+      "value": "后来两人都很有成就，故事讲的是态度"
+    }
+  ],
+  "scene": {
+    "deck": "一把刀把席子割成两半——不是绝交那么简单，是告诉朋友：读书的心要安静。地图带你找到这间书舍：北海。",
+    "map_headline": "割席分坐 专注读书",
+    "map_headline_en": "Cutting the Mat",
+    "meta_label": "专注与择友",
+    "caption": "示意图：北海按汉代郡国范围标注（今山东潍坊、青州一带）。典故出自《世说新语·德行》。",
+    "overlay_boundary": null,
+    "bounds": [
+      104,
+      28,
+      128,
+      42
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "北海书舍",
+        "left": "60%",
+        "top": "34%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "门外车马喧哗",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "北海 · 割席读书之地"
+      },
+      {
+        "key": "route",
+        "label": "门外马车经过（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_beihai",
+        "subtitle": "割席读书之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "The Carriage Passes"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                119.08,
+                36.72
+              ],
+              [
+                119.11,
+                36.71
+              ],
+              [
+                119.14,
+                36.7
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_190_ce_guan_ning_ge_xi",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "event_wang_huizhi_xue_ye_fang_dai_360_ce",
+  "title": "王徽之雪夜访戴",
+  "year": 360,
+  "period": "东晋",
+  "era": "魏晋篇",
+  "type": "daily",
+  "review_status": "draft",
+  "source_refs": [
+    "source_wang_huizhi_xue_ye_fang_dai_historical_digest",
+    "source_wang_huizhi_xue_ye_fang_dai_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_wang_huizhi_xue_ye_fang_dai_child_retelling",
+      "source_wang_huizhi_xue_ye_fang_dai_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/360-王徽之雪夜访戴-史料提要.md",
+      "kids-narration/360-王徽之雪夜访戴-小星星讲述.md"
+    ],
+    "bibliography": [
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_wang_huizhi"
+  ],
+  "factions": [],
+  "places": [
+    "place_shanxian",
+    "place_shanyin"
+  ],
+  "result": "连夜乘小船沿剡溪行一宿至戴家门口；却不入门，命船返回：\"乘兴而行，兴尽而返，何必见戴？\"；成为魏晋风度\"重过程体验\"的经典意象",
+  "importance": "做事情，我们总盯着\"结果\"——非要到达、非要完成。王徽之告诉我们另一件事：路上的快乐本身就是目的。一整夜的雪、月亮、小船、心里想着朋友——那份想念和兴味已经圆满了，见不见到反而不要紧。这是中国文人最潇洒的\"留白\"。",
+  "child_summary": "今天讲的，是一个\"到了朋友家门口却不进去\"的奇怪又浪漫的故事。 很久以前，有个叫王徽之的人，他爸爸就是大书法家王羲之。 有一天夜里，下了一整夜的大雪。王徽之睡到半夜醒来，推开窗户一看——哇！雪停了，月亮出来了，天地间白茫茫、亮堂堂，美得像画一样！ 他心里忽然涌起一个念头：\"好想我的好朋友戴逵呀！他住在剡县，就是顺着溪水往南的地方。现在就去看看他！\" 说走就走！他跳上一条小船，让船夫划起来。小船在雪后的溪水里，摇啊摇，走了一整夜。两岸的雪白白的，月亮跟着船走，安静极了。 天亮的时候，船终于到了戴逵家门口。 船夫正要上去敲门，王徽之却说：\"等等——我们回去吧。\" 啊？船夫惊呆了：划了一整夜，到了门口，不进去？！ 王徽之笑了：\"我是乘着高兴的劲儿来的。现在这一路的雪、月亮和小船，已经让我开心够啦——高兴的事儿做完了，就回家呀！为什么非要见到他本人呢？\" 后来，人们说起最潇洒的人，总会讲起这个雪夜的故事。 小朋友，你有没有过这样的时候：去公园的路上，看到的花、追到的蝴蝶，比到了公园本身还开心？——那就是你的\"乘兴而行\"呀！",
+  "questions": [
+    "划了一整夜却不进门，你觉得王徽之傻还是潇洒？为什么？",
+    "你有没有\"路上的快乐比目的地还好玩\"的经历？",
+    "如果想念一个朋友，你会用王徽之的方式表达吗？还是会怎么做？"
+  ],
+  "map_plan_id": "map_plan_360_ce_wang_huizhi_xue_ye",
+  "child_story_id": "story_wang_huizhi_xue_ye_fang_dai_age7",
+  "parent_note_id": "note_wang_huizhi_xue_ye_fang_dai_360"
+}

@@ -1,0 +1,47 @@
+{
+  "id": "event_wang_xizhi_lan_ting_ya_ji_353_ce",
+  "title": "王羲之兰亭雅集",
+  "year": 353,
+  "period": "东晋",
+  "era": "魏晋篇",
+  "type": "gathering",
+  "review_status": "draft",
+  "source_refs": [
+    "source_wang_xizhi_lan_ting_ya_ji_historical_digest",
+    "source_wang_xizhi_lan_ting_ya_ji_child_retelling",
+    "兰亭集序"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_wang_xizhi_lan_ting_ya_ji_child_retelling",
+      "source_wang_xizhi_lan_ting_ya_ji_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/353-王羲之兰亭雅集-史料提要.md",
+      "kids-narration/353-王羲之兰亭雅集-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "兰亭集序",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    "person_wang_xizhi"
+  ],
+  "factions": [],
+  "places": [
+    "place_lanting"
+  ],
+  "result": "曲水流觞、饮酒赋诗，成《兰亭集》；王羲之乘兴写序，\"天下第一行书\"《兰亭集序》诞生；\"群贤毕至，少长咸集\"成为聚会盛况的代称",
+  "importance": "一场春天的聚会，留下了书法史上最伟大的一件作品。有趣的是，序文里不只有开心——王羲之写着写着，感叹起时间：\"后之视今，亦犹今之视昔。\"快乐是短暂的，字却把那个春天永远留住了。对孩子来说：认真做一件事的美好瞬间，本身就是纪念。",
+  "child_summary": "今天讲的，是一场\"杯子在水里漂\"的春天派对。 很久以前的一个春天，大书法家王羲之请了四十多位好朋友，到山边一个叫兰亭的地方玩。那天呀，天空蓝蓝的，风暖暖的，小溪\"哗啦哗啦\"地流。 他们玩了一个特别好玩的游戏，叫\"曲水流觞\"：把酒杯放到小溪里，让杯子顺着弯弯的溪水漂——漂呀漂，停在谁的面前，谁就要把酒喝掉，还要马上作一首诗！作不出来？那可要罚酒三杯哦！ 大家沿着溪水坐成一排，杯子漂到谁那儿，谁就又喝又念，笑声一路不断。 玩着玩着，有人提议：\"今天这么多好诗，把它们收起来，编成一本小书吧！王羲之，请你给这本小书写个开头吧！\" 王羲之那天喝得微微有点醉，兴致特别高。他拿起毛笔，\"唰唰唰——\"一气呵成，写下了一篇文章，就是后来大大有名的《兰亭集序》！ 这字写得太漂亮啦！像浮云一样轻盈，像小龙一样有劲儿——后来大家都叫它\"天下第一行书\"！ 小朋友，那个春天的溪水、漂着的酒杯、大家作的诗，本来一下子就过去了。可是因为王羲之认真写下的这一笔一画，一千六百多年前的那个春天，一直留到今天呢！",
+  "questions": [
+    "要是办一场\"曲水流觞\"派对，漂到的杯子停下来，你想\"作\"什么？（唱首歌、跳个舞也算！）",
+    "王羲之为什么能写出天下第一行书？（平时天天练字的功夫 + 那天的好心情）",
+    "你们家有什么\"把美好瞬间留住\"的办法？（拍照、画画、写日记）"
+  ],
+  "map_plan_id": "map_plan_353_ce_wang_xizhi_lan_ting",
+  "child_story_id": "story_wang_xizhi_lan_ting_ya_ji_age7",
+  "parent_note_id": "note_wang_xizhi_lan_ting_ya_ji_353"
+}

@@ -1,0 +1,196 @@
+{
+  "story_id": "story_011_wang_xizhi_tan_fu_dong_chuang",
+  "review_status": "draft",
+  "timeline": {
+    "year": 330,
+    "label": "王羲之坦腹东床",
+    "lesson": "真实自然的样子，本身就很有魅力"
+  },
+  "event": {
+    "id": "event_wang_xizhi_tan_fu_dong_chuang_330_ce",
+    "title": "王羲之坦腹东床",
+    "type": "daily",
+    "year": 330,
+    "result": "唯王羲之坦腹卧于东床、啃胡饼如故；郗鉴闻之曰：\"正此佳婿邪！\"遂以女妻之；\"东床坦腹\"成为女婿的代称",
+    "importance": "所有人都想\"演\"出最好的样子，王羲之却懒得演。真实自然的松弛感，反而成了最打动人的地方——因为那背后是底气：我不需要靠装来赢得认可。告诉孩子：大大方方做自己的人，自带光芒；紧张装出来的完美，反而容易露馅。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_wang_xizhi_tan_fu_dong_chuang_child_retelling",
+      "source_wang_xizhi_tan_fu_dong_chuang_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/330-王羲之坦腹东床-史料提要.md",
+      "kids-narration/330-王羲之坦腹东床-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_wang_xizhi",
+      "name": "王羲之",
+      "role": "书法家"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_jiankang",
+      "name": "建康",
+      "certainty": "high",
+      "lat": 32.06,
+      "lng": 118.8,
+      "map_label": "建康"
+    }
+  ],
+  "child_story": {
+    "id": "story_wang_xizhi_tan_fu_dong_chuang_age7",
+    "title": "王羲之坦腹东床：躺着啃饼被选中"
+  },
+  "panel": {
+    "child_spotlight": "先找建康，最著名的家族——王家就住在乌衣巷。",
+    "year_tags": [
+      "东晋咸和年间",
+      "坦腹东床"
+    ],
+    "map_focus": [
+      "找到建康（今南京），东晋都城",
+      "看趣味小路线：从郗府到王家的\"选婿观察\"",
+      "想一想：为什么真实的样子最打动人？"
+    ],
+    "reading_keys": [
+      {
+        "label": "大官选婿",
+        "value": "郗鉴派人来王家挑女婿"
+      },
+      {
+        "label": "人人装样子",
+        "value": "王家儿郎个个紧张端正"
+      },
+      {
+        "label": "一人躺平",
+        "value": "东床上露着肚子啃饼，如不闻"
+      },
+      {
+        "label": "偏偏选中",
+        "value": "不装的孩子，心里有底气"
+      }
+    ],
+    "memory_anchors": [
+      "坦腹东床",
+      "如不闻",
+      "正此佳婿邪"
+    ],
+    "parent_prompt": [
+      "别人都装端正时，王羲之为什么不装？",
+      "为什么郗鉴偏偏选中了躺着啃饼的？",
+      "紧张的时候，怎么学王羲之的\"有底气\"？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "大官选婿",
+      "value": "郗鉴要在王家挑一个女婿"
+    },
+    {
+      "label": "全家紧张",
+      "value": "年轻人个个换装打扮正襟危坐"
+    },
+    {
+      "label": "一人例外",
+      "value": "王羲之东床坦腹，啃饼如故"
+    },
+    {
+      "label": "仆人回报",
+      "value": "只有一个躺着的，满不在乎"
+    },
+    {
+      "label": "一锤定音",
+      "value": "郗鉴：就选这个！"
+    }
+  ],
+  "scene": {
+    "deck": "别的年轻人都正襟危坐装样子，只有一个躺着啃饼——结果偏偏选中了他。地图带你找到这场\"选婿大会\"：建康王家。",
+    "map_headline": "坦腹东床 真实为王",
+    "map_headline_en": "Belly Up, Chosen Best",
+    "meta_label": "真实与底气",
+    "caption": "示意图：故事锚定于建康（今南京），王家乌衣巷为传统说法。典故出自《世说新语·雅量》。",
+    "overlay_boundary": null,
+    "bounds": [
+      106,
+      24,
+      126,
+      36
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "建康 · 乌衣巷王家",
+        "left": "62%",
+        "top": "40%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "选婿大会",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "建康 · 坦腹东床之地"
+      },
+      {
+        "key": "route",
+        "label": "选婿观察之路（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_jiankang",
+        "subtitle": "坦腹东床之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "The Matchmaker Visit"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                118.77,
+                32.05
+              ],
+              [
+                118.79,
+                32.06
+              ],
+              [
+                118.81,
+                32.06
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_330_ce_wang_xizhi_tan_fu",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}

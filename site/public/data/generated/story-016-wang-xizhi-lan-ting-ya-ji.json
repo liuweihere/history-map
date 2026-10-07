@@ -1,0 +1,200 @@
+{
+  "story_id": "story_016_wang_xizhi_lan_ting_ya_ji",
+  "review_status": "draft",
+  "timeline": {
+    "year": 353,
+    "label": "王羲之兰亭雅集",
+    "lesson": "认真做好一件事，就是把时间留住"
+  },
+  "event": {
+    "id": "event_wang_xizhi_lan_ting_ya_ji_353_ce",
+    "title": "王羲之兰亭雅集",
+    "type": "gathering",
+    "year": 353,
+    "result": "曲水流觞、饮酒赋诗，成《兰亭集》；王羲之乘兴写序，\"天下第一行书\"《兰亭集序》诞生；\"群贤毕至，少长咸集\"成为聚会盛况的代称",
+    "importance": "一场春天的聚会，留下了书法史上最伟大的一件作品。有趣的是，序文里不只有开心——王羲之写着写着，感叹起时间：\"后之视今，亦犹今之视昔。\"快乐是短暂的，字却把那个春天永远留住了。对孩子来说：认真做一件事的美好瞬间，本身就是纪念。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_wang_xizhi_lan_ting_ya_ji_child_retelling",
+      "source_wang_xizhi_lan_ting_ya_ji_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/353-王羲之兰亭雅集-史料提要.md",
+      "kids-narration/353-王羲之兰亭雅集-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "兰亭集序",
+      "女儿口述"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_wang_xizhi",
+      "name": "王羲之",
+      "role": "书法家"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_lanting",
+      "name": "兰亭",
+      "certainty": "high",
+      "lat": 29.93,
+      "lng": 120.53,
+      "map_label": "兰亭"
+    }
+  ],
+  "child_story": {
+    "id": "story_wang_xizhi_lan_ting_ya_ji_age7",
+    "title": "王羲之兰亭雅集：杯子漂呀漂，漂出天下第一"
+  },
+  "panel": {
+    "child_spotlight": "先找兰亭（绍兴西南的山脚下），那条弯弯的小溪就是\"流觞曲水\"。",
+    "year_tags": [
+      "永和九年",
+      "兰亭雅集"
+    ],
+    "map_focus": [
+      "找到兰亭，看山脚下弯弯的溪水",
+      "沿\"曲水\"路线想象酒杯漂呀漂",
+      "聊一聊：认真做好一件事，怎么把时间留住？"
+    ],
+    "reading_keys": [
+      {
+        "label": "春天雅集",
+        "value": "三月初三，四十一位名士"
+      },
+      {
+        "label": "曲水流觞",
+        "value": "酒杯顺水漂，停在谁前谁作诗"
+      },
+      {
+        "label": "一挥而就",
+        "value": "王羲之微醉写下《兰亭集序》"
+      }
+    ],
+    "memory_anchors": [
+      "群贤毕至",
+      "少长咸集",
+      "天朗气清 惠风和畅"
+    ],
+    "parent_prompt": [
+      "曲水流觞漂到你面前，你会\"作\"什么？",
+      "为什么说《兰亭集序》把那个春天留住了？",
+      "你们家怎么\"把美好瞬间留住\"？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "春日修禊",
+      "value": "三月初三，水边去灾祈福"
+    },
+    {
+      "label": "群贤毕至",
+      "value": "王羲之邀四十一位好友"
+    },
+    {
+      "label": "曲水流觞",
+      "value": "酒杯顺溪漂，漂到就作诗"
+    },
+    {
+      "label": "得诗三十七",
+      "value": "一日欢聚，诗成一本"
+    },
+    {
+      "label": "乘兴作序",
+      "value": "王羲之醉笔一挥，天下第一"
+    }
+  ],
+  "scene": {
+    "deck": "酒杯在溪水里漂呀漂，漂到谁面前谁作诗——天下第一行书，就从这条小溪边开始。地图带你找到兰亭。",
+    "map_headline": "曲水流觞 兰亭集序",
+    "map_headline_en": "Wine Cups on the Winding Stream",
+    "meta_label": "书法之美",
+    "caption": "示意图：兰亭在会稽山阴（今浙江绍兴西南兰渚山下），事见《兰亭集序》本文，时间地点明确。",
+    "overlay_boundary": null,
+    "bounds": [
+      118.5,
+      28,
+      122.5,
+      31.5
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "会稽山阴 · 兰亭",
+        "left": "46%",
+        "top": "40%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "曲水流觞",
+        "right": "60px",
+        "top": "170px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "兰亭 · 天下第一行书之地"
+      },
+      {
+        "key": "route",
+        "label": "曲水流觞（溪流示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_lanting",
+        "subtitle": "天下第一行书之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "The Winding Stream"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                120.52,
+                29.94
+              ],
+              [
+                120.54,
+                29.93
+              ],
+              [
+                120.53,
+                29.92
+              ],
+              [
+                120.55,
+                29.91
+              ],
+              [
+                120.56,
+                29.92
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_353_ce_wang_xizhi_lan_ting",
+    "display_type": "place_story",
+    "certainty": "high"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "event_ji_shao_he_li_ji_qun_280_ce",
+  "title": "嵇绍鹤立鸡群",
+  "year": 280,
+  "period": "西晋",
+  "era": "三国篇",
+  "type": "court",
+  "review_status": "draft",
+  "source_refs": [
+    "source_ji_shao_he_li_ji_qun_historical_digest",
+    "source_ji_shao_he_li_ji_qun_child_retelling",
+    "世说新语"
+  ],
+  "sources": {
+    "page_ids": [
+      "source_ji_shao_he_li_ji_qun_child_retelling",
+      "source_ji_shao_he_li_ji_qun_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/280-嵇绍鹤立鸡群-史料提要.md",
+      "kids-narration/280-嵇绍鹤立鸡群-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    "person_ji_shao"
+  ],
+  "factions": [],
+  "places": [
+    "place_luoyang"
+  ],
+  "result": "有人赞叹\"昂昂然如野鹤之在鸡群\"；\"鹤立鸡群\"成为形容气质出众的成语",
+  "importance": "一个人的气质，是内心的样子长在了身体上。嵇绍的挺拔不只是个子高——他的父亲嵇康就是以风骨著称的名士，家风给了他从容自信的底气。\"鹤立鸡群\"告诉孩子：真正让人一眼记住的，不是衣服和打扮，而是从心里长出来的自信和精神气。",
+  "child_summary": "今天讲的，是一个\"像仙鹤一样的年轻人\"的故事。 很久以前，有个年轻人叫嵇绍。他个子高高的，背挺得直直的，眼睛亮亮的，走在路上特别精神。 有一天，他来到大城市洛阳，走进了一群人中间。奇怪的事情发生了——所有人都忍不住看他！ 有人悄悄感叹：\"你们看他站得多挺拔呀！就像一只高高大大、干干净净的仙鹤，站在一群小鸡中间！一眼就认出来啦！\" 后来呀，大家就用\"鹤立鸡群\"来形容一个人特别出众、特别精神的样子。 可是嵇绍的好看，不只是长得高。他的爸爸嵇康也是一位特别有骨气的人，从小家里教他：站要站得直，做事要做得正。所以他的\"仙鹤样子\"，是从心里长出来的——心里又正又稳，人才会挺拔又精神！ 小朋友，你想不想也像仙鹤一样呀？把腰挺直，把头抬起来，眼睛亮亮的——对啦！心里有底气，站在哪里都会发光！",
+  "questions": [
+    "你见过\"鹤立鸡群\"的人吗？他什么地方让你一眼记住？",
+    "为什么说嵇绍的挺拔是\"从心里长出来的\"？",
+    "站姿和心情有关系吗？试试挺胸抬头走一段路，感觉有什么不一样？"
+  ],
+  "map_plan_id": "map_plan_280_ce_ji_shao_he_li",
+  "child_story_id": "story_ji_shao_he_li_ji_qun_age7",
+  "parent_note_id": "note_ji_shao_he_li_ji_qun_280"
+}

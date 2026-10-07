@@ -1,0 +1,200 @@
+{
+  "story_id": "story_013_zu_ti_wen_ji_qi_wu",
+  "review_status": "draft",
+  "timeline": {
+    "year": 313,
+    "label": "祖逖闻鸡起舞",
+    "lesson": "每天坚持练一点，说出口的誓言用行动实现"
+  },
+  "event": {
+    "id": "event_zu_ti_wen_ji_qi_wu_313_ce",
+    "title": "祖逖闻鸡起舞",
+    "type": "war",
+    "year": 313,
+    "result": "闻鸡起舞成为自律苦练的千古佳话；祖逖北伐收复黄河以南大片土地；\"击楫中流\"成为立志报国的成语",
+    "importance": "闻鸡起舞讲的是\"自律\"——别人都在睡觉，你起来练功，日复一日；击楫中流讲的是\"志气\"——把誓言敲在船桨上，说出口就要做到。小星星练网球也是一样：每天准时出现在球场上挥拍，就是自己的\"闻鸡起舞\"。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_zu_ti_wen_ji_qi_wu_child_retelling",
+      "source_zu_ti_wen_ji_qi_wu_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/313-祖逖闻鸡起舞-史料提要.md",
+      "kids-narration/313-祖逖闻鸡起舞-小星星讲述.md"
+    ],
+    "bibliography": [
+      "晋书",
+      "女儿口述",
+      "资治通鉴"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_zu_ti",
+      "name": "祖逖",
+      "role": "名将"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_jingkou",
+      "name": "京口",
+      "certainty": "medium",
+      "lat": 32.2,
+      "lng": 119.42,
+      "map_label": "京口"
+    }
+  ],
+  "child_story": {
+    "id": "story_zu_ti_wen_ji_qi_wu_age7",
+    "title": "祖逖闻鸡起舞：听见鸡叫就起床练功"
+  },
+  "panel": {
+    "child_spotlight": "先找京口（今镇江），祖逖的船就是从这里驶入长江的。",
+    "year_tags": [
+      "建武元年",
+      "闻鸡起舞"
+    ],
+    "map_focus": [
+      "找到京口（今镇江），长江南岸的渡口",
+      "沿渡江路线看船驶向江北——想象江心的誓言",
+      "聊一聊：你的\"闻鸡起舞\"是什么？（练球？晨读？）"
+    ],
+    "reading_keys": [
+      {
+        "label": "半夜鸡叫",
+        "value": "别人嫌吵，祖逖当它是练武闹钟"
+      },
+      {
+        "label": "日日苦练",
+        "value": "闻鸡起舞，功夫天天长"
+      },
+      {
+        "label": "击楫立誓",
+        "value": "船到江心，敲桨发誓复中原"
+      }
+    ],
+    "memory_anchors": [
+      "此非恶声也",
+      "因起舞",
+      "有如大江"
+    ],
+    "parent_prompt": [
+      "你的\"闻鸡起舞\"是什么？每天坚持的那件事",
+      "祖逖为什么把鸡叫当宝贝？（心里有目标的人什么都是动力）",
+      "想给自己立一个什么样的\"击楫\"誓言？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "天下大乱",
+      "value": "北方丢失，许多人南渡"
+    },
+    {
+      "label": "闻鸡起舞",
+      "value": "祖逖刘琨半夜闻鸡，起床舞剑"
+    },
+    {
+      "label": "请命北伐",
+      "value": "祖逖率部曲自京口渡江"
+    },
+    {
+      "label": "中流击楫",
+      "value": "敲桨立誓：不清中原，不复过江"
+    },
+    {
+      "label": "收复失地",
+      "value": "黄河以南大片土地光复"
+    }
+  ],
+  "scene": {
+    "deck": "船到江心，他敲着船桨发誓：不收复中原，绝不回来！地图带你找到这个誓言响起的地方：京口的长江渡口。",
+    "map_headline": "击楫中流 誓复中原",
+    "map_headline_en": "Oath at the River's Heart",
+    "meta_label": "自律与家国",
+    "caption": "示意图：京口为祖逖渡江传统说法出发地（今江苏镇江）。渡江路线为示意直线，事见《晋书·祖逖传》。",
+    "overlay_boundary": null,
+    "bounds": [
+      106,
+      26,
+      124,
+      40
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "京口渡口",
+        "left": "64%",
+        "top": "44%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "中流击楫",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "京口 · 渡江北伐之地"
+      },
+      {
+        "key": "route",
+        "label": "渡江北上路线"
+      },
+      {
+        "key": "river",
+        "label": "长江天堑"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_jingkou",
+        "subtitle": "渡江北伐之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Crossing The Yangtze"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                119.42,
+                32.2
+              ],
+              [
+                119.46,
+                32.35
+              ],
+              [
+                119.5,
+                32.5
+              ],
+              [
+                119.52,
+                32.66
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_313_ce_zu_ti_wen_ji",
+    "display_type": "river_crossing",
+    "certainty": "medium"
+  }
+}

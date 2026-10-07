@@ -1,0 +1,201 @@
+{
+  "story_id": "story_015_yang_xiu_jue_miao_hao_ci",
+  "review_status": "draft",
+  "timeline": {
+    "year": 199,
+    "label": "杨修绝妙好辞",
+    "lesson": "真正的强大，有时候是藏起来的"
+  },
+  "event": {
+    "id": "event_yang_xiu_jue_miao_hao_ci_199_ce",
+    "title": "杨修绝妙好辞",
+    "type": "daily",
+    "year": 199,
+    "result": "杨修即刻解出，曹操行三十里方悟——\"绝妙好辞\"；成为汉字拆解游戏的经典范本",
+    "importance": "这是最适合和孩子玩的汉字游戏：一个字拆开是谜面，合起来是谜底。黄绢不是布，是\"色+丝\"；外孙不是亲戚，是\"女+子\"——汉字的部件里藏着无尽的乐趣。杨修赢在\"捷悟\"：知识一样多的时候，反应快、看得透的人先到终点。"
+  },
+  "sources": {
+    "page_ids": [
+      "source_yang_xiu_jue_miao_hao_ci_child_retelling",
+      "source_yang_xiu_jue_miao_hao_ci_historical_digest"
+    ],
+    "raw_files": [
+      "historical-digests/199-杨修绝妙好辞-史料提要.md",
+      "kids-narration/199-杨修绝妙好辞-小星星讲述.md"
+    ],
+    "bibliography": [
+      "后汉书",
+      "女儿口述",
+      "世说新语"
+    ]
+  },
+  "people": [
+    {
+      "id": "person_cao_cao",
+      "name": "曹操",
+      "role": "政治家"
+    },
+    {
+      "id": "person_yang_xiu",
+      "name": "杨修",
+      "role": "主簿"
+    }
+  ],
+  "factions": [],
+  "places": [
+    {
+      "id": "place_shangyu",
+      "name": "上虞",
+      "certainty": "medium",
+      "lat": 30.03,
+      "lng": 120.87,
+      "map_label": "上虞"
+    }
+  ],
+  "child_story": {
+    "id": "story_yang_xiu_jue_miao_hao_ci_age7",
+    "title": "杨修绝妙好辞：走了三十里才解开的字谜"
+  },
+  "panel": {
+    "child_spotlight": "先找上虞（今绍兴上虞），曹娥江边的大石碑就是故事的起点。",
+    "year_tags": [
+      "建安年间",
+      "绝妙好辞"
+    ],
+    "map_focus": [
+      "找到上虞，想象曹娥江边的大碑",
+      "看趣味短线：曹操一边走一边想的样子",
+      "玩一玩：自己编个字谜考考爸爸妈妈"
+    ],
+    "reading_keys": [
+      {
+        "label": "八字谜面",
+        "value": "黄绢、幼妇、外孙、齑臼"
+      },
+      {
+        "label": "一快一慢",
+        "value": "杨修即刻解出，曹操想了三十里"
+      },
+      {
+        "label": "四字谜底",
+        "value": "绝、妙、好、辞"
+      }
+    ],
+    "memory_anchors": [
+      "黄绢幼妇",
+      "外孙齑臼",
+      "绝妙好辞"
+    ],
+    "parent_prompt": [
+      "\"外孙=女子\"这个字谜妙在哪里？",
+      "和爸爸妈妈互编一个字谜（如：一口咬掉牛尾巴=告）",
+      "杨修\"秒懂\"的本事是怎么练出来的？"
+    ]
+  },
+  "narration_flow": [
+    {
+      "label": "路过大碑",
+      "value": "曹操杨修同观曹娥碑"
+    },
+    {
+      "label": "碑背八字",
+      "value": "黄绢幼妇，外孙齑臼"
+    },
+    {
+      "label": "一人秒懂",
+      "value": "杨修看破不说破"
+    },
+    {
+      "label": "三十里悟",
+      "value": "曹操走三十里才想通"
+    },
+    {
+      "label": "相视而笑",
+      "value": "绝妙好辞——我才不及卿"
+    }
+  ],
+  "scene": {
+    "deck": "八个字里藏着四个字，曹操想了三十里，杨修一眼就看穿。地图带你找到这块神奇的石碑：上虞曹娥碑。",
+    "map_headline": "绝妙好辞 字中有字",
+    "map_headline_en": "A Puzzle Inside Words",
+    "meta_label": "汉字之美",
+    "caption": "示意图：曹娥碑在上虞（今浙江绍兴上虞区），传说碑阴八字为蔡邕题。典故出自《世说新语·捷悟》，曹操杨修行踪为传说附会。",
+    "overlay_boundary": null,
+    "bounds": [
+      116,
+      26,
+      124,
+      34
+    ],
+    "annotations": [
+      {
+        "kind": "region",
+        "label": "上虞 · 曹娥碑",
+        "left": "66%",
+        "top": "46%"
+      },
+      {
+        "kind": "disturbance",
+        "label": "字谜三十里",
+        "right": "60px",
+        "top": "160px"
+      }
+    ],
+    "legend": [
+      {
+        "key": "capital",
+        "label": "上虞 · 绝妙好辞之地"
+      },
+      {
+        "key": "route",
+        "label": "三十里思索（趣味示意）"
+      }
+    ],
+    "markers": [
+      {
+        "place_id": "place_shangyu",
+        "subtitle": "绝妙好辞之地",
+        "kind": "capital"
+      }
+    ],
+    "geojson": {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "properties": {
+            "id": "story-route",
+            "kind": "route",
+            "title": "Thirty Li of Thinking"
+          },
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [
+                120.87,
+                30.03
+              ],
+              [
+                120.92,
+                30.06
+              ],
+              [
+                120.97,
+                30.09
+              ],
+              [
+                121.02,
+                30.12
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "map_plan": {
+    "id": "map_plan_199_ce_yang_xiu_zi_mi",
+    "display_type": "place_story",
+    "certainty": "low"
+  }
+}
