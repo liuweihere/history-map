@@ -193,16 +193,18 @@ export function HistoryAtlasApp({ entries, timeline }) {
             </p>
           </div>
 
-          <div
-            className="atlas-map-storyhint"
-            role="button"
-            tabIndex={0}
-            onClick={() => setDrawerOpen(true)}
-            onKeyDown={(e) => { if (e.key === "Enter") setDrawerOpen(true); }}
-          >
-            <span className="atlas-map-storyhint__badge">{story.child_story?.title ?? event.title}</span>
-            <span className="atlas-map-storyhint__cta">点击唤醒故事 ▸</span>
-          </div>
+          {!drawerOpen && (
+            <div
+              className="atlas-map-storyhint"
+              role="button"
+              tabIndex={0}
+              onClick={() => setDrawerOpen(true)}
+              onKeyDown={(e) => { if (e.key === "Enter") setDrawerOpen(true); }}
+            >
+              <span className="atlas-map-storyhint__badge">{story.child_story?.title ?? event.title}</span>
+              <span className="atlas-map-storyhint__cta">点击唤醒故事 ▸</span>
+            </div>
+          )}
         </div>
 
         <aside className={`atlas-drawer${drawerOpen ? " is-open" : ""}`}>
