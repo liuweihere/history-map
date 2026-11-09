@@ -77,6 +77,14 @@ export function HistoryAtlasApp({ entries, timeline }) {
   };
 
   const recordedCount = milestones.filter((m) => m.interactive).length;
+  // 真实口述计数：narration_status 区分「可打开」（interactive）与「真实口述」。
+  // placeholder = 占位待回填；unknown = 无证据（不自动标 recorded）。
+  const realNarrationCount = milestones.filter(
+    (m) => m.interactive && m.narration_status === "recorded",
+  ).length;
+  const placeholderNarrationCount = milestones.filter(
+    (m) => m.interactive && m.narration_status === "placeholder",
+  ).length;
 
   const drawerTabs = [
     { key: "mindmap", label: "故事导图" },
@@ -291,7 +299,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
         >
           <span className="atlas-panel-kicker">故事目录 / Story Index</span>
           <span className="atlas-story-index__meta">
-            {milestones.length} 个节点 · {recordedCount} 个已录制
+            {milestones.length} 个节点 · {recordedCount} 个可打开 · 真实口述 {realNarrationCount} · 口述占位 {placeholderNarrationCount}
           </span>
           <span className={`atlas-story-index__chevron${railOpen ? " is-open" : ""}`}>▾</span>
         </button>
@@ -302,7 +310,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
               const previewable = !milestone.interactive && Boolean(milestone.regionId);
               return (
                 <button
-                  key={`${milestone.year}-${milestone.label}`}
+                  key={milestone.render_key ?? milestone.milestone_id}
                   className={`timeline-stop timeline-stop--${milestone.status}`}
                   disabled={!milestone.interactive && !previewable}
                   onClick={() => {

@@ -101,7 +101,7 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
           {/* 刻度点层：钉在轴线上（top:50% 居中），悬停显示年份+故事名+朝代 */}
           {milestones.map((milestone, index) => (
             <span
-              key={`${milestone.year}-${milestone.label}`}
+              key={milestone.render_key ?? milestone.milestone_id}
               className={[
                 "time-scrubber__tick",
                 milestone.interactive ? "time-scrubber__tick--recorded" : "",

@@ -1,6 +1,8 @@
 {
   "milestones": [
     {
+      "milestone_id": "ms--5000-盘古开天",
+      "render_key": "ms--5000-盘古开天",
       "year": -5000,
       "period": "上古",
       "label": "盘古开天",
@@ -8,9 +10,15 @@
       "lesson": "历史最早的一段，常常先用神话帮孩子建立时间感",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--4500-女娲补天",
+      "render_key": "ms--4500-女娲补天",
       "year": -4500,
       "period": "上古",
       "label": "女娲补天",
@@ -18,9 +26,15 @@
       "lesson": "很多很早的故事，不是在讲真假，而是在讲人们怎么理解世界",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--2697-炎黄传说",
+      "render_key": "ms--2697-炎黄传说",
       "year": -2697,
       "period": "上古",
       "label": "炎黄传说",
@@ -28,9 +42,15 @@
       "lesson": "先有很多部族，后来才慢慢有更大的“我们”",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--2357-尧舜禅让",
+      "render_key": "ms--2357-尧舜禅让",
       "year": -2357,
       "period": "上古",
       "label": "尧舜禅让",
@@ -38,9 +58,15 @@
       "lesson": "有些古人心里，好的领导者要先会照顾大家",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--2070-大禹治水",
+      "render_key": "ms--2070-大禹治水",
       "year": -2070,
       "period": "上古",
       "label": "大禹治水",
@@ -48,9 +74,15 @@
       "lesson": "很多王朝故事，前面先会有“把世界安顿好”的人",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--2070-大禹建夏",
+      "render_key": "ms--2070-大禹建夏",
       "year": -2070,
       "period": "夏",
       "label": "大禹建夏",
@@ -58,9 +90,15 @@
       "lesson": "从这里开始，故事不只是英雄，也开始有王朝",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1970-少康中兴",
+      "render_key": "ms--1970-少康中兴",
       "year": -1970,
       "period": "夏",
       "label": "少康中兴",
@@ -68,9 +106,15 @@
       "lesson": "历史里一个国家会衰弱，也可能再撑一阵",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1600-夏桀失国",
+      "render_key": "ms--1600-夏桀失国",
       "year": -1600,
       "period": "夏",
       "label": "夏桀失国",
@@ -78,9 +122,15 @@
       "lesson": "王朝会换人，不是因为名字变了，而是力量和人心都变了",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1600-商汤灭夏",
+      "render_key": "ms--1600-商汤灭夏",
       "year": -1600,
       "period": "商",
       "label": "商汤灭夏",
@@ -88,9 +138,15 @@
       "lesson": "一个新王朝常常是在旧王朝撑不住时上来的",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1540-伊尹辅政",
+      "render_key": "ms--1540-伊尹辅政",
       "year": -1540,
       "period": "商",
       "label": "伊尹辅政",
@@ -98,9 +154,15 @@
       "lesson": "会打天下很重要，会治理天下也很重要",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1300-盘庚迁殷",
+      "render_key": "ms--1300-盘庚迁殷",
       "year": -1300,
       "period": "商",
       "label": "盘庚迁殷",
@@ -108,9 +170,15 @@
       "lesson": "有时候迁都不是逃跑，而是在重做国家中心",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1250-武丁中兴",
+      "render_key": "ms--1250-武丁中兴",
       "year": -1250,
       "period": "商",
       "label": "武丁中兴",
@@ -118,9 +186,15 @@
       "lesson": "一个王朝会有自己的高峰期",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1240-妇好出征",
+      "render_key": "ms--1240-妇好出征",
       "year": -1240,
       "period": "商",
       "label": "妇好出征",
@@ -128,9 +202,15 @@
       "lesson": "历史里重要人物不只有国王，也有能打仗的人",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1046-商纣失国",
+      "render_key": "ms--1046-商纣失国",
       "year": -1046,
       "period": "商",
       "label": "商纣失国",
@@ -138,9 +218,15 @@
       "lesson": "老王朝不是一下消失，是一步步失掉支持",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1046-武王伐纣",
+      "render_key": "ms--1046-武王伐纣",
       "year": -1046,
       "period": "西周",
       "label": "武王伐纣",
@@ -148,9 +234,15 @@
       "lesson": "打败旧王朝之后，要开始建立新的规矩",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--1043-周公辅成王",
+      "render_key": "ms--1043-周公辅成王",
       "year": -1043,
       "period": "西周",
       "label": "周公辅成王",
@@ -158,9 +250,15 @@
       "lesson": "建国之后，最难的是让新秩序真正站住",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--841-国人暴动",
+      "render_key": "ms--841-国人暴动",
       "year": -841,
       "period": "西周",
       "label": "国人暴动",
@@ -168,9 +266,15 @@
       "lesson": "一个王朝出问题，常常先从内部不满开始",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--771-烽火戏诸侯",
+      "render_key": "ms--771-烽火戏诸侯",
       "year": -771,
       "period": "西周",
       "label": "烽火戏诸侯",
@@ -178,9 +282,15 @@
       "lesson": "开玩笑和失信，在王朝层面会变成大祸",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--770-周平王东迁",
+      "render_key": "ms--770-周平王东迁",
       "year": -770,
       "period": "春秋",
       "label": "周平王东迁",
@@ -188,9 +298,15 @@
       "lesson": "很多英雄故事，是在旧王朝变弱以后才开始的",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--743-郑庄公小霸",
+      "render_key": "ms--743-郑庄公小霸",
       "year": -743,
       "period": "春秋",
       "label": "郑庄公小霸",
@@ -198,9 +314,15 @@
       "lesson": "王室变弱以后，真正说话算数的常常换成诸侯",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--685-齐桓公称霸",
+      "render_key": "ms--685-齐桓公称霸",
       "year": -685,
       "period": "春秋",
       "label": "齐桓公称霸",
@@ -208,9 +330,15 @@
       "lesson": "有时一个强国出现，会让大家暂时跟着它转",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--685-管鲍之交",
+      "render_key": "ms--685-管鲍之交",
       "year": -685,
       "period": "春秋",
       "label": "管鲍之交",
@@ -218,9 +346,15 @@
       "lesson": "好朋友和好搭档，也能改变国家命运",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--655-假途灭虢",
+      "render_key": "ms--655-假途灭虢",
       "year": -655,
       "period": "春秋",
       "label": "假途灭虢",
@@ -228,9 +362,15 @@
       "lesson": "有些故事看起来像计谋，其实在改变格局",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--633-退避三舍",
+      "render_key": "ms--633-退避三舍",
       "year": -633,
       "period": "春秋",
       "label": "退避三舍",
@@ -238,9 +378,15 @@
       "lesson": "有时候先退，不代表真的输了",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--632-城濮之战",
+      "render_key": "ms--632-城濮之战",
       "year": -632,
       "period": "春秋",
       "label": "城濮之战",
@@ -248,9 +394,15 @@
       "lesson": "一场战役会改变谁说了算",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--613-楚庄王问鼎",
+      "render_key": "ms--613-楚庄王问鼎",
       "year": -613,
       "period": "春秋",
       "label": "楚庄王问鼎",
@@ -258,9 +410,15 @@
       "lesson": "天下谁强，不一定一直由老牌强国决定",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--506-孙武练兵",
+      "render_key": "ms--506-孙武练兵",
       "year": -506,
       "period": "春秋",
       "label": "孙武练兵",
@@ -268,9 +426,15 @@
       "lesson": "好的办法和训练，也能改变国家强弱",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--496-卧薪尝胆",
+      "render_key": "ms--496-卧薪尝胆",
       "year": -496,
       "period": "春秋",
       "label": "卧薪尝胆",
@@ -278,9 +442,15 @@
       "lesson": "忍耐和准备，有时比立刻出手更重要",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--494-夫差败越",
+      "render_key": "ms--494-夫差败越",
       "year": -494,
       "period": "春秋",
       "label": "夫差败越",
@@ -288,9 +458,15 @@
       "lesson": "暂时输掉，不等于以后没有机会",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--473-吴越争霸终局",
+      "render_key": "ms--473-吴越争霸终局",
       "year": -473,
       "period": "春秋",
       "label": "吴越争霸终局",
@@ -298,9 +474,15 @@
       "lesson": "历史里常常会有“后面翻盘”的故事",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--453-三家分晋",
+      "render_key": "ms--453-三家分晋",
       "year": -453,
       "period": "战国",
       "label": "三家分晋",
@@ -308,9 +490,15 @@
       "lesson": "有些变化不是一战决定，而是旧国家被慢慢拆掉",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--356-商鞅变法",
+      "render_key": "ms--356-商鞅变法",
       "year": -356,
       "period": "战国",
       "label": "商鞅变法",
@@ -318,9 +506,15 @@
       "lesson": "能不能治理好国家，和会不会打仗一样重要",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--342-孙膑斗庞涓",
+      "render_key": "ms--342-孙膑斗庞涓",
       "year": -342,
       "period": "战国",
       "label": "孙膑斗庞涓",
@@ -328,9 +522,15 @@
       "lesson": "战国很多故事，不只是拼兵力，也拼谁更会用脑子",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--341-围魏救赵",
+      "render_key": "ms--341-围魏救赵",
       "year": -341,
       "period": "战国",
       "label": "围魏救赵",
@@ -338,9 +538,15 @@
       "lesson": "聪明的打法，有时比硬碰硬更厉害",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--307-胡服骑射",
+      "render_key": "ms--307-胡服骑射",
       "year": -307,
       "period": "战国",
       "label": "胡服骑射",
@@ -348,9 +554,15 @@
       "lesson": "愿意改变旧方法，国家会更强",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--283-完璧归赵",
+      "render_key": "ms--283-完璧归赵",
       "year": -283,
       "period": "战国",
       "label": "完璧归赵",
@@ -358,9 +570,15 @@
       "lesson": "有时候不打仗，也是在较量谁更强",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--279-负荆请罪",
+      "render_key": "ms--279-负荆请罪",
       "year": -279,
       "period": "战国",
       "label": "负荆请罪",
@@ -368,9 +586,15 @@
       "lesson": "一个国家想变强，内部也要能合作",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--260-长平之战",
+      "render_key": "ms--260-长平之战",
       "year": -260,
       "period": "战国",
       "label": "长平之战",
@@ -378,9 +602,15 @@
       "lesson": "有些节点一过去，天下大势就更清楚了",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--227-荆轲刺秦王",
+      "render_key": "ms--227-荆轲刺秦王",
       "year": -227,
       "period": "战国",
       "label": "荆轲刺秦王",
@@ -388,9 +618,15 @@
       "lesson": "勇敢不一定能改变大势，但会被一直记住",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--221-秦统一六国",
+      "render_key": "ms--221-秦统一六国",
       "year": -221,
       "period": "秦",
       "label": "秦统一六国",
@@ -398,9 +634,15 @@
       "lesson": "很多前面的变化，最后会收成一个新王朝",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--214-修筑长城",
+      "render_key": "ms--214-修筑长城",
       "year": -214,
       "period": "秦",
       "label": "修筑长城",
@@ -408,9 +650,15 @@
       "lesson": "王朝强大时，不只打仗，还会留下很大的工程",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--213-焚书坑儒",
+      "render_key": "ms--213-焚书坑儒",
       "year": -213,
       "period": "秦",
       "label": "焚书坑儒",
@@ -418,9 +666,15 @@
       "lesson": "国家统一以后，如果压得太紧，也会埋下新的问题",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--210-沙丘之变",
+      "render_key": "ms--210-沙丘之变",
       "year": -210,
       "period": "秦",
       "label": "沙丘之变",
@@ -428,9 +682,15 @@
       "lesson": "大王朝崩掉前，常常先从宫廷内部乱起来",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--209-陈胜吴广起义",
+      "render_key": "ms--209-陈胜吴广起义",
       "year": -209,
       "period": "秦末",
       "label": "陈胜吴广起义",
@@ -438,9 +698,15 @@
       "lesson": "大王朝也可能从内部开始松动",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--207-巨鹿之战",
+      "render_key": "ms--207-巨鹿之战",
       "year": -207,
       "period": "楚汉相争",
       "label": "巨鹿之战",
@@ -448,9 +714,15 @@
       "lesson": "旧王朝快结束时，新英雄会先冒出来",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--206-鸿门宴",
+      "render_key": "ms--206-鸿门宴",
       "year": -206,
       "period": "楚汉相争",
       "label": "鸿门宴",
@@ -458,9 +730,15 @@
       "lesson": "打倒旧王朝，不等于新秩序马上稳定",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--206-韩信拜将",
+      "render_key": "ms--206-韩信拜将",
       "year": -206,
       "period": "西汉",
       "label": "韩信拜将",
@@ -468,9 +746,15 @@
       "lesson": "一个团队有时会因为找到对的人而整个变强",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--205-楚汉相争",
+      "render_key": "ms--205-楚汉相争",
       "year": -205,
       "period": "楚汉相争",
       "label": "楚汉相争",
@@ -478,9 +762,15 @@
       "lesson": "历史最精彩的时候，常常是“谁都会赢，也谁都可能输”",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--202-四面楚歌",
+      "render_key": "ms--202-四面楚歌",
       "year": -202,
       "period": "楚汉相争",
       "label": "四面楚歌",
@@ -488,9 +778,15 @@
       "lesson": "很多大结局不是一下结束，而是先被一步步围住",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--202-项羽乌江自刎",
+      "render_key": "ms--202-项羽乌江自刎",
       "year": -202,
       "period": "楚汉相争",
       "label": "项羽乌江自刎",
@@ -498,9 +794,15 @@
       "lesson": "一个英雄的结束，也意味着汉朝快要开始",
       "story_id": "story_000_xiang_yu_wujiang",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--202-汉朝建立",
+      "render_key": "ms--202-汉朝建立",
       "year": -202,
       "period": "西汉",
       "label": "汉朝建立",
@@ -508,9 +810,15 @@
       "lesson": "打赢天下之后，真正难的是把天下安定下来",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--200-白登之围",
+      "render_key": "ms--200-白登之围",
       "year": -200,
       "period": "西汉",
       "label": "白登之围",
@@ -518,9 +826,15 @@
       "lesson": "新王朝刚建立时，不一定马上处处都强",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--180-吕后专权",
+      "render_key": "ms--180-吕后专权",
       "year": -180,
       "period": "西汉",
       "label": "吕后专权",
@@ -528,9 +842,15 @@
       "lesson": "王朝稳不稳，不只看皇帝，也看继位之后怎么接班",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--157-文景之治",
+      "render_key": "ms--157-文景之治",
       "year": -157,
       "period": "西汉",
       "label": "文景之治",
@@ -538,9 +858,15 @@
       "lesson": "一个国家最厉害的时候，不一定在打仗，而可能在休养生息",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--154-周亚夫治军",
+      "render_key": "ms--154-周亚夫治军",
       "year": -154,
       "period": "西汉",
       "label": "周亚夫治军",
@@ -548,9 +874,15 @@
       "lesson": "一个王朝要稳，不只要有皇帝，也要有能顶住大局的人",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--154-七国之乱",
+      "render_key": "ms--154-七国之乱",
       "year": -154,
       "period": "西汉",
       "label": "七国之乱",
@@ -558,9 +890,15 @@
       "lesson": "一个王朝要长久，常常要先解决内部谁说了算",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--141-汉武帝即位",
+      "render_key": "ms--141-汉武帝即位",
       "year": -141,
       "period": "西汉",
       "label": "汉武帝即位",
@@ -568,9 +906,15 @@
       "lesson": "不同皇帝会把同一个王朝带向完全不同的样子",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--139-张骞通西域",
+      "render_key": "ms--139-张骞通西域",
       "year": -139,
       "period": "西汉",
       "label": "张骞通西域",
@@ -578,9 +922,15 @@
       "lesson": "原来天下不只眼前这一块地方，还有更远的世界",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--121-卫青霍去病",
+      "render_key": "ms--121-卫青霍去病",
       "year": -121,
       "period": "西汉",
       "label": "卫青霍去病",
@@ -588,9 +938,15 @@
       "lesson": "有些时代会因为几位厉害将领而改写边疆格局",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--100-苏武牧羊",
+      "render_key": "ms--100-苏武牧羊",
       "year": -100,
       "period": "西汉",
       "label": "苏武牧羊",
@@ -598,9 +954,15 @@
       "lesson": "历史里有人不是靠打赢，而是靠坚持被记住",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms--33-昭君出塞",
+      "render_key": "ms--33-昭君出塞",
       "year": -33,
       "period": "西汉",
       "label": "昭君出塞",
@@ -608,9 +970,15 @@
       "lesson": "处理冲突不一定只有打仗，也可以用另一种方式换和平",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-8-王莽改制",
+      "render_key": "ms-8-王莽改制",
       "year": 8,
       "period": "西汉",
       "label": "王莽改制",
@@ -618,9 +986,15 @@
       "lesson": "改得太急太大，也可能把原来就不稳的局面弄得更乱",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-25-刘秀建东汉",
+      "render_key": "ms-25-刘秀建东汉",
       "year": 25,
       "period": "东汉",
       "label": "刘秀建东汉",
@@ -628,9 +1002,15 @@
       "lesson": "一个王朝倒下后，有时还会以新的样子再回来",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-30-光武中兴",
+      "render_key": "ms-30-光武中兴",
       "year": 30,
       "period": "东汉",
       "label": "光武中兴",
@@ -638,9 +1018,15 @@
       "lesson": "重建秩序，有时比开国打仗更考验本事",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-67-汉明帝求法",
+      "render_key": "ms-67-汉明帝求法",
       "year": 67,
       "period": "东汉",
       "label": "汉明帝求法",
@@ -648,9 +1034,15 @@
       "lesson": "好学问可以从很远的地方“请进来”，交流会让自己更丰富",
       "story_id": "story_002_han_ming_di_qiu_fa",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-73-班超经营西域",
+      "render_key": "ms-73-班超经营西域",
       "year": 73,
       "period": "东汉",
       "label": "班超经营西域",
@@ -658,9 +1050,15 @@
       "lesson": "同一个方向，前朝做过，后朝也可能接着做",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-105-蔡伦造纸",
+      "render_key": "ms-105-蔡伦造纸",
       "year": 105,
       "period": "东汉",
       "label": "蔡伦造纸",
@@ -668,9 +1066,15 @@
       "lesson": "一个让东西变便宜的发明，能改变所有人读书识字的机会",
       "story_id": "story_001_cai_lun_zao_zhi",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-150-江南可采莲",
+      "render_key": "ms-150-江南可采莲#1",
       "year": 150,
       "period": "东汉",
       "label": "江南可采莲",
@@ -678,9 +1082,15 @@
       "lesson": "很早以前人们就用歌记住自己生活的地方",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": true,
+      "duplicate_index": 0,
+      "duplicate_count": 2
     },
     {
+      "milestone_id": "ms-150-江南可采莲",
+      "render_key": "ms-150-江南可采莲#2",
       "year": 150,
       "period": "东汉",
       "label": "江南可采莲",
@@ -688,9 +1098,15 @@
       "lesson": "很早以前人们就用歌记住自己生活的地方",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": true,
+      "duplicate_index": 1,
+      "duplicate_count": 2
     },
     {
+      "milestone_id": "ms-166-党锢之祸",
+      "render_key": "ms-166-党锢之祸",
       "year": 166,
       "period": "东汉",
       "label": "党锢之祸",
@@ -698,9 +1114,15 @@
       "lesson": "一个王朝快出问题时，常常是内部先彼此不信任",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-184-黄巾起义",
+      "render_key": "ms-184-黄巾起义",
       "year": 184,
       "period": "东汉",
       "label": "黄巾起义",
@@ -708,9 +1130,15 @@
       "lesson": "大时代结束前，往往会先出现一场大家都压不住的大乱",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-190-管宁割席",
+      "render_key": "ms-190-管宁割席",
       "year": 190,
       "period": "东汉末",
       "label": "管宁割席",
@@ -718,9 +1146,15 @@
       "lesson": "交朋友时，看清对方真正在乎什么很重要",
       "story_id": "story_009_guan_ning_ge_xi",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-199-曹操煮酒论英雄",
+      "render_key": "ms-199-曹操煮酒论英雄",
       "year": 199,
       "period": "东汉末",
       "label": "曹操煮酒论英雄",
@@ -728,9 +1162,15 @@
       "lesson": "真正的强大，有时候是藏起来的",
       "story_id": "story_004_zhu_jiu_lun_ying_xiong",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-199-望梅止渴",
+      "render_key": "ms-199-望梅止渴",
       "year": 199,
       "period": "东汉末",
       "label": "望梅止渴",
@@ -738,9 +1178,15 @@
       "lesson": "有时候一个聪明的想法，能帮大家度过难关",
       "story_id": "story_005_wang_mei_zhi_ke",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-200-名医张仲景",
+      "render_key": "ms-200-名医张仲景",
       "year": 200,
       "period": "东汉末",
       "label": "名医张仲景",
@@ -748,9 +1194,15 @@
       "lesson": "遇到巨大的伤心时，人可以把苦难变成帮助别人的力量",
       "story_id": "story_003_zhang_zhong_jing",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-199-绝妙好辞",
+      "render_key": "ms-199-绝妙好辞",
       "year": 199,
       "period": "东汉末",
       "label": "绝妙好辞",
@@ -758,9 +1210,15 @@
       "lesson": "汉字的部件里藏着无尽的乐趣",
       "story_id": "story_015_yang_xiu_jue_miao_hao_ci",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-220-三国鼎立",
+      "render_key": "ms-220-三国鼎立#1",
       "year": 220,
       "period": "三国",
       "label": "三国鼎立",
@@ -768,9 +1226,15 @@
       "lesson": "一个大时代结束后，天下有时会分成好几块",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": true,
+      "duplicate_index": 0,
+      "duplicate_count": 2
     },
     {
+      "milestone_id": "ms-220-曹植七步成诗",
+      "render_key": "ms-220-曹植七步成诗",
       "year": 220,
       "period": "三国",
       "label": "曹植七步成诗",
@@ -778,9 +1242,15 @@
       "lesson": "亲兄弟之间，才华护身，相煎何急",
       "story_id": "story_006_cao_zhi_qi_bu_cheng_shi",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-245-道边苦李",
+      "render_key": "ms-245-道边苦李",
       "year": 245,
       "period": "三国",
       "label": "道边苦李",
@@ -788,9 +1258,15 @@
       "lesson": "会推理的小朋友：观察、想为什么、猜出秘密",
       "story_id": "story_007_wang_rong_dao_bian_ku_li",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-280-鹤立鸡群",
+      "render_key": "ms-280-鹤立鸡群",
       "year": 280,
       "period": "西晋",
       "label": "鹤立鸡群",
@@ -798,9 +1274,15 @@
       "lesson": "真正的气质是从心里长出来的自信",
       "story_id": "story_008_ji_shao_he_li_ji_qun",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-200-官渡之战",
+      "render_key": "ms-200-官渡之战",
       "year": 200,
       "period": "东汉末",
       "label": "官渡之战",
@@ -808,9 +1290,15 @@
       "lesson": "人少的一方，用对了办法也能赢",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-207-观沧海",
+      "render_key": "ms-207-观沧海",
       "year": 207,
       "period": "东汉末",
       "label": "观沧海",
@@ -818,9 +1306,15 @@
       "lesson": "站得高看得远的人，心里常常装着更大的世界",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-220-三国鼎立",
+      "render_key": "ms-220-三国鼎立#2",
       "year": 220,
       "period": "三国",
       "label": "三国鼎立",
@@ -828,9 +1322,15 @@
       "lesson": "一个大时代结束后，天下有时会分成好几块",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": true,
+      "duplicate_index": 1,
+      "duplicate_count": 2
     },
     {
+      "milestone_id": "ms-280-三国归晋",
+      "render_key": "ms-280-三国归晋",
       "year": 280,
       "period": "西晋",
       "label": "三国归晋",
@@ -838,9 +1338,15 @@
       "lesson": "分久必合，但合起来的天下还要学会怎么守住",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-313-闻鸡起舞",
+      "render_key": "ms-313-闻鸡起舞",
       "year": 313,
       "period": "东晋",
       "label": "闻鸡起舞",
@@ -848,9 +1354,15 @@
       "lesson": "每天坚持练一点，说出口的誓言用行动实现",
       "story_id": "story_013_zu_ti_wen_ji_qi_wu",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-317-衣冠南渡",
+      "render_key": "ms-317-衣冠南渡",
       "year": 317,
       "period": "东晋",
       "label": "衣冠南渡",
@@ -858,9 +1370,15 @@
       "lesson": "人们搬家有时是因为战乱，新家会慢慢长出新的繁荣",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-330-坦腹东床",
+      "render_key": "ms-330-坦腹东床",
       "year": 330,
       "period": "东晋",
       "label": "坦腹东床",
@@ -868,9 +1386,15 @@
       "lesson": "真实自然的样子，本身就很有魅力",
       "story_id": "story_011_wang_xizhi_tan_fu_dong_chuang",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-353-兰亭雅集",
+      "render_key": "ms-353-兰亭雅集",
       "year": 353,
       "period": "东晋",
       "label": "兰亭雅集",
@@ -878,9 +1402,15 @@
       "lesson": "认真做好一件事，就是把时间留住",
       "story_id": "story_016_wang_xizhi_lan_ting_ya_ji",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-360-雪夜访戴",
+      "render_key": "ms-360-雪夜访戴",
       "year": 360,
       "period": "东晋",
       "label": "雪夜访戴",
@@ -888,9 +1418,15 @@
       "lesson": "做一件事，开心在路上，不一定非要到达终点",
       "story_id": "story_014_wang_huizhi_xue_ye_fang_dai",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-375-咏雪之才",
+      "render_key": "ms-375-咏雪之才",
       "year": 375,
       "period": "东晋",
       "label": "咏雪之才",
@@ -898,9 +1434,15 @@
       "lesson": "好的比喻能让平常的东西一下子变活",
       "story_id": "story_010_xie_daoyun_yong_xue",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-380-渐至佳境",
+      "render_key": "ms-380-渐至佳境",
       "year": 380,
       "period": "东晋",
       "label": "渐至佳境",
@@ -908,9 +1450,15 @@
       "lesson": "把苦放前面，甜就在后面等着你",
       "story_id": "story_012_gu_kai_zhi_jian_zhi_jia_jing",
       "story_status": "recorded",
-      "region_id": null
+      "narration_status": "placeholder",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-383-淝水之战",
+      "render_key": "ms-383-淝水之战",
       "year": 383,
       "period": "东晋",
       "label": "淝水之战",
@@ -918,9 +1466,15 @@
       "lesson": "看似弱小的一方，准备充分也能守住自己",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-406-归园田居",
+      "render_key": "ms-406-归园田居",
       "year": 406,
       "period": "东晋",
       "label": "归园田居",
@@ -928,9 +1482,15 @@
       "lesson": "生活里不只有做官，种地看山也可以是一种选择",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-450-木兰诗",
+      "render_key": "ms-450-木兰诗",
       "year": 450,
       "period": "南北朝",
       "label": "木兰诗",
@@ -938,9 +1498,15 @@
       "lesson": "勇敢和担当，不分男孩女孩",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-494-孝文帝迁都洛阳",
+      "render_key": "ms-494-孝文帝迁都洛阳",
       "year": 494,
       "period": "南北朝",
       "label": "孝文帝迁都洛阳",
@@ -948,9 +1514,15 @@
       "lesson": "不同民族生活在一起，会互相学习变成新的样子",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-546-敕勒歌",
+      "render_key": "ms-546-敕勒歌",
       "year": 546,
       "period": "南北朝",
       "label": "敕勒歌",
@@ -958,9 +1530,15 @@
       "lesson": "每个地方的人，都会用歌记住自己的家园",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     },
     {
+      "milestone_id": "ms-589-隋统一南北",
+      "render_key": "ms-589-隋统一南北",
       "year": 589,
       "period": "隋",
       "label": "隋统一南北",
@@ -968,7 +1546,11 @@
       "lesson": "分开很久的两半，总有一天会重新合在一起",
       "story_id": null,
       "story_status": "planned",
-      "region_id": null
+      "narration_status": "unknown",
+      "region_id": null,
+      "duplicate": false,
+      "duplicate_index": 0,
+      "duplicate_count": 1
     }
   ]
 }
