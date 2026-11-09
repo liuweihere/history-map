@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { REGION_GEOJSON_PATH, regionIdForStory } from "../lib/history-regions";
+import { buildBasemapAttribution } from "../lib/basemap-attribution";
 
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
@@ -118,6 +119,7 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
   const regionsGeojsonRef = useRef(null);
   const flyToRegionRef = useRef(null);
   const [regionsReady, setRegionsReady] = useState(false);
+  const [basemapOnline, setBasemapOnline] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -132,6 +134,11 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
       const { style: basemapStyle, online: basemapOnline } = await loadBasemapStyle();
       if (cancelled) return;
       mapNodeRef.current.classList.toggle("map--basemap-off", !basemapOnline);
+
+      // 底图署名（§5 #9）：attributionControl 关闭后自绘 credit，
+      // 在线显示 Carto 署名，离线纯色 fallback 诚实标注回退底图，不伪报 Carto。
+      // 完整许可评估为人工关卡，此处只呈现署名文本。
+      setBasemapOnline(basemapOnline);
 
       const map = new maplibregl.Map({
         container: mapNodeRef.current,
@@ -494,5 +501,15 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
     return () => clearTimeout(timer);
   }, [focusRegion, regionsReady]);
 
-  return <div className="history-map-canvas" ref={mapNodeRef} />;
+  const attributionText = buildBasemapAttribution(basemapOnline === true);
+
+  return (
+    <div className="history-map-canvas" ref={mapNodeRef}>
+      {basemapOnline !== null ? (
+        <div className="history-map-attribution" role="contentinfo">
+          {attributionText}
+        </div>
+      ) : null}
+    </div>
+  );
 }

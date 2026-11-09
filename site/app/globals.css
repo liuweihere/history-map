@@ -312,6 +312,21 @@ button {
   color: inherit;
 }
 
+/* 自绘底图署名（attributionControl 关闭后补偿，§5 #9） */
+.history-map-attribution {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  z-index: 4;
+  background: rgba(247, 240, 228, 0.88);
+  color: var(--ink-soft);
+  border-radius: 12px;
+  border: 1px solid rgba(72, 48, 28, 0.12);
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  pointer-events: none;
+}
+
 .atlas-frame {
   position: absolute;
   background: rgba(72, 48, 28, 0.16);
