@@ -7,68 +7,48 @@ import { TimeScrubber } from "./time-scrubber";
 import { StoryMindMap } from "./story-mind-map";
 import {
   regionIdForStory,
-  milestoneRegionId,
 } from "../lib/history-regions";
+import {
+  buildMilestones,
+  selectEntryByStoryId,
+  selectMilestoneByStoryId,
+  milestoneInteractive,
+  storyIdFromMilestone,
+} from "../lib/story-selection";
 
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
   return String(year);
 }
 
-function buildMilestones(entries, rail, currentYear) {
-  const entryByStoryId = new Map(entries.map((entry) => [entry.story.story_id, entry]));
-
-  return rail.map((milestone) => {
-    const storyEntry = milestone.story_id ? entryByStoryId.get(milestone.story_id) : null;
-    const regionId = milestoneRegionId(milestone);
-    return {
-      ...milestone,
-      status:
-        milestone.year === currentYear
-          ? "active"
-          : storyEntry
-            ? "available"
-            : regionId
-              ? "preview"
-              : "upcoming",
-      interactive: Boolean(storyEntry),
-      storyYear: storyEntry?.story.timeline.year ?? null,
-      regionId,
-    };
-  });
-}
-
-function milestoneInteractive(milestone) {
-  return Boolean(milestone && milestone.story_id && milestone.interactive);
-}
-
 export function HistoryAtlasApp({ entries, timeline }) {
   const chronicleEntries = [...entries].sort((a, b) => a.story.timeline.year - b.story.timeline.year);
-  const [selectedYear, setSelectedYear] = useState(chronicleEntries[0]?.story.timeline.year ?? 0);
+  // 身份选择用稳定 story_id（年份是日期不是身份，同年多故事按年 find 会串线）
+  const [selectedStoryId, setSelectedStoryId] = useState(chronicleEntries[0]?.story.story_id ?? null);
   const [selectedQuestion, setSelectedQuestion] = useState(0);
   const [drawerTab, setDrawerTab] = useState("mindmap");
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(false);
   const [focusRegion, setFocusRegion] = useState(null);
 
-  const currentEntry =
-    chronicleEntries.find((entry) => entry.story.timeline.year === selectedYear) ?? chronicleEntries[0];
+  const currentEntry = selectEntryByStoryId(chronicleEntries, selectedStoryId);
 
   useEffect(() => {
     setSelectedQuestion(0);
-  }, [selectedYear]);
+  }, [selectedStoryId]);
 
   useEffect(() => {
-    if (!chronicleEntries.some((entry) => entry.story.timeline.year === selectedYear)) {
-      setSelectedYear(chronicleEntries[0]?.story.timeline.year ?? 0);
+    if (!chronicleEntries.some((entry) => entry.story.story_id === selectedStoryId)) {
+      setSelectedStoryId(chronicleEntries[0]?.story.story_id ?? null);
     }
-  }, [chronicleEntries, selectedYear]);
+  }, [chronicleEntries, selectedStoryId]);
 
   if (!currentEntry) {
     return null;
   }
 
   const { event, story } = currentEntry;
+  const selectedYear = story.timeline.year;
   const scene = story.scene ?? {
     deck: event.child_summary,
     map_headline: story.timeline.label,
@@ -81,18 +61,15 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const panel = story.panel;
   const promptDeck = panel.parent_prompt?.length ? panel.parent_prompt : event.questions;
   const currentPrompt = promptDeck[selectedQuestion] ?? promptDeck[0];
-  const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], story.timeline.year);
+  const milestones = buildMilestones(chronicleEntries, timeline?.milestones ?? [], selectedStoryId);
 
-  // 同年多节点时优先命中 interactive 的故事节点（如 220 三国鼎立/曹植七步成诗）
-  const dockedMilestone =
-    milestones.find((m) => m.year === selectedYear && m.interactive) ??
-    milestones.find((m) => m.year === selectedYear) ??
-    null;
+  // docked 里程碑按 story_id 选取：同年多故事各自命中自己的节点，保证唯一
+  const dockedMilestone = selectMilestoneByStoryId(milestones, selectedStoryId);
   const skeletonMode = !milestoneInteractive(dockedMilestone);
 
   const dockToMilestone = (milestone) => {
     if (milestoneInteractive(milestone)) {
-      setSelectedYear(milestone.storyYear);
+      setSelectedStoryId(storyIdFromMilestone(milestone));
       setDrawerOpen(true);
       // 切换故事时重置大区聚焦（plan.md）
       setFocusRegion(null);
@@ -301,7 +278,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
         onDock={dockToMilestone}
         onYearChange={(milestone) => {
           if (milestoneInteractive(milestone)) {
-            setSelectedYear(milestone.storyYear);
+            setSelectedStoryId(storyIdFromMilestone(milestone));
           }
         }}
       />
@@ -330,7 +307,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
                   disabled={!milestone.interactive && !previewable}
                   onClick={() => {
                     if (milestone.interactive) {
-                      if (milestone.storyYear !== null) setSelectedYear(milestone.storyYear);
+                      setSelectedStoryId(storyIdFromMilestone(milestone));
                     } else if (previewable) {
                       // planned 里程碑：仅 flyTo + 高亮大区，不改选中故事（plan.md）
                       setFocusRegion({ id: milestone.regionId, nonce: Date.now() });
