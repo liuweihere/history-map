@@ -51,6 +51,16 @@ async function setupJsdom() {
   if (!dom.window.HTMLCanvasElement.prototype.getContext) {
     dom.window.HTMLCanvasElement.prototype.getContext = () => null;
   }
+  // maplibre 模块加载需要 URL.createObjectURL（jsdom 缺失会抛错）；stub 以避免
+  // 异步泄漏。Map 构造仍会因无 WebGL 失败，由组件 init().catch 承载。
+  if (!dom.window.URL.createObjectURL) {
+    dom.window.URL.createObjectURL = () => "blob:fake";
+    dom.window.URL.revokeObjectURL = () => {};
+  }
+  if (!globalThis.URL.createObjectURL) {
+    globalThis.URL.createObjectURL = () => "blob:fake";
+    globalThis.URL.revokeObjectURL = () => {};
+  }
   return dom;
 }
 
@@ -297,4 +307,57 @@ test("index fetch 失败时显示友好提示，不锁死（保留故事入口�
   } finally {
     globalThis.fetch = origFetch;
   }
+});
+
+// ── 修复回归（独立审查 5a934a4 后）────────────────────────────────
+
+test("数据缺失首屏：空态卡含明显可发现的「进入故事目录」按钮，触发 onGoToStories", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = () => Promise.reject(new Error("no data"));
+  let called = false;
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onGoToStories: () => { called = true; },
+        onStateChange: () => {},
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 120));
+    const cta = document.querySelector(".exploration-empty-stage__cta");
+    assert.ok(cta, "首屏无数据时有明显的故事目录入口按钮");
+    assert.match(cta.textContent, /进入故事目录/);
+    const win = document.defaultView;
+    cta.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 10));
+    assert.equal(called, true, "点击触发 onGoToStories");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("数据来源与示意提醒显示：江山时序 / historical-basemaps / 未经法律审核", async () => {
+  // ExplorationMapStage 依赖 maplibre/WebGL（jsdom 无），直接挂载会触发
+  // 异步 init 失败后 setState 泄漏。归因文案是静态 JSX，用源文件字符串断言
+  // 验证存在性（构建保证 JSX 语法正确）。
+  const { readFile } = await import("node:fs/promises");
+  const { fileURLToPath } = await import("node:url");
+  const src = await readFile(
+    fileURLToPath(new URL("../components/exploration-map-stage.jsx", import.meta.url)),
+    "utf8",
+  );
+  assert.match(src, /江山时序/, "组件含江山时序来源标注");
+  assert.match(src, /historical-basemaps/, "组件含 historical-basemaps 来源标注");
+  assert.match(src, /未经法律/, "组件明确未通过法律审核");
+  assert.match(src, /示意/, "组件保留示意提醒");
+});
+
+test("走廊过滤：无 from/to 的走廊一直显示（与 corridorActiveAt 一致）", async () => {
+  const { corridorActiveAt } = await import("../lib/jiangshan-data.js");
+  assert.ok(corridorActiveAt({ properties: {} }, 220), "无 span 一直显示");
+  assert.ok(corridorActiveAt({ properties: { from: 220, to: 265 } }, 245), "在区间内显示");
+  assert.ok(!corridorActiveAt({ properties: { from: 220, to: 265 } }, 300), "区间外不显示");
 });

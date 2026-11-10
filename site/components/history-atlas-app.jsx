@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { HistoryMapStage } from "./history-map-stage";
 import { TimeScrubber } from "./time-scrubber";
@@ -42,8 +42,11 @@ export function HistoryAtlasApp({ entries, timeline }) {
   // 点击探索抽屉里的故事 → 进入故事状态；「返回地图探索」恢复探索现场
   // （年份 / 视角 / 右侧标签与开合状态，§2 故事学习状态）。
   const [mode, setMode] = useState("explore");
-  // 探索现场快照（由 ExplorationStage 通过 onStateChange 持续记录）
+  // 探索现场快照（由 ExplorationStage 通过 onStateChange 持续记录 year/drawer/tab）
   const [exploreState, setExploreState] = useState(null);
+  // 视角由 ExplorationStage 通过 onCameraChange 实时写入此 ref（不触发 re-render），
+  // 供 topbar「故事目录」与抽屉故事入口在进入故事前读取最新视角。
+  const exploreCameraRef = useRef(null);
   // 进入故事前保存的探索现场（往返恢复用）
   const [savedExploreState, setSavedExploreState] = useState(null);
 
@@ -60,12 +63,28 @@ export function HistoryAtlasApp({ entries, timeline }) {
     }
   }, [chronicleEntries, selectedStoryId]);
 
-  // ── 探索 ↔ 故事 往返：进入故事前保存探索现场（含视角），返回时恢复 ──
+  // ── 探索 ↔ 故事 往返：进入故事前保存探索现场（含最新视角），返回时恢复 ──
+  // 抽屉故事入口由 ExplorationStage 传入含 camera 的快照；
+  // topbar「故事目录」入口由 goToStoryIndex 用当前 exploreState + exploreCameraRef 组装，
+  // 保证返回时恢复的是进入前的年份/抽屉/视角，而非更早的 savedExploreState。
   const enterStoryFromExplore = (storyId, exploreSnapshot) => {
     if (typeof storyId === "string" && storyId) {
       setSelectedStoryId(storyId);
     }
-    setSavedExploreState(exploreSnapshot ?? exploreState);
+    setSavedExploreState(exploreSnapshot ?? buildCurrentExploreSnapshot());
+    setMode("story");
+  };
+
+  // 组装当前探索现场（年份/抽屉/标签/视角）——供 topbar 入口与无 exploreSnapshot 时兜底
+  const buildCurrentExploreSnapshot = () => ({
+    selectedYear: exploreState?.selectedYear,
+    drawerOpen: exploreState?.drawerOpen,
+    drawerTab: exploreState?.drawerTab,
+    camera: exploreCameraRef.current ?? exploreState?.camera ?? null,
+  });
+
+  const goToStoryIndex = () => {
+    setSavedExploreState(buildCurrentExploreSnapshot());
     setMode("story");
   };
 
@@ -88,8 +107,8 @@ export function HistoryAtlasApp({ entries, timeline }) {
             <button
               type="button"
               className="atlas-mode-switch"
-              onClick={() => setMode("story")}
-              title="回到故事学习体验"
+              onClick={goToStoryIndex}
+              title="回到故事学习体验（恢复时还原当前年份、视角与面板）"
             >
               故事目录 ▸
             </button>
@@ -99,6 +118,8 @@ export function HistoryAtlasApp({ entries, timeline }) {
         <ExplorationStage
           entries={chronicleEntries}
           onEnterStory={enterStoryFromExplore}
+          onGoToStories={goToStoryIndex}
+          onCameraChange={(cam) => { exploreCameraRef.current = cam; }}
           restoredState={savedExploreState ?? undefined}
           onStateChange={setExploreState}
         />

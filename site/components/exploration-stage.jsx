@@ -36,11 +36,13 @@ import {
  * - 数据缺失（Phase 1 未交付）时显示友好提示，保留故事入口，不造数据。
  *
  * @param {array} entries  本站故事条目（来自 getChronicleData）
- * @param {function} onEnterStory  (storyId) => void  点击故事 → 进入故事状态
+ * @param {function} onEnterStory  (storyId, exploreSnapshot) => void  点击故事 → 进入故事状态
+ * @param {function|null} onGoToStories  () => void  数据缺失时进入故事目录
+ * @param {function|null} onCameraChange  (camera) => void  视角变化上报（父级持有最新视角）
  * @param {object|null} restoredState  从故事返回时恢复的探索现场
  * @param {function} onStateChange  (state) => void  记录探索现场供往返恢复
  */
-export function ExplorationStage({ entries, onEnterStory, restoredState, onStateChange }) {
+export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCameraChange, restoredState, onStateChange }) {
   const [index, setIndex] = useState(null);
   const [indexError, setIndexError] = useState(null);
   const [corridors, setCorridors] = useState(null);
@@ -177,7 +179,7 @@ export function ExplorationStage({ entries, onEnterStory, restoredState, onState
     if (target) setSelectedYear(clampYear(target.p.from));
   };
 
-  // 数据缺失友好提示
+  // 数据缺失友好提示（首屏无数据时，故事入口明显可发现）
   if (indexError && !index) {
     return (
       <div className="exploration-empty-stage">
@@ -191,6 +193,15 @@ export function ExplorationStage({ entries, onEnterStory, restoredState, onState
           <p className="exploration-empty-stage__err" role="note">
             数据接口：{indexError}
           </p>
+          {typeof onGoToStories === "function" ? (
+            <button
+              type="button"
+              className="exploration-empty-stage__cta"
+              onClick={onGoToStories}
+            >
+              进入故事目录 ▸
+            </button>
+          ) : null}
         </div>
       </div>
     );
@@ -205,7 +216,11 @@ export function ExplorationStage({ entries, onEnterStory, restoredState, onState
             corridors={corridors}
             selectedYear={selectedYear}
             initialCamera={cameraRef.current}
-            onCameraChange={(cam) => { cameraRef.current = cam; }}
+            onCameraChange={(cam) => {
+              cameraRef.current = cam;
+              // 同步给父级（用 ref 持有），供 topbar「故事目录」进入故事时读取最新视角
+              onCameraChange?.(cam);
+            }}
           />
         ) : (
           <div className="exploration-loading">正在加载历史地图数据…</div>
@@ -230,7 +245,7 @@ export function ExplorationStage({ entries, onEnterStory, restoredState, onState
           ) : (
             <p className="exploration-phase-card__empty">
               {index
-                ? "所选年份不在任何已导出的导航朝代区间内。"
+                ? `所选年份 ${formatYear(selectedYear)} 暂无对应的导航朝代区间（可尝试相邻年份）。`
                 : "正在加载朝代索引…"}
             </p>
           )}

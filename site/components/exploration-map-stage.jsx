@@ -150,6 +150,7 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
     }
 
     init().catch((e) => {
+      if (cancelled) return; // 卸载后不再 setState（避免 React 19 调度器异步泄漏）
       console.error("[exploration-map] init failed", e);
       setError(String(e?.message ?? e));
     });
@@ -167,21 +168,32 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
 
   // ── 政权快照 + 走廊：随 snapshot / corridors / selectedYear 更新 ──
   // 同 phase（snapshot 不变）只更新走廊过滤，不重建快照源。
+  // 防过期回写：style 未加载时延迟到 idle 应用，但用 revision 守卫——
+  // 新 snapshot 到来后旧 idle 回调捕获的旧 snapshot 不再回写。
   const snapshotVersionRef = useRef(null);
+  const latestSnapshotRef = useRef(null);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !snapshot) return;
+    latestSnapshotRef.current = snapshot;
+    const mySnapshot = snapshot;
     if (!map.isStyleLoaded()) {
       // 等待 style load 后再挂；用 once 避免漏挂
-      map.once("idle", () => applySnapshot());
+      map.once("idle", () => {
+        // 守卫：若期间已有更新的 snapshot，丢弃本次（旧 snapshot 不回写）
+        if (latestSnapshotRef.current !== mySnapshot) return;
+        applySnapshot();
+      });
       return;
     }
     applySnapshot();
 
     function applySnapshot() {
       if (!mapRef.current) return;
-      const version = snapshot.__v ?? JSON.stringify(snapshot).length;
+      // 守卫：仅应用最新 snapshot（防止延迟回调过期回写）
+      if (latestSnapshotRef.current !== mySnapshot) return;
+      const version = mySnapshot.__v ?? JSON.stringify(mySnapshot).length;
       // 同 snapshot 不重复重建
       if (snapshotVersionRef.current === version && map.getSource("jiangshan-polity")) return;
       snapshotVersionRef.current = version;
@@ -194,7 +206,7 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
 
       map.addSource("jiangshan-polity", {
         type: "geojson",
-        data: snapshot,
+        data: mySnapshot,
       });
       // 政权填色淡化（0.32），不堆色块；色由 display_color→tint→安全色
       map.addLayer({
@@ -209,7 +221,7 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
       });
 
       // 政权锚点标签（DOM Marker，properties.title / anchor）
-      polityLabelsRef.current = (snapshot.features ?? [])
+      polityLabelsRef.current = (mySnapshot.features ?? [])
         .map((f) => {
           const props = f.properties ?? {};
           const anchor = polityAnchor(props);
@@ -223,21 +235,29 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
     }
   }, [snapshot]);
 
-  // 走廊层：corridors 常驻，按 selectedYear 过滤（from/to 两端包含）
+  // 走廊层：corridors 常驻，按 selectedYear 过滤（from/to 两端包含；
+  // 无 from/to 的走廊按上游定义「一直显示」，与 corridorActiveAt 一致）
   const corridorsVersionRef = useRef(null);
+  const latestCorridorsRef = useRef(null);
 
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !corridors) return;
+    latestCorridorsRef.current = corridors;
+    const myCorridors = corridors;
     if (!map.isStyleLoaded()) {
-      map.once("idle", () => applyCorridors());
+      map.once("idle", () => {
+        if (latestCorridorsRef.current !== myCorridors) return; // 守卫：丢弃过期回写
+        applyCorridors();
+      });
       return;
     }
     applyCorridors();
 
     function applyCorridors() {
       if (!mapRef.current) return;
-      const version = corridors.__v ?? JSON.stringify(corridors).length;
+      if (latestCorridorsRef.current !== myCorridors) return;
+      const version = myCorridors.__v ?? JSON.stringify(myCorridors).length;
       if (corridorsVersionRef.current === version && map.getSource("jiangshan-corridors")) {
         // 同 corridors 只更新过滤
         updateFilter();
@@ -248,7 +268,7 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
       if (map.getLayer("corridor-line")) map.removeLayer("corridor-line");
       if (map.getSource("jiangshan-corridors")) map.removeSource("jiangshan-corridors");
 
-      map.addSource("jiangshan-corridors", { type: "geojson", data: corridors });
+      map.addSource("jiangshan-corridors", { type: "geojson", data: myCorridors });
       // 走廊在上层（polity 之上）：用 line，棕褐色虚线
       map.addLayer({
         id: "corridor-line",
@@ -267,11 +287,11 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
     function updateFilter() {
       const m = mapRef.current;
       if (!m || !m.getLayer("corridor-line")) return;
-      // from<=year<=to 两端包含
+      // from<=year<=to 两端包含；from/to 缺失（无 span）→ 一直显示
       m.setFilter("corridor-line", [
-        "all",
-        ["<=", ["get", "from"], selectedYear],
-        [">=", ["get", "to"], selectedYear],
+        "any",
+        ["!", ["all", ["has", "from"], ["has", "to"]]],
+        ["all", ["<=", ["get", "from"], selectedYear], [">=", ["get", "to"], selectedYear]],
       ]);
     }
   }, [corridors, selectedYear]);
@@ -285,9 +305,15 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
           {attributionText}
         </div>
       ) : null}
-      {/* 近似 / 现代底图提示（§2/§3 护栏：明确显示不确定性）*/}
+      {/* 近似 / 现代底图提示 + 数据来源（§2/§3/§5 护栏：明确显示不确定性与来源，不伪称法律审核通过）*/}
       <div className="exploration-map-notice" role="note">
-        示意 · 近似复原 · 底图为现代地理参考，河道等可能与古代不同
+        <p className="exploration-map-notice__main">
+          示意 · 近似复原 · 底图为现代地理参考，河道等可能与古代不同
+        </p>
+        <p className="exploration-map-notice__source">
+          政权数据源自江山时序（jiangshan-map）/ historical-basemaps 社区导出；
+          示意复原，未经法律与发布合规审核。
+        </p>
       </div>
       {error ? (
         <div className="exploration-map-error" role="alert">
