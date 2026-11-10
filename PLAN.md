@@ -812,6 +812,30 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 > 本节由验证协议产出物按时间倒序追加；每条记录含：日期、Phase、
 > PASS/FAIL 总表、commit/tag 清单、给人类的决策清单。
 
+#### 2026-11-10 · Phase 0 产品验证完成（主 agent 亲自执行）→ `phase-0-verified`
+
+浏览器（cursor-ide-browser，localhost:3457）逐项实测：
+
+| 验收项 | 结果 | 证据 |
+|--------|------|------|
+| 199 三故事独立选择 | PASS | 三次点击标题分别为 曹操煮酒论英雄/望梅止渴/杨修绝妙好辞，导图正确 |
+| 键盘导航（夜间遗留 FAIL） | PASS | ArrowRight：绝妙好辞→曹植七步成诗；ArrowLeft 三连：曹植→绝妙好辞→张仲景→管宁割席；游标经 planned 节点不卡死（`26eaea8` 修复在真实浏览器生效） |
+| 地图渲染（夜间遗留存疑） | PASS | canvas 2896×1476、12 marker、水彩底图正常——夜间 headless `--disable-gpu` 的 WebGL 失败确认为环境问题，非产品缺陷 |
+| 底图署名 | PASS | 右下角实测「© CARTO © OpenStreetMap contributors」 |
+| narration_status | PASS | 目录头「95 个节点 · 17 个可打开 · 真实口述 0 · 口述占位 16」 |
+| 重复条目 | PASS | 150 江南可采莲 / 220 三国鼎立 各一条（源清理 `399f2ab`，用户已批准删除副本+持久 ID 方案） |
+| 持久 milestone_id | PASS | timeline-id-stability 13/13；milestone-identity 13/13 |
+| 知识限定语（超出预期） | PASS | 煮酒论英雄/望梅止渴/绝妙好辞 均显示史料出处限定（世说新语=笔记小说、演义增饰等） |
+| 数据层测试 | 61/64 | 3 失败均为 keyboard-navigation.test.mjs 的 React 集成项，根因 `ERR_UNKNOWN_FILE_EXTENSION: .jsx`——测试基建缺 loader，非产品缺陷（行为已在真浏览器实证） |
+
+**Tag**：`phase-0-verified` @ `6cf0644`。
+**遗留（不阻塞 Phase 1，记入 Phase 5 清单）**：① 故事面板内缺逐故事口述
+状态徽章（目录级统计已有，面板级未做）；② 3 个 React 集成测试需补
+jsx loader（建议改用 next/jest 或 tsx --loader，Phase 1 顺手修）。
+**协议复盘**：夜间卡点 100% 是验证环境（CDP 驱动崩溃/安全分类器
+超时），产品本身已就绪——印证 §7 角色分工正确但缺"控制端亲自兜底
+产品验证"的兜底条款，已在本轮由主 agent 补位执行。
+
 #### 2026-11-10 · 锁异常独立复核结果
 
 - 独立验证者在 `f78425e` 运行锁测试，报告 10/10 通过：写入/关闭
