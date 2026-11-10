@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { access, mkdir, mkdtemp, readFile, readdir, rename, rm, unlink, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, open, readFile, readdir, rename, rm, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTimelineMilestones } from "./timeline-milestone-parser.mjs";
@@ -1376,6 +1376,7 @@ type PublishFs = {
   rm: typeof rm;
   writeFile: typeof writeFile;
   readFile: typeof readFile;
+  open: typeof open;
 };
 
 const DEFAULT_PUBLISH_FS: PublishFs = {
@@ -1387,6 +1388,7 @@ const DEFAULT_PUBLISH_FS: PublishFs = {
   rm,
   writeFile,
   readFile,
+  open,
 };
 
 // 判定输出目录中属于「生成物」的文件名：发布阶段只移动/清理这些文件，
@@ -1418,25 +1420,47 @@ class ExportRollbackIncompleteError extends Error {
   }
 }
 
-// acquireExportLock：check-then-write 守卫同目标并发导出。
-// 锁已存在 → fail-closed（抛错），绝不删除/覆盖他人锁。
+// acquireExportLock：原子排他创建（open 'wx' = O_CREAT|O_EXCL）守卫同目标并发导出。
+// 创建成功即获得所有权；锁已存在 → fail-closed（抛错），绝不删除/覆盖他人锁。
 // 写入 ownerTag（pid + 时间 + stagingDir）便于 releaseExportLock 核验归属。
+//
+// 历史的 readFile(check)→writeFile(act) 是非原子 check-then-write，存在 TOCTOU
+// 窗口：两个并发导出可同时读到 ENOENT 后各自建锁，双双获得所有权，互斥被击穿。
+// 改用单次 open('wx') 原子排他创建：由内核保证「创建即唯一拥有」，EEXIST 即失败。
+// 文件句柄在 finally 中关闭，确保无论写入成败都不泄漏句柄。
 async function acquireExportLock(fs: PublishFs, lockPath: string, ownerTag: string) {
-  let existing: string | null = null;
+  let handle;
   try {
-    existing = await fs.readFile(lockPath, "utf8");
+    // 原子排他创建：文件不存在则创建并独占；已存在则抛 EEXIST（不覆盖他人锁）。
+    handle = await fs.open(lockPath, "wx");
   } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-  }
-  if (existing !== null) {
-    throw new Error(
-      `导出锁已存在，同目标并发导出被拒绝（fail-closed）：${lockPath}\n` +
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") {
+      // 锁已存在 → fail-closed。读取现有 ownerTag 用于诊断，绝不删除/覆盖。
+      // 极小窗口：EEXIST 后读取时锁已被他人释放（ENOENT）→ 重试一次原子创建，
+      // 既不漏抢也不误判为他人锁。
+      let existing: string | null = null;
+      try {
+        existing = await fs.readFile(lockPath, "utf8");
+      } catch (readError) {
+        if ((readError as NodeJS.ErrnoException).code !== "ENOENT") throw readError;
+        // 锁在 EEXIST 与读取之间被释放 → 重试原子创建（递归一次即可收敛）。
+        return acquireExportLock(fs, lockPath, ownerTag);
+      }
+      throw new Error(
+        `导出锁已存在，同目标并发导出被拒绝（fail-closed）：${lockPath}\n` +
         `锁内容：\n${existing}\n` +
         `若为残留锁（进程意外退出），请先核查输出目录与同级 export-backup-* ` +
         `备份完整性，确认无误后手动删除该锁再重跑。本实现不会自动清除他人/残留锁。`,
-    );
+      );
+    }
+    throw error;
   }
-  await fs.writeFile(lockPath, ownerTag, "utf8");
+  try {
+    await handle.writeFile(ownerTag, "utf8");
+  } finally {
+    // 无论写入成败都关闭句柄，避免泄漏。写入失败时由调用方清理半成品锁。
+    await handle.close();
+  }
 }
 
 // releaseExportLock：仅当锁内容仍是本进程 ownerTag 才删除，绝不误删他人锁。
@@ -1583,8 +1607,8 @@ async function exportTimelineRail(
 // rootDir/outputDir 可注入供隔离测试；fsOps 可注入发布阶段 fs 操作以精确
 // 复现发布失败（见 site/test/export-publish-failure.test.mjs）。注入仅作用于
 // 发布阶段，编译/读取阶段始终用真实 fs。
-// 注意：acquireExportLock 为 check-then-write，存在极小 TOCTOU 窗口；导出为
-// 操作者手动触发、非高并发场景，可接受。如需严格互斥可改用 O_EXCL 原子创建。
+// 注意：acquireExportLock 已改用 open('wx')（O_CREAT|O_EXCL）原子排他创建，
+// 无 TOCTOU 窗口，同目标并发导出由内核保证严格互斥（见并发锁回归测试）。
 async function runExport({
   rootDir = ROOT,
   outputDir,
