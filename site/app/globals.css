@@ -2134,3 +2134,506 @@ button {
     font-size: 11px;
   }
 }
+
+/* ===== Phase 3 · 时空探索（Exploration Mode）===== */
+
+.atlas-shell--explore {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 16px 18px;
+  gap: 12px;
+}
+
+.atlas-topbar--explore {
+  margin-bottom: 0;
+}
+
+.atlas-mode-switch {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(124, 61, 45, 0.32);
+  background: linear-gradient(180deg, rgba(255, 250, 244, 0.96), rgba(244, 233, 214, 0.9));
+  color: var(--capital);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+.atlas-mode-switch:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(107, 56, 40, 0.16);
+}
+
+.exploration-stage {
+  position: relative;
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1fr clamp(300px, 30%, 420px);
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+  min-height: clamp(480px, 64vh, 820px);
+}
+
+.exploration-stage__map {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(72, 48, 28, 0.14);
+  background:
+    radial-gradient(circle at 27% 22%, rgba(255, 255, 255, 0.68), transparent 25%),
+    linear-gradient(180deg, rgba(247, 240, 228, 0.95), rgba(232, 219, 195, 0.88));
+}
+
+.exploration-map-canvas {
+  position: absolute;
+  inset: 0;
+}
+.exploration-map-canvas .maplibre-gl-canvas {
+  filter: contrast(0.97) brightness(1.01);
+}
+
+.exploration-map-notice {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  max-width: 70%;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(255, 250, 244, 0.86);
+  border: 1px solid rgba(72, 48, 28, 0.14);
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  z-index: 6;
+  pointer-events: none;
+}
+
+.exploration-map-error {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(124, 61, 45, 0.92);
+  color: #fff8f0;
+  font-size: 0.8rem;
+  z-index: 7;
+}
+
+.exploration-loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* 左下阶段说明卡 */
+.exploration-phase-card {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  max-width: min(48%, 360px);
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(247, 240, 228, 0.92);
+  border: 1px solid rgba(72, 48, 28, 0.14);
+  z-index: 5;
+  pointer-events: none;
+}
+.exploration-phase-card h3 {
+  margin: 4px 0 4px;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+}
+.exploration-phase-card__years {
+  margin: 0 0 6px;
+  color: var(--capital);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+}
+.exploration-phase-card__selected {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+.exploration-phase-card__note {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+}
+.exploration-phase-card__empty,
+.exploration-phase-card__warn {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.exploration-phase-card__warn {
+  color: var(--capital);
+}
+
+/* 右侧抽屉 */
+.exploration-drawer {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 246, 0.94), rgba(244, 233, 214, 0.9)),
+    var(--card-strong);
+  border: 1px solid rgba(72, 48, 28, 0.14);
+  overflow: hidden;
+  transition: opacity 200ms ease;
+}
+.exploration-drawer:not(.is-open) {
+  min-height: 44px;
+}
+.exploration-drawer__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+.exploration-drawer__toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(72, 48, 28, 0.18);
+  background: rgba(255, 250, 244, 0.9);
+  color: var(--ink-soft);
+  font-size: 1rem;
+  cursor: pointer;
+  flex: none;
+}
+.exploration-drawer__tabs {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+.exploration-drawer__tab {
+  flex: 1;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 1px solid rgba(72, 48, 28, 0.16);
+  border-radius: 10px 10px 0 0;
+  background: rgba(236, 224, 200, 0.55);
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.exploration-drawer__tab.is-active {
+  background: rgba(255, 250, 244, 0.98);
+  color: var(--capital);
+  font-weight: 590;
+}
+.exploration-drawer__collapsed-label {
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  letter-spacing: 0.06em;
+}
+.exploration-drawer__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 18px;
+  border-top: 1px solid rgba(72, 48, 28, 0.12);
+  background: rgba(255, 250, 244, 0.72);
+}
+
+.exploration-empty {
+  margin: 0;
+  padding: 16px 12px;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.exploration-story-list,
+.exploration-event-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.exploration-story-list__item,
+.exploration-event-list__item {
+  border-radius: 12px;
+  background: rgba(255, 251, 240, 0.72);
+  border: 1px solid rgba(146, 116, 64, 0.18);
+}
+.exploration-story-list__btn,
+.exploration-event-list__btn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 12px;
+}
+.exploration-story-list__btn:hover,
+.exploration-event-list__btn:hover {
+  background: rgba(236, 224, 200, 0.4);
+}
+.exploration-story-list__year,
+.exploration-event-list__year {
+  flex: none;
+  color: var(--capital);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.84rem;
+}
+.exploration-story-list__title,
+.exploration-event-list__headline {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+.exploration-event-list__item.is-current {
+  border-color: rgba(124, 61, 45, 0.4);
+  background: rgba(255, 244, 232, 0.9);
+}
+.exploration-event-list__hint {
+  flex-basis: 100%;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+.exploration-event-list__links {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 10px;
+}
+.exploration-event-list__link {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 61, 45, 0.3);
+  background: rgba(124, 61, 45, 0.08);
+  color: var(--capital);
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+/* 底部朝代比例时间轴 */
+.dynasty-timeline {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 246, 0.92), rgba(244, 233, 214, 0.86)),
+    var(--card-strong);
+  border: 1px solid rgba(72, 48, 28, 0.12);
+}
+.dynasty-timeline__controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.dynasty-timeline__btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(72, 48, 28, 0.18);
+  background: rgba(255, 250, 244, 0.9);
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.dynasty-timeline__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.dynasty-timeline__btn--phase {
+  color: var(--capital);
+}
+.dynasty-timeline__yearbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+}
+.dynasty-timeline__year {
+  font-family: Baskerville, "Times New Roman", serif;
+  font-size: 1.2rem;
+  color: var(--capital);
+  font-variant-numeric: tabular-nums;
+}
+.dynasty-timeline__input {
+  flex: 1;
+  min-width: 120px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(72, 48, 28, 0.2);
+  background: rgba(255, 250, 244, 0.96);
+  color: var(--ink);
+  font-size: 0.84rem;
+}
+.dynasty-timeline__go {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(72, 48, 28, 0.2);
+  background: rgba(255, 250, 244, 0.9);
+  color: var(--capital);
+  cursor: pointer;
+}
+.dynasty-timeline__input-error {
+  flex-basis: 100%;
+  font-size: 0.74rem;
+  color: var(--capital);
+}
+
+.dynasty-timeline__track {
+  position: relative;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(232, 219, 195, 0.5);
+  touch-action: none;
+  cursor: pointer;
+}
+.dynasty-timeline__track:focus-visible {
+  outline: 2px solid rgba(124, 61, 45, 0.5);
+}
+.dynasty-timeline__rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: rgba(72, 48, 28, 0.28);
+  transform: translateY(-50%);
+}
+.dynasty-timeline__seg {
+  position: absolute;
+  top: 50%;
+  height: 10px;
+  transform: translateY(-50%);
+  background: rgba(146, 116, 64, 0.16);
+  border-left: 1px solid rgba(72, 48, 28, 0.14);
+  border-right: 1px solid rgba(72, 48, 28, 0.14);
+}
+.dynasty-timeline__seg-label {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+.dynasty-timeline__pin {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.dynasty-timeline__flag {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(124, 61, 45, 0.92);
+  color: #fff8f0;
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.dynasty-timeline__thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--capital);
+  border: 2px solid #fff8f0;
+  box-shadow: 0 2px 6px rgba(107, 56, 40, 0.4);
+}
+
+/* 数据缺失友好提示 */
+.exploration-empty-stage {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  min-height: 50vh;
+  padding: 24px;
+}
+.exploration-empty-stage__card {
+  max-width: 520px;
+  padding: 28px 32px;
+  border-radius: 18px;
+  background: rgba(255, 252, 246, 0.94);
+  border: 1px solid rgba(72, 48, 28, 0.14);
+}
+.exploration-empty-stage__card h2 {
+  margin: 6px 0 12px;
+  font-size: 1.3rem;
+}
+.exploration-empty-stage__card p {
+  margin: 0 0 10px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.exploration-empty-stage__err {
+  font-size: 0.76rem;
+  color: var(--ink-faint);
+}
+
+/* 政权锚点标签（探索） */
+.polity-label {
+  pointer-events: none;
+}
+.polity-label__name {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(255, 250, 244, 0.82);
+  border: 1px solid rgba(72, 48, 28, 0.18);
+  color: var(--ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .exploration-stage {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto auto;
+  }
+  .exploration-stage__map {
+    grid-row: 1;
+    min-height: 50vh;
+  }
+  .exploration-drawer {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .dynasty-timeline {
+    grid-column: 1;
+    grid-row: 3;
+  }
+}

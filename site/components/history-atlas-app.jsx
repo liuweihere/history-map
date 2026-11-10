@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { HistoryMapStage } from "./history-map-stage";
 import { TimeScrubber } from "./time-scrubber";
 import { StoryMindMap } from "./story-mind-map";
+import { ExplorationStage } from "./exploration-stage";
 import {
   regionIdForStory,
 } from "../lib/history-regions";
@@ -36,6 +37,16 @@ export function HistoryAtlasApp({ entries, timeline }) {
   // 选中故事变化时重置为 null（游标跟随 docked interactive 节点）。
   const [cursorMilestoneId, setCursorMilestoneId] = useState(null);
 
+  // ── Phase 3：探索 / 故事 双状态（一个地图舞台，两种状态）──────────
+  // mode = "explore"（默认，时空漫游）| "story"（既有学习体验）。
+  // 点击探索抽屉里的故事 → 进入故事状态；「返回地图探索」恢复探索现场
+  // （年份 / 视角 / 右侧标签与开合状态，§2 故事学习状态）。
+  const [mode, setMode] = useState("explore");
+  // 探索现场快照（由 ExplorationStage 通过 onStateChange 持续记录）
+  const [exploreState, setExploreState] = useState(null);
+  // 进入故事前保存的探索现场（往返恢复用）
+  const [savedExploreState, setSavedExploreState] = useState(null);
+
   const currentEntry = selectEntryByStoryId(chronicleEntries, selectedStoryId);
 
   useEffect(() => {
@@ -48,6 +59,52 @@ export function HistoryAtlasApp({ entries, timeline }) {
       setSelectedStoryId(chronicleEntries[0]?.story.story_id ?? null);
     }
   }, [chronicleEntries, selectedStoryId]);
+
+  // ── 探索 ↔ 故事 往返：进入故事前保存探索现场（含视角），返回时恢复 ──
+  const enterStoryFromExplore = (storyId, exploreSnapshot) => {
+    if (typeof storyId === "string" && storyId) {
+      setSelectedStoryId(storyId);
+    }
+    setSavedExploreState(exploreSnapshot ?? exploreState);
+    setMode("story");
+  };
+
+  const returnToExplore = () => {
+    setMode("explore");
+    // savedExploreState 由 ExplorationStage 通过 restoredState 读取恢复
+  };
+
+  // 探索状态：数据缺失时也保留故事入口（§5）
+  if (mode === "explore") {
+    return (
+      <main className="atlas-shell atlas-shell--explore">
+        <div className="atlas-shell__grain" />
+        <header className="atlas-topbar atlas-topbar--explore">
+          <p className="atlas-kicker">小星星的历史漫游</p>
+          <div className="atlas-topbar__title">
+            <h1>时空探索 · 自由漫游</h1>
+          </div>
+          <div className="atlas-topbar__badges">
+            <button
+              type="button"
+              className="atlas-mode-switch"
+              onClick={() => setMode("story")}
+              title="回到故事学习体验"
+            >
+              故事目录 ▸
+            </button>
+          </div>
+        </header>
+
+        <ExplorationStage
+          entries={chronicleEntries}
+          onEnterStory={enterStoryFromExplore}
+          restoredState={savedExploreState ?? undefined}
+          onStateChange={setExploreState}
+        />
+      </main>
+    );
+  }
 
   if (!currentEntry) {
     return null;
@@ -123,6 +180,14 @@ export function HistoryAtlasApp({ entries, timeline }) {
           <span className="atlas-badge">
             时代 · {skeletonMode && dockedMilestone ? dockedMilestone.period : event.period}
           </span>
+          <button
+            type="button"
+            className="atlas-mode-switch"
+            onClick={returnToExplore}
+            title="返回地图探索（恢复年份、视角与面板）"
+          >
+            ◂ 返回地图探索
+          </button>
         </div>
         <button
           className="atlas-topbar__drawer-toggle"
