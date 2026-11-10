@@ -21,6 +21,8 @@ import {
   assertNoYearZero,
   assertPhaseBoundaries,
   assertIndexFilesExist,
+  assertRequiredFiles,
+  REQUIRED_FILES,
   deterministicStringify,
   sortKeys,
   sha256,
@@ -389,4 +391,99 @@ test("sha256: correct hash for known input", () => {
   const hash = sha256(Buffer.from("hello"));
   assert.equal(hash.length, 64);
   assert.equal(hash, "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+});
+
+// ── Prefecture assertion on ORIGINAL (pre-filter) data ────────────
+
+test("assertNoPrefecture: catches prefecture in original snapshot BEFORE filtering", () => {
+  const originalSnap = {
+    type: "FeatureCollection",
+    features: [
+      { type: "Feature", properties: { layer: "polity", title: "X" }, geometry: { type: "Polygon", coordinates: [[[0,0],[1,0],[1,1],[0,0]]] } },
+      { type: "Feature", properties: { layer: "prefecture", title: "Y" }, geometry: { type: "Polygon", coordinates: [[[0,0],[1,0],[1,1],[0,0]]] } },
+    ],
+  };
+  // If we assert on the ORIGINAL, prefecture is caught.
+  assert.throws(() => assertNoPrefecture({ "snap": originalSnap }), /prefecture/i);
+  // If we filtered first, prefecture would be hidden — this is the bug we fixed.
+  const filtered = transformSnapshot(originalSnap);
+  assertNoPrefecture({ "snap": filtered }); // passes (prefecture was filtered out)
+});
+
+// ── Intra-dynasty phase continuity ────────────────────────────────
+
+test("assertPhaseBoundaries: detects gap within same dynasty phases", () => {
+  const idx = {
+    dynasties: [{
+      key: "test", from: -100, to: 50,
+      phases: [
+        { snapshot: "s_a", from: -100, to: -50, file: "snapshots/s_a.geojson" },
+        { snapshot: "s_b", from: -48, to: 50, file: "snapshots/s_b.geojson" }, // gap: -49
+      ],
+    }],
+  };
+  assert.throws(() => assertPhaseBoundaries(idx), /phase gap/i);
+});
+
+test("assertPhaseBoundaries: contiguous phases within dynasty pass", () => {
+  const idx = {
+    dynasties: [{
+      key: "test", from: -100, to: 50,
+      phases: [
+        { snapshot: "s_a", from: -100, to: -51, file: "snapshots/s_a.geojson" },
+        { snapshot: "s_b", from: -50, to: 50, file: "snapshots/s_b.geojson" },
+      ],
+    }],
+  };
+  assertPhaseBoundaries(idx);
+});
+
+test("assertPhaseBoundaries: BCE/CE no-year-0 gap within dynasty is valid", () => {
+  const idx = {
+    dynasties: [{
+      key: "test", from: -10, to: 50,
+      phases: [
+        { snapshot: "s_a", from: -10, to: -1, file: "snapshots/s_a.geojson" },
+        { snapshot: "s_b", from: 1, to: 50, file: "snapshots/s_b.geojson" },
+      ],
+    }],
+  };
+  assertPhaseBoundaries(idx);
+});
+
+// ── Required files validation ─────────────────────────────────────
+
+test("assertRequiredFiles: passes when index/corridors/milestones present", () => {
+  assertRequiredFiles(["index.json", "corridors.geojson", "milestones.geojson", "snapshots/s_a.geojson"]);
+});
+
+test("assertRequiredFiles: throws when corridors missing", () => {
+  assert.throws(() => assertRequiredFiles(["index.json", "milestones.geojson"]), /corridors/i);
+});
+
+test("assertRequiredFiles: throws when all missing", () => {
+  assert.throws(() => assertRequiredFiles([]), /index.json/i);
+});
+
+test("REQUIRED_FILES: exactly index/corridors/milestones", () => {
+  assert.deepEqual([...REQUIRED_FILES].sort(), ["corridors.geojson", "index.json", "milestones.geojson"]);
+});
+
+// ── Real fixture: phase boundaries verified with source data ─────
+
+test("fixture index: -203/-202 boundary verified (秦→西汉)", async () => {
+  const idx = await loadJson("index.json");
+  const out = transformIndex(idx, ["s_qin_chuhan", "s_qin_a", "s_xihan_a", "s_donghan", "s_sanguo"]);
+  const qin = out.dynasties.find((d) => d.key === "qin");
+  const xihan = out.dynasties.find((d) => d.key === "xihan");
+  assert.equal(qin.to, -203, "秦 ends at -203 (boundary belongs to 西汉)");
+  assert.equal(xihan.from, -202, "西汉 starts at -202");
+  assertPhaseBoundaries(out);
+});
+
+test("fixture index: intra-dynasty phases contiguous (秦 s_qin_a → s_qin_chuhan)", async () => {
+  const idx = await loadJson("index.json");
+  const out = transformIndex(idx, ["s_qin_chuhan", "s_qin_a", "s_xihan_a", "s_donghan", "s_sanguo"]);
+  // Fixture now has contiguous phases: s_qin_a -221..-207, s_qin_chuhan -206..-203.
+  assertPhaseBoundaries(out);
 });

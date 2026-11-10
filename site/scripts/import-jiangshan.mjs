@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import {
   transformSnapshot, transformIndex, transformCorridors, transformMilestones,
   assertNoPrefecture, assertNoYearZero, assertPhaseBoundaries, assertIndexFilesExist,
-  deterministicStringify, sha256, buildManifest, buildSyncReport,
+  assertRequiredFiles, deterministicStringify, sha256, buildManifest, buildSyncReport,
 } from "./lib/jiangshan-transform.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -102,6 +102,18 @@ async function transformPipeline(exported, inputBundles, exportScriptHash, upstr
   if (!upstreamIndex) throw new Error("Upstream export missing index.json");
   const snapshotRels = Object.keys(exported).filter((k) => k.startsWith("snapshots/") && k.endsWith(".geojson"));
   const snapshotKeys = snapshotRels.map((r) => r.replace("snapshots/", "").replace(".geojson", ""));
+
+  // CRITICAL: assert no prefecture on ORIGINAL snapshots BEFORE filtering.
+  // Filtering to polity-only would hide prefecture features, making the
+  // assertion meaningless. This catches CHGIS data leaking into the export.
+  const originalSnaps = {};
+  for (const rel of snapshotRels) {
+    const key = rel.replace("snapshots/", "").replace(".geojson", "");
+    originalSnaps[key] = exported[rel];
+  }
+  assertNoPrefecture(originalSnaps);
+
+  // Transform snapshots (polity-only, add display_color).
   const transformedSnaps = {};
   for (const rel of snapshotRels) {
     const key = rel.replace("snapshots/", "").replace(".geojson", "");
@@ -110,10 +122,10 @@ async function transformPipeline(exported, inputBundles, exportScriptHash, upstr
   const corridors = exported["corridors.geojson"] ? transformCorridors(exported["corridors.geojson"]) : null;
   const milestones = exported["milestones.geojson"] ? transformMilestones(exported["milestones.geojson"]) : null;
   const outIndex = transformIndex(upstreamIndex, snapshotKeys);
-  assertNoPrefecture(transformedSnaps);
   assertNoYearZero(outIndex);
   assertPhaseBoundaries(outIndex);
   assertIndexFilesExist(outIndex, snapshotRels);
+
   const outputFiles = {};
   for (const [key, fc] of Object.entries(transformedSnaps)) {
     outputFiles["snapshots/" + key + ".geojson"] = deterministicStringify(fc);
@@ -121,6 +133,14 @@ async function transformPipeline(exported, inputBundles, exportScriptHash, upstr
   if (corridors) outputFiles["corridors.geojson"] = deterministicStringify(corridors);
   if (milestones) outputFiles["milestones.geojson"] = deterministicStringify(milestones);
   outputFiles["index.json"] = deterministicStringify(outIndex);
+
+  // Strictly require index/corridors/milestones.
+  assertRequiredFiles(Object.keys(outputFiles));
+
+  // LICENSE + NOTICE must be in manifest hashes too.
+  outputFiles["LICENSE"] = await readLicenseText(upstreamPath);
+  outputFiles["NOTICE"] = buildNoticeText();
+
   const outputHashes = [];
   for (const [rel, content] of Object.entries(outputFiles).sort()) {
     outputHashes.push({ path: rel, sha256: sha256(Buffer.from(content)) });
@@ -140,8 +160,6 @@ async function transformPipeline(exported, inputBundles, exportScriptHash, upstr
     },
   });
   outputFiles["sync-report.json"] = deterministicStringify(syncReport);
-  outputFiles["LICENSE"] = await readLicenseText(upstreamPath);
-  outputFiles["NOTICE"] = buildNoticeText();
   return { outputFiles, manifest, syncReport };
 }
 
@@ -196,33 +214,28 @@ async function safeSwapDir(src, dst) {
 }
 
 async function atomicPublish(stageDir, outputDir) {
-  // Verify parent exists.
+  // DISABLED: --publish is temporarily forbidden to avoid any overwrite risk.
+  // Existing target directories — even with manifest.json — may contain
+  // unknown files that must not be destroyed. The user must remove the
+  // target manually and re-run without --publish.
+  await rm(stageDir, { recursive: true, force: true });
+  if (existsSync(outputDir)) {
+    throw new Error(
+      "--publish is disabled. Output already exists: " + outputDir + "\n" +
+      "Refusing to overwrite any existing directory. " +
+      "Remove it manually if you are sure, then re-run without --publish."
+    );
+  }
+  // Target doesn't exist: safe to write directly (no overwrite risk).
   const parent = path.dirname(outputDir);
   if (!existsSync(parent)) {
-    await rm(stageDir, { recursive: true, force: true });
-    throw new Error("Atomic publish failed: parent directory does not exist: " + parent);
+    throw new Error("Parent directory does not exist: " + parent);
   }
-  // If output exists, verify it is a previous adapter output (has manifest.json).
-  // Refuse to overwrite directories containing non-adapter data.
-  if (existsSync(outputDir)) {
-    const manifestPath = path.join(outputDir, "manifest.json");
-    if (!existsSync(manifestPath)) {
-      await rm(stageDir, { recursive: true, force: true });
-      throw new Error(
-        "Atomic publish refused: " + outputDir + " exists but has no manifest.json. " +
-        "Refusing to overwrite a directory that may contain non-adapter data. " +
-        "Remove it manually if you are sure, or use a different --output path."
-      );
-    }
-  }
-  const backupDir = path.join(parent, path.basename(outputDir) + ".bak." + Date.now());
-  if (existsSync(outputDir)) await safeSwapDir(outputDir, backupDir);
   try {
-    await safeSwapDir(stageDir, outputDir);
-    if (existsSync(backupDir)) await rm(backupDir, { recursive: true, force: true });
-  } catch (err) {
-    if (existsSync(backupDir)) await safeSwapDir(backupDir, outputDir);
-    throw new Error("Atomic publish failed, existing restored: " + err.message);
+    await rename(stageDir, outputDir);
+  } catch {
+    await cp(stageDir, outputDir, { recursive: true });
+    await rm(stageDir, { recursive: true, force: true });
   }
 }
 
@@ -254,31 +267,26 @@ async function main() {
   console.log("[import-jiangshan] transform: " + Object.keys(outputFiles).length + " files");
   console.log("[import-jiangshan] stats:", syncReport.stats);
   const stageDir = await writeToStaging(outputFiles);
-  if (args.publish) {
-    await atomicPublish(stageDir, args.output);
-    console.log("[import-jiangshan] published: " + args.output);
-  } else {
-    // SAFETY: never rm -rf an existing directory. If output exists, refuse
-    // and tell user to use --publish (which backs up first) or remove manually.
-    if (existsSync(args.output)) {
-      await rm(stageDir, { recursive: true, force: true });
-      throw new Error(
-        "Output directory already exists: " + args.output +
-        "\nRefusing to overwrite. Use --publish to atomically swap (backs up old first), " +
-        "or remove the directory manually if you are sure."
-      );
-    }
-    await mkdir(path.dirname(args.output), { recursive: true });
-    // rename may fail across filesystems; fall back to recursive copy + cleanup.
-    try {
-      await rename(stageDir, args.output);
-    } catch {
-      await cp(stageDir, args.output, { recursive: true });
-      await rm(stageDir, { recursive: true, force: true });
-    }
-    console.log("[import-jiangshan] output: " + args.output);
-    console.log("[import-jiangshan] staging mode — NOT in public/. For T0: --publish --output site/public/data/jiangshan");
+  // SAFETY: both --publish and default mode refuse to overwrite ANY existing
+  // target directory. No automatic rm of unknown content. User must remove
+  // manually. This prevents destruction of non-adapter data.
+  if (existsSync(args.output)) {
+    await rm(stageDir, { recursive: true, force: true });
+    throw new Error(
+      "Output directory already exists: " + args.output +
+      "\nRefusing to overwrite. Remove it manually if you are sure, then re-run."
+    );
   }
+  await mkdir(path.dirname(args.output), { recursive: true });
+  // rename may fail across filesystems; fall back to recursive copy + cleanup.
+  try {
+    await rename(stageDir, args.output);
+  } catch {
+    await cp(stageDir, args.output, { recursive: true });
+    await rm(stageDir, { recursive: true, force: true });
+  }
+  console.log("[import-jiangshan] output: " + args.output);
+  console.log("[import-jiangshan] staging mode — NOT in public/. Use --output site/public/data/jiangshan for T0 (user-authorized, target must not exist).");
   console.log("\n=== Manifest ===");
   console.log("adapter: " + manifest.adapter_version + " | schema: " + manifest.schema_version);
   console.log("export_script: " + manifest.export_script_sha256.slice(0, 16) + "...");

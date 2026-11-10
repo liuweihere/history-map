@@ -249,11 +249,20 @@ export function assertPhaseBoundaries(index) {
   const errors = [];
   for (let i = 0; i < index.dynasties.length; i++) {
     const d = index.dynasties[i];
+    // Intra-dynasty: phases within same dynasty must be contiguous.
+    for (let j = 0; j < d.phases.length - 1; j++) {
+      const cur = d.phases[j];
+      const nxt = d.phases[j + 1];
+      // BCE/CE boundary within dynasty: -1 → 1 is valid (no year 0).
+      if (cur.to === -1 && nxt.from === 1) continue;
+      if (cur.to + 1 !== nxt.from) {
+        errors.push(`${d.key} phase gap: ${cur.snapshot}.to=${cur.to} but ${nxt.snapshot}.from=${nxt.from} (expected ${cur.to + 1})`);
+      }
+    }
+    // Inter-dynasty: dynasty.to + 1 === next dynasty.from.
     const next = index.dynasties[i + 1];
     if (!next) continue;
-    // BCE/CE boundary: -1 → 1 is valid (no year 0).
     if (d.to === -1 && next.from === 1) continue;
-    // General rule: d.to + 1 === next.from (boundary belongs to later).
     if (d.to + 1 !== next.from) {
       errors.push(`${d.key}.to=${d.to} but ${next.key}.from=${next.from} (expected ${d.to + 1})`);
     }
@@ -277,6 +286,20 @@ export function assertIndexFilesExist(index, existingFiles) {
   if (missing.length) {
     throw new Error(
       `Index references ${missing.length} missing file(s): ${missing.slice(0, 5).join(", ")}`,
+    );
+  }
+}
+
+// ── Validation: required output files are present ─────────────────
+// index.json, corridors.geojson, milestones.geojson are strictly required.
+export const REQUIRED_FILES = ["index.json", "corridors.geojson", "milestones.geojson"];
+
+export function assertRequiredFiles(outputFileNames) {
+  const set = new Set(outputFileNames);
+  const missing = REQUIRED_FILES.filter((f) => !set.has(f));
+  if (missing.length) {
+    throw new Error(
+      `Required output file(s) missing: ${missing.join(", ")}`,
     );
   }
 }

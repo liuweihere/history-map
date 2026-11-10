@@ -23,7 +23,7 @@
       "to": -203,
       "tint": "#4a6fa5",
       "phases": [
-        { "snapshot": "s_qin_a", "from": -221, "to": -215, "file": "snapshots/s_qin_a.geojson" },
+        { "snapshot": "s_qin_a", "from": -221, "to": -207, "file": "snapshots/s_qin_a.geojson" },
         { "snapshot": "s_qin_chuhan", "from": -206, "to": -203, "file": "snapshots/s_qin_chuhan.geojson" }
       ]
     },
