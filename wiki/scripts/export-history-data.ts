@@ -1363,20 +1363,175 @@ async function compileStory(
   return narrationStatus;
 }
 
-async function clearGeneratedStoryExports(outputDir: string) {
-  await mkdir(outputDir, { recursive: true });
-  const fileNames = await readdir(outputDir);
+// 发布阶段使用的 fs 操作集合。默认指向 node:fs/promises；测试可通过
+// runExport({ fsOps }) 注入受控失败，精确复现发布阶段某一文件操作出错时的
+// 数据保全行为。注入仅作用于发布阶段（备份/搬运/回滚/锁），编译/读取阶段
+// 始终使用真实 fs，避免测试意外改变编译语义。
+type PublishFs = {
+  mkdir: typeof mkdir;
+  mkdtemp: typeof mkdtemp;
+  readdir: typeof readdir;
+  rename: typeof rename;
+  unlink: typeof unlink;
+  rm: typeof rm;
+  writeFile: typeof writeFile;
+  readFile: typeof readFile;
+};
 
-  await Promise.all(
-    fileNames
-      .filter(
-        (fileName) =>
-          fileName.startsWith("event_") ||
-          fileName.startsWith("story-") ||
-          fileName === "timeline-rail.json",
-      )
-      .map((fileName) => unlink(path.join(outputDir, fileName))),
+const DEFAULT_PUBLISH_FS: PublishFs = {
+  mkdir,
+  mkdtemp,
+  readdir,
+  rename,
+  unlink,
+  rm,
+  writeFile,
+  readFile,
+};
+
+// 判定输出目录中属于「生成物」的文件名：发布阶段只移动/清理这些文件，
+// 所有未知非生成文件（README、手写 JSON 等）一律原位保留，不被搬运、
+// 不被覆盖、不被删除。
+function isGeneratedExportName(fileName: string): boolean {
+  return (
+    fileName.startsWith("event_") ||
+    fileName.startsWith("story-") ||
+    fileName === "timeline-rail.json"
   );
+}
+
+// 发布阶段发布失败且回滚未能完整恢复旧产物时抛出。backupDir 被保留不删除，
+// 操作者可据此人工恢复。runExport 据此类型保留并发锁（fail-closed）。
+class ExportRollbackIncompleteError extends Error {
+  readonly backupDir: string;
+  readonly cause: unknown;
+  constructor(backupDir: string, cause: unknown) {
+    super(
+      `导出发布失败且回滚未能完整恢复旧产物。可恢复备份保留于：${backupDir}\n` +
+        `请检查输出目录是否完整，不完整则从上述备份恢复旧生成物，` +
+        `确认无误后删除同级 .export-lock 与残留暂存/备份目录再重跑。\n` +
+        `原始失败原因：${cause instanceof Error ? cause.message : String(cause)}`,
+    );
+    this.name = "ExportRollbackIncompleteError";
+    this.backupDir = backupDir;
+    this.cause = cause;
+  }
+}
+
+// acquireExportLock：check-then-write 守卫同目标并发导出。
+// 锁已存在 → fail-closed（抛错），绝不删除/覆盖他人锁。
+// 写入 ownerTag（pid + 时间 + stagingDir）便于 releaseExportLock 核验归属。
+async function acquireExportLock(fs: PublishFs, lockPath: string, ownerTag: string) {
+  let existing: string | null = null;
+  try {
+    existing = await fs.readFile(lockPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+  }
+  if (existing !== null) {
+    throw new Error(
+      `导出锁已存在，同目标并发导出被拒绝（fail-closed）：${lockPath}\n` +
+        `锁内容：\n${existing}\n` +
+        `若为残留锁（进程意外退出），请先核查输出目录与同级 export-backup-* ` +
+        `备份完整性，确认无误后手动删除该锁再重跑。本实现不会自动清除他人/残留锁。`,
+    );
+  }
+  await fs.writeFile(lockPath, ownerTag, "utf8");
+}
+
+// releaseExportLock：仅当锁内容仍是本进程 ownerTag 才删除，绝不误删他人锁。
+async function releaseExportLock(fs: PublishFs, lockPath: string, ownerTag: string) {
+  let current: string | null = null;
+  try {
+    current = await fs.readFile(lockPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+    return; // 锁已不存在，无需释放。
+  }
+  if (current !== ownerTag) {
+    // 锁不属于本进程（他人持有或被替换）——不删除。
+    return;
+  }
+  await fs.unlink(lockPath);
+}
+
+// publishOutputs：串行发布，备份优先，失败即精确回滚。
+//
+// 步骤：
+//   1. mkdir outputDir（如不存在），readdir 取旧生成物名单；
+//   2. 串行 rename 每个旧生成物 outputDir→backupDir，记录 movedToBackup
+//      （任一失败→回滚）；
+//   3. 串行 rename 暂存产物 stagingDir→outputDir，记录 publishedFromStaging
+//      （任一失败→回滚）；
+//   4. 回滚（精确）：
+//        a. 先把 publishedFromStaging 中已落入 outputDir 的新产物移回 staging
+//           （或 rm），腾出槽位——这些名字可能与旧产物同名，必须先清；
+//        b. 再把 movedToBackup 中的旧产物从 backupDir 搬回 outputDir；
+//        c. movedToBackup 之外、仍在 outputDir 的旧产物从未被移动，保持不动。
+//      回滚完整→删除 backupDir 后重抛原始失败；回滚不完整（任何 backup 文件
+//      无法搬回）→保留 backupDir 并抛 ExportRollbackIncompleteError。
+// 非生成物全程不动（既不搬入 backup，也不清理）。
+async function publishOutputs(
+  fs: PublishFs,
+  outputDir: string,
+  stagingDir: string,
+  backupDir: string,
+) {
+  await fs.mkdir(outputDir, { recursive: true });
+  const existing = await fs.readdir(outputDir);
+  const oldGenerated = existing.filter((fileName) => isGeneratedExportName(fileName));
+
+  const movedToBackup: string[] = [];
+  const publishedFromStaging: string[] = [];
+
+  try {
+    // 1. 旧生成物 → 备份（串行）。
+    for (const name of oldGenerated) {
+      await fs.rename(path.join(outputDir, name), path.join(backupDir, name));
+      movedToBackup.push(name);
+    }
+    // 2. 暂存产物 → 输出（串行）。
+    const staged = await fs.readdir(stagingDir);
+    for (const name of staged) {
+      await fs.rename(path.join(stagingDir, name), path.join(outputDir, name));
+      publishedFromStaging.push(name);
+    }
+  } catch (publishError) {
+    // 回滚 a：清理 outputDir 中已落入的新产物（搬回 staging 或 rm）。
+    for (const name of publishedFromStaging) {
+      const p = path.join(outputDir, name);
+      try {
+        await fs.rename(p, path.join(stagingDir, name));
+      } catch {
+        try {
+          await fs.rm(p, { force: true });
+        } catch {
+          // 尽力而为；若清理失败，下方 backup 恢复同名文件会因目标存在而失败，
+          // 落入不完整回滚（保留备份），仍可人工恢复。
+        }
+      }
+    }
+    // 回滚 b：把已移入备份的旧产物搬回 outputDir。
+    let rollbackFailed = false;
+    for (const name of movedToBackup) {
+      try {
+        await fs.rename(path.join(backupDir, name), path.join(outputDir, name));
+      } catch {
+        rollbackFailed = true;
+        // 继续尝试其余文件，最大化恢复；备份目录保留供人工恢复。
+      }
+    }
+    if (rollbackFailed) {
+      throw new ExportRollbackIncompleteError(backupDir, publishError);
+    }
+    // 回滚完整：删除 backupDir（旧产物已恢复原位），重抛原始发布失败。
+    try {
+      await fs.rm(backupDir, { recursive: true, force: true });
+    } catch {
+      // backupDir 删除失败不影响输出一致性；残留空目录无害，忽略。
+    }
+    throw publishError;
+  }
 }
 
 // detectNarrationStatus：从「小星星讲述」source 正文编译真实口述状态。
@@ -1409,13 +1564,33 @@ async function exportTimelineRail(
   );
 }
 
-// 事务式导出：先把全部产物写入暂存目录，校验/编译全部成功后再清理旧产物
-// 并原子替换；任一 milestone_id 校验或故事编译失败时仅清理暂存目录，旧
-// story/event/timeline 产物原封不动，避免「先清理再编译」造成的数据丢失。
+// 事务式导出：先把全部产物写入暂存目录，校验/编译全部成功后再提交发布。
+//
+// 发布阶段（acquireExportLock ~ releaseExportLock 之间）是数据安全核心：
+//   1. acquireExportLock 守卫同目标并发导出（fail-closed，不抢/不删他人锁）；
+//   2. mkdtemp 同级备份目录；
+//   3. publishOutputs 串行备份旧产物→串行发布暂存产物，任一失败即回滚
+//      （把备份搬回输出）；回滚不完整则保留备份并抛 ExportRollbackIncompleteError；
+//   4. 成功才删除备份目录并释放锁；回滚完整也释放锁（输出已一致，允许重试）；
+//      回滚不完整（备份保留、输出可能不一致）则保留锁，强制人工核查。
+// 任一编译/校验失败发生在发布之前，旧产物原封不动（仅清理暂存目录）。
+//
+// 进程意外退出恢复（不新建文档，仅在此说明）：锁文件残留→下次导出 fail-closed；
+// 备份目录可能残留旧产物。操作者需 (a) 检查 outputDir 完整性，不完整则从同级
+// export-backup-* 恢复旧生成物；(b) 删除残留 export-stage-*/export-backup-*；
+// (c) 确认无误后删除 .export-lock 再重跑。本实现不自动清理他人/残留锁。
+//
+// rootDir/outputDir 可注入供隔离测试；fsOps 可注入发布阶段 fs 操作以精确
+// 复现发布失败（见 site/test/export-publish-failure.test.mjs）。注入仅作用于
+// 发布阶段，编译/读取阶段始终用真实 fs。
+// 注意：acquireExportLock 为 check-then-write，存在极小 TOCTOU 窗口；导出为
+// 操作者手动触发、非高并发场景，可接受。如需严格互斥可改用 O_EXCL 原子创建。
 async function runExport({
   rootDir = ROOT,
   outputDir,
-}: { rootDir?: string; outputDir?: string } = {}) {
+  fsOps,
+}: { rootDir?: string; outputDir?: string; fsOps?: Partial<PublishFs> } = {}) {
+  const fs: PublishFs = { ...DEFAULT_PUBLISH_FS, ...fsOps };
   const resolvedOutputDir = outputDir ?? path.join(rootDir, "06_Exports/json");
   const timelinePage = await readMarkdownPage(
     "wiki/synthesis/curriculum/小星星历史时间线.md",
@@ -1427,13 +1602,18 @@ async function runExport({
   const outputParent = path.dirname(resolvedOutputDir);
   await mkdir(outputParent, { recursive: true });
   const stagingDir = await mkdtemp(path.join(outputParent, "export-stage-"));
+  const lockPath = path.join(outputParent, ".export-lock");
+  const ownerTag = `${process.pid}\n${new Date().toISOString()}\n${stagingDir}`;
+
+  let lockHeld = false;
+  let backupPreserved = false;
 
   try {
     // 先编译故事包（收集每条的 narration_status），再导出时间线，
     // 使 timeline-rail 的 narration_status 从真实编译结果派生，
     // 而非凭 story_id 存在就标 recorded。
     // 任何 compileStory 抛错或 exportTimelineRail 内 buildTimelineMilestones
-    // 校验失败都会在此抛出，此时仅清理暂存目录，旧产物不受影响。
+    // 校验失败都会在此抛出，此时尚未进入发布阶段，旧产物不受影响。
     const narrationByStoryId = new Map<string, "placeholder" | "unknown">();
     for (const config of STORY_CONFIGS) {
       const narrationStatus = await compileStory(
@@ -1447,17 +1627,27 @@ async function runExport({
 
     await exportTimelineRail(timelineRows, narrationByStoryId, stagingDir);
 
-    // 全部编译/校验成功后再提交：清理旧产物，然后将暂存文件搬入输出目录。
-    await clearGeneratedStoryExports(resolvedOutputDir);
-    const stagedFiles = await readdir(stagingDir);
-    await Promise.all(
-      stagedFiles.map((fileName) =>
-        rename(path.join(stagingDir, fileName), path.join(resolvedOutputDir, fileName)),
-      ),
-    );
+    // ===== 发布阶段（受并发锁保护）=====
+    await acquireExportLock(fs, lockPath, ownerTag);
+    lockHeld = true;
+    const backupDir = await fs.mkdtemp(path.join(outputParent, "export-backup-"));
+    await publishOutputs(fs, resolvedOutputDir, stagingDir, backupDir);
+    // 发布成功：删除备份目录。
+    await fs.rm(backupDir, { recursive: true, force: true });
+  } catch (error) {
+    if (error instanceof ExportRollbackIncompleteError) {
+      backupPreserved = true;
+    }
+    throw error;
   } finally {
-    // 无论成功或失败都移除暂存目录（成功时已搬空，失败时丢弃半成品）。
+    // 无论成功或失败都移除暂存目录（成功时已搬空，失败时丢弃半成品或回滚迁入物）。
+    // 用真实 rm 而非注入 fs，避免测试注入的失败干扰最终清理。
     await rm(stagingDir, { recursive: true, force: true });
+    // 输出一致（发布成功，或失败但回滚已完整恢复旧产物）→ 释放锁允许重试；
+    // 备份被保留（输出可能不一致）→ 保留锁，强制人工核查后再清除。
+    if (lockHeld && !backupPreserved) {
+      await releaseExportLock(fs, lockPath, ownerTag);
+    }
   }
 
   console.log(`Exported ${STORY_CONFIGS.length} history story bundle(s) successfully.`);
