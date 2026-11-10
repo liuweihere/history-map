@@ -1,5 +1,5 @@
 import { createRequire } from "node:module";
-import { access, mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, readdir, rename, rm, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTimelineMilestones } from "./timeline-milestone-parser.mjs";
@@ -997,8 +997,8 @@ function parseMarkdownTable(markdownBody: string): Array<Record<string, string>>
   });
 }
 
-async function readMarkdownPage(pagePath: string) {
-  const absolutePath = path.join(ROOT, pagePath);
+async function readMarkdownPage(pagePath: string, rootDir: string = ROOT) {
+  const absolutePath = path.join(rootDir, pagePath);
   const content = await readFile(absolutePath, "utf8");
   const { frontmatter, body } = parseFrontmatter(content);
   return { absolutePath, frontmatter, body, sections: parseMarkdownSections(body) };
@@ -1037,14 +1037,19 @@ async function assertFileExists(label: string, filePath: string) {
   }
 }
 
-async function readEntityPages(ids: string[], fileMap: Record<string, string>, label: string) {
+async function readEntityPages(
+  ids: string[],
+  fileMap: Record<string, string>,
+  label: string,
+  rootDir: string = ROOT,
+) {
   return Promise.all(
     ids.map(async (id) => {
       const fileName = fileMap[id];
       if (!fileName) {
         throw new Error(`No file mapping configured for ${label} ${id}.`);
       }
-      return readMarkdownPage(fileName);
+      return readMarkdownPage(fileName, rootDir);
     }),
   );
 }
@@ -1053,14 +1058,15 @@ async function compileStory(
   config: StoryCompileConfig,
   timelineRows: Array<Record<string, string>>,
   outputDir: string,
+  rootDir: string = ROOT,
 ) {
   const [eventPage, childStoryPage, parentNotePage, mapLayerPage, ...sourcePageDocs] =
     await Promise.all([
-      readMarkdownPage(config.eventFile),
-      readMarkdownPage(config.childStoryFile),
-      readMarkdownPage(config.parentNoteFile),
-      readMarkdownPage(config.mapLayerFile),
-      ...config.sourcePageFiles.map((file) => readMarkdownPage(file)),
+      readMarkdownPage(config.eventFile, rootDir),
+      readMarkdownPage(config.childStoryFile, rootDir),
+      readMarkdownPage(config.parentNoteFile, rootDir),
+      readMarkdownPage(config.mapLayerFile, rootDir),
+      ...config.sourcePageFiles.map((file) => readMarkdownPage(file, rootDir)),
     ]);
 
   const event = eventFrontmatterSchema.parse(eventPage.frontmatter);
@@ -1145,7 +1151,7 @@ async function compileStory(
   }
 
   for (const rawSourceFile of rawSourceFiles) {
-    await assertFileExists("raw source", path.join(ROOT, "raw/sources", rawSourceFile));
+    await assertFileExists("raw source", path.join(rootDir, "raw/sources", rawSourceFile));
   }
 
   const historyMeaningSection = eventPage.sections.get("历史意义") ?? "";
@@ -1220,9 +1226,9 @@ async function compileStory(
   }
 
   const [personPages, factionPages, placePages] = await Promise.all([
-    readEntityPages(event.people, PERSON_FILE_BY_ID, "person"),
-    readEntityPages(event.factions, FACTION_FILE_BY_ID, "faction"),
-    readEntityPages(event.places, PLACE_FILE_BY_ID, "place"),
+    readEntityPages(event.people, PERSON_FILE_BY_ID, "person", rootDir),
+    readEntityPages(event.factions, FACTION_FILE_BY_ID, "faction", rootDir),
+    readEntityPages(event.places, PLACE_FILE_BY_ID, "place", rootDir),
   ]);
 
   const people = stableOrder(
@@ -1403,25 +1409,65 @@ async function exportTimelineRail(
   );
 }
 
-async function main() {
-  const timelinePage = await readMarkdownPage("wiki/synthesis/curriculum/小星星历史时间线.md");
+// 事务式导出：先把全部产物写入暂存目录，校验/编译全部成功后再清理旧产物
+// 并原子替换；任一 milestone_id 校验或故事编译失败时仅清理暂存目录，旧
+// story/event/timeline 产物原封不动，避免「先清理再编译」造成的数据丢失。
+async function runExport({
+  rootDir = ROOT,
+  outputDir,
+}: { rootDir?: string; outputDir?: string } = {}) {
+  const resolvedOutputDir = outputDir ?? path.join(rootDir, "06_Exports/json");
+  const timelinePage = await readMarkdownPage(
+    "wiki/synthesis/curriculum/小星星历史时间线.md",
+    rootDir,
+  );
   const timelineRows = parseMarkdownTable(timelinePage.body);
-  const outputDir = path.join(ROOT, "06_Exports/json");
-  await clearGeneratedStoryExports(outputDir);
 
-  // 先编译故事包（收集每条的 narration_status），再导出时间线，
-  // 使 timeline-rail 的 narration_status 从真实编译结果派生，
-  // 而非凭 story_id 存在就标 recorded。
-  const narrationByStoryId = new Map<string, "placeholder" | "unknown">();
-  for (const config of STORY_CONFIGS) {
-    const narrationStatus = await compileStory(config, timelineRows, outputDir);
-    narrationByStoryId.set(config.storyId, narrationStatus);
+  // 暂存目录与目标输出目录同父级，保证 rename 在同一文件系统（跨平台可靠）。
+  const outputParent = path.dirname(resolvedOutputDir);
+  await mkdir(outputParent, { recursive: true });
+  const stagingDir = await mkdtemp(path.join(outputParent, "export-stage-"));
+
+  try {
+    // 先编译故事包（收集每条的 narration_status），再导出时间线，
+    // 使 timeline-rail 的 narration_status 从真实编译结果派生，
+    // 而非凭 story_id 存在就标 recorded。
+    // 任何 compileStory 抛错或 exportTimelineRail 内 buildTimelineMilestones
+    // 校验失败都会在此抛出，此时仅清理暂存目录，旧产物不受影响。
+    const narrationByStoryId = new Map<string, "placeholder" | "unknown">();
+    for (const config of STORY_CONFIGS) {
+      const narrationStatus = await compileStory(
+        config,
+        timelineRows,
+        stagingDir,
+        rootDir,
+      );
+      narrationByStoryId.set(config.storyId, narrationStatus);
+    }
+
+    await exportTimelineRail(timelineRows, narrationByStoryId, stagingDir);
+
+    // 全部编译/校验成功后再提交：清理旧产物，然后将暂存文件搬入输出目录。
+    await clearGeneratedStoryExports(resolvedOutputDir);
+    const stagedFiles = await readdir(stagingDir);
+    await Promise.all(
+      stagedFiles.map((fileName) =>
+        rename(path.join(stagingDir, fileName), path.join(resolvedOutputDir, fileName)),
+      ),
+    );
+  } finally {
+    // 无论成功或失败都移除暂存目录（成功时已搬空，失败时丢弃半成品）。
+    await rm(stagingDir, { recursive: true, force: true });
   }
-
-  await exportTimelineRail(timelineRows, narrationByStoryId, outputDir);
 
   console.log(`Exported ${STORY_CONFIGS.length} history story bundle(s) successfully.`);
 }
+
+async function main() {
+  await runExport();
+}
+
+export { runExport };
 
 // 仅在直接执行时运行 main()（import 时不自动执行）
 const isMainModule = fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? "");
