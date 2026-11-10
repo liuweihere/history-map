@@ -92,3 +92,43 @@ export function buildMilestones(entries, rail, selectedStoryId) {
     };
   });
 }
+
+/**
+ * dockAction：键盘/点击到达一个里程碑后，决定父组件该做什么。
+ *
+ * - interactive 里程碑 → select-story（照常选故事，cursor 跟随 docked）。
+ * - planned 里程碑 → advance-cursor（游标前进到该节点，不卡死）；
+ *   携带 regionId 供父组件做大区预览（与目录按钮行为一致）。
+ *
+ * 设计依据 PLAN.md V3 §5/§8：方向键在相邻 planned 节点不得卡死。
+ * 旧实现 dockToMilestone 仅处理 interactive，planned 被忽略 → 键盘卡住。
+ */
+export function dockAction(milestone) {
+  if (!milestone) return { type: "noop" };
+  if (milestoneInteractive(milestone)) {
+    return { type: "select-story", storyId: storyIdFromMilestone(milestone) };
+  }
+  return {
+    type: "advance-cursor",
+    milestoneId: milestone.milestone_id,
+    regionId: milestone.regionId ?? null,
+  };
+}
+
+/**
+ * resolveCursor：解析当前游标里程碑。
+ *
+ * 有 keyboard cursorId 时返回游标里程碑（可指向 planned 节点）；
+ * 否则回退到 docked（interactive）。未知 cursorId 安全回退。
+ * 父组件用此结果作为 TimeScrubber 的 cursor prop，使拇指可移到 planned 节点。
+ */
+export function resolveCursor(milestones, cursorMilestoneId, dockedMilestone) {
+  if (!Array.isArray(milestones) || milestones.length === 0) {
+    return dockedMilestone ?? null;
+  }
+  if (typeof cursorMilestoneId === "string" && cursorMilestoneId) {
+    const found = milestones.find((m) => m.milestone_id === cursorMilestoneId);
+    if (found) return found;
+  }
+  return dockedMilestone ?? milestones[0] ?? null;
+}

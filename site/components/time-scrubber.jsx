@@ -1,13 +1,13 @@
 "use client";
 
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
   return String(year);
 }
 
-export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
+export function TimeScrubber({ milestones, docked, cursor, onDock, onYearChange }) {
   const trackRef = useRef(null);
   const [dragIndex, setDragIndex] = useState(null);
   const [hoverIndex, setHoverIndex] = useState(null);
@@ -15,7 +15,9 @@ export function TimeScrubber({ milestones, docked, onDock, onYearChange }) {
   const total = milestones.length;
   if (!total) return null;
 
-  const activeIndex = Math.max(0, milestones.indexOf(docked));
+  // activeIndex 取 cursor（可为 planned 节点）优先，否则 docked（interactive）。
+  // cursor 由父组件键盘导航设置，使拇指可移到 planned 节点而不卡死。
+  const activeIndex = Math.max(0, milestones.indexOf(cursor ?? docked));
   const previewIndex = dragIndex ?? hoverIndex ?? activeIndex;
   const isDragging = dragIndex !== null;
 

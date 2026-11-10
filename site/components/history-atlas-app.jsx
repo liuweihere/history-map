@@ -14,6 +14,8 @@ import {
   selectMilestoneByStoryId,
   milestoneInteractive,
   storyIdFromMilestone,
+  dockAction,
+  resolveCursor,
 } from "../lib/story-selection";
 
 function formatYear(year) {
@@ -30,11 +32,15 @@ export function HistoryAtlasApp({ entries, timeline }) {
   const [drawerOpen, setDrawerOpen] = useState(true);
   const [railOpen, setRailOpen] = useState(false);
   const [focusRegion, setFocusRegion] = useState(null);
+  // 键盘游标：可指向 planned 节点（无 story_id），使方向键不卡死。
+  // 选中故事变化时重置为 null（游标跟随 docked interactive 节点）。
+  const [cursorMilestoneId, setCursorMilestoneId] = useState(null);
 
   const currentEntry = selectEntryByStoryId(chronicleEntries, selectedStoryId);
 
   useEffect(() => {
     setSelectedQuestion(0);
+    setCursorMilestoneId(null);
   }, [selectedStoryId]);
 
   useEffect(() => {
@@ -65,14 +71,25 @@ export function HistoryAtlasApp({ entries, timeline }) {
 
   // docked 里程碑按 story_id 选取：同年多故事各自命中自己的节点，保证唯一
   const dockedMilestone = selectMilestoneByStoryId(milestones, selectedStoryId);
+  // cursor 里程碑：键盘游标可指向 planned 节点（无 story_id），使方向键不卡死。
+  // 无游标时回退到 docked（interactive）。
+  const cursorMilestone = resolveCursor(milestones, cursorMilestoneId, dockedMilestone);
   const skeletonMode = !milestoneInteractive(dockedMilestone);
 
   const dockToMilestone = (milestone) => {
-    if (milestoneInteractive(milestone)) {
-      setSelectedStoryId(storyIdFromMilestone(milestone));
+    const action = dockAction(milestone);
+    if (action.type === "select-story") {
+      setSelectedStoryId(action.storyId);
+      setCursorMilestoneId(null);
       setDrawerOpen(true);
       // 切换故事时重置大区聚焦（plan.md）
       setFocusRegion(null);
+    } else if (action.type === "advance-cursor") {
+      // planned 节点：前进游标（不卡死），有大区则触发预览（与目录按钮一致）
+      setCursorMilestoneId(action.milestoneId);
+      if (action.regionId) {
+        setFocusRegion({ id: action.regionId, nonce: Date.now() });
+      }
     }
   };
 
@@ -283,6 +300,7 @@ export function HistoryAtlasApp({ entries, timeline }) {
       <TimeScrubber
         milestones={milestones}
         docked={dockedMilestone}
+        cursor={cursorMilestone}
         onDock={dockToMilestone}
         onYearChange={(milestone) => {
           if (milestoneInteractive(milestone)) {
