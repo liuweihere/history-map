@@ -1,0 +1,64 @@
+{
+  "name": "jiangshan-map GeoJSON export",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "crs": "EPSG:4326 (lon, lat), RFC 7946 winding",
+  "years": "Integer years; negative = BCE. There is no year 0 (-1 is 1 BCE, 1 is 1 CE).",
+  "coverage": "-221 to 1948; later years and modern provinces are not exported",
+  "prefecture_layer": "not exported (CHGIS terms); rerun with --with-prefectures for local academic use",
+  "layers": {
+    "corridors": "corridors.geojson",
+    "settlements": "settlements.geojson",
+    "milestones": "milestones.geojson",
+    "neighbors": "neighbors.geojson",
+    "rivers": "modern/rivers.geojson",
+    "lakes": "modern/lakes.geojson",
+    "hydro_labels": "modern/hydro_labels.geojson"
+  },
+  "dynasties": [
+    {
+      "key": "qin",
+      "title": "秦",
+      "title_en": "Qin",
+      "from": -221,
+      "to": -203,
+      "tint": "#4a6fa5",
+      "phases": [
+        { "snapshot": "s_qin_a", "from": -221, "to": -215, "file": "snapshots/s_qin_a.geojson" },
+        { "snapshot": "s_qin_chuhan", "from": -206, "to": -203, "file": "snapshots/s_qin_chuhan.geojson" }
+      ]
+    },
+    {
+      "key": "xihan",
+      "title": "西汉",
+      "title_en": "Western Han",
+      "from": -202,
+      "to": 24,
+      "tint": "#c98a2b",
+      "phases": [
+        { "snapshot": "s_xihan_a", "from": -202, "to": -141, "file": "snapshots/s_xihan_a.geojson" }
+      ]
+    },
+    {
+      "key": "donghan",
+      "title": "东汉",
+      "title_en": "Eastern Han",
+      "from": 25,
+      "to": 219,
+      "tint": "#3f8f6a",
+      "phases": [
+        { "snapshot": "s_donghan", "from": 25, "to": 219, "file": "snapshots/s_donghan.geojson" }
+      ]
+    },
+    {
+      "key": "sanguo",
+      "title": "三国",
+      "title_en": "Three Kingdoms",
+      "from": 220,
+      "to": 280,
+      "tint": "#a0522d",
+      "phases": [
+        { "snapshot": "s_sanguo", "from": 220, "to": 265, "file": "snapshots/s_sanguo.geojson" }
+      ]
+    }
+  ]
+}

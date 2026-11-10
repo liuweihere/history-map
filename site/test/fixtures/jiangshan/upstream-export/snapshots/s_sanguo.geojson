@@ -1,0 +1,64 @@
+{
+  "type": "FeatureCollection",
+  "name": "s_sanguo",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "bbox": [100.0, 22.0, 125.0, 42.0],
+  "from": 220,
+  "to": 265,
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [100.0, 32.0, 125.0, 42.0],
+      "properties": {
+        "layer": "polity",
+        "title": "魏",
+        "title_en": "Wei",
+        "category": "native",
+        "kind": "state",
+        "role": "main",
+        "tint": "#4a6fa5",
+        "anchor": [113.0, 34.5]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[100.0, 36.0], [115.0, 42.0], [125.0, 40.0], [120.0, 32.0], [105.0, 32.0], [100.0, 36.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [100.0, 22.0, 110.0, 32.0],
+      "properties": {
+        "layer": "polity",
+        "title": "蜀",
+        "title_en": "Shu",
+        "category": "native",
+        "kind": "state",
+        "role": "rival",
+        "tint": "#c98a2b",
+        "anchor": [104.0, 30.5]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[100.0, 28.0], [108.0, 32.0], [110.0, 30.0], [104.0, 22.0], [100.0, 28.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [110.0, 22.0, 122.0, 32.0],
+      "properties": {
+        "layer": "polity",
+        "title": "吴",
+        "title_en": "Wu",
+        "category": "native",
+        "kind": "state",
+        "role": "rival",
+        "tint": "#3f8f6a",
+        "anchor": [116.0, 28.0]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[110.0, 32.0], [122.0, 32.0], [121.0, 22.0], [112.0, 24.0], [110.0, 32.0]]]
+      }
+    }
+  ]
+}

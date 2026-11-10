@@ -1,0 +1,72 @@
+{
+  "type": "FeatureCollection",
+  "name": "milestones",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "bbox": [108.0, 22.0, 120.0, 41.0],
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [108.0, 33.0, 108.0, 33.0],
+      "properties": {
+        "dynasty": "qin",
+        "year": -206,
+        "headline": "刘邦入关",
+        "headline_en": "Liu Bang enters Guanzhong",
+        "site": "咸阳",
+        "site_en": "Xianyang"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [108.5, 34.3]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [117.0, 33.0, 117.0, 33.0],
+      "properties": {
+        "dynasty": "qin",
+        "year": -203,
+        "headline": "垓下之战",
+        "headline_en": "Battle of Gaixia",
+        "site": "垓下",
+        "site_en": "Gaixia"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [117.35, 33.0]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [113.0, 34.0, 113.0, 34.0],
+      "properties": {
+        "dynasty": "xihan",
+        "year": -202,
+        "headline": "汉朝建立",
+        "headline_en": "Han dynasty established",
+        "site": "洛阳",
+        "site_en": "Luoyang"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [113.0, 34.5]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [120.0, 30.0, 120.0, 30.0],
+      "properties": {
+        "dynasty": "sanguo",
+        "year": 220,
+        "headline": "三国鼎立",
+        "headline_en": "Three Kingdoms established",
+        "site": "洛阳",
+        "site_en": "Luoyang"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [120.0, 30.0]
+      }
+    }
+  ]
+}

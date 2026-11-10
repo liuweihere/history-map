@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "name": "corridors",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "bbox": [96.0, 34.0, 120.0, 41.0],
+  "note": "Great Walls, canals, roads and sea routes; from/to give the years each corridor is shown",
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [96.0, 38.0, 104.0, 41.0],
+      "properties": {
+        "key": "great_wall_qin",
+        "kind": "wall",
+        "title": "秦长城",
+        "title_en": "Qin Great Wall",
+        "from": -215,
+        "to": 220,
+        "summary": "秦始皇修筑的长城",
+        "summary_en": "Great Wall built by Qin Shi Huang",
+        "label_at": [100.0, 40.0]
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[96.0, 40.0], [100.0, 41.0], [104.0, 38.0]]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [110.0, 34.0, 120.0, 40.0],
+      "properties": {
+        "key": "silkroad_hexi",
+        "kind": "road",
+        "title": "河西丝绸之路",
+        "title_en": "Hexi Silk Road",
+        "from": -139,
+        "to": 1948,
+        "summary": "丝绸之路河西走廊段",
+        "summary_en": "Hexi Corridor section of the Silk Road",
+        "label_at": [115.0, 38.0]
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[110.0, 40.0], [115.0, 38.0], [120.0, 34.0]]
+      }
+    }
+  ]
+}

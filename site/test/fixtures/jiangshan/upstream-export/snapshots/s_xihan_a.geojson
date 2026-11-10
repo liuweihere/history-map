@@ -1,0 +1,49 @@
+{
+  "type": "FeatureCollection",
+  "name": "s_xihan_a",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "bbox": [95.0, 18.0, 125.0, 42.0],
+  "from": -202,
+  "to": -141,
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [95.0, 28.0, 120.0, 42.0],
+      "properties": {
+        "layer": "polity",
+        "title": "汉",
+        "title_en": "Han",
+        "category": "native",
+        "kind": "empire",
+        "role": "main",
+        "tint": "#c98a2b",
+        "anchor": [109.0, 34.5]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [[95.0, 34.0], [110.0, 42.0], [120.0, 40.0], [118.0, 30.0], [102.0, 28.0], [95.0, 34.0]],
+          [[108.0, 30.0], [112.0, 32.0], [110.0, 34.0], [108.0, 30.0]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [100.0, 18.0, 110.0, 25.0],
+      "properties": {
+        "layer": "polity",
+        "title": "匈奴",
+        "title_en": "Xiongnu",
+        "category": "foreign",
+        "kind": "tribe",
+        "role": "rival",
+        "tint": "#8b4513",
+        "anchor": [105.0, 42.0]
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[100.0, 18.0], [110.0, 18.0], [110.0, 25.0], [100.0, 25.0], [100.0, 18.0]]]
+      }
+    }
+  ]
+}

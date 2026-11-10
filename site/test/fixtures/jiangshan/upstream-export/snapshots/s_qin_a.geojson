@@ -1,0 +1,60 @@
+{
+  "type": "FeatureCollection",
+  "name": "s_qin_a",
+  "license": "GPL-3.0 · jiangshan-map (Chronicles of the Realm). Historical borders are schematic approximations, not survey-grade boundaries.",
+  "bbox": [100.0, 22.0, 125.0, 42.0],
+  "from": -221,
+  "to": -215,
+  "features": [
+    {
+      "type": "Feature",
+      "bbox": [100.0, 28.0, 115.0, 42.0],
+      "properties": {
+        "layer": "polity",
+        "title": "秦",
+        "title_en": "Qin",
+        "category": "native",
+        "kind": "empire",
+        "role": "main",
+        "tint": "#4a6fa5",
+        "anchor": [109.0, 34.5]
+      },
+      "geometry": {
+        "type": "MultiPolygon",
+        "coordinates": [
+          [[[100.0, 34.0], [110.0, 42.0], [115.0, 40.0], [113.0, 30.0], [102.0, 28.0], [100.0, 34.0]]],
+          [[[110.0, 35.0], [114.0, 38.0], [112.0, 36.0], [110.0, 35.0]]]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [104.0, 22.0, 110.0, 25.0],
+      "properties": {
+        "layer": "polity",
+        "title": "南越",
+        "title_en": "Nanyue",
+        "category": "foreign",
+        "kind": "tribe",
+        "role": "rival"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.0, 22.0], [110.0, 22.0], [110.0, 25.0], [104.0, 25.0], [104.0, 22.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "bbox": [96.0, 37.0, 104.0, 41.0],
+      "properties": {
+        "layer": "region",
+        "title": "陇西",
+        "kind": "province"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[96.0, 37.0], [104.0, 37.0], [104.0, 41.0], [96.0, 41.0], [96.0, 37.0]]]
+      }
+    }
+  ]
+}
