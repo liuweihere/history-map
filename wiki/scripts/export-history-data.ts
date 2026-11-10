@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 import { access, mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { buildTimelineMilestones } from "./timeline-milestone-parser.mjs";
 
 type FrontmatterValue = string | number | boolean | string[] | undefined;
 
@@ -629,12 +630,10 @@ const storyBundleSchema = z.object({
 const timelineRailSchema = z.object({
   milestones: z.array(
     z.object({
-      // 稳定身份：由内容（year+label）派生，非数组位置。
-      // 重复行共享同一 milestone_id（诚实反映相同内容），不伪装成不同身份。
-      // 跨版本长期引用重复行的 milestone_id 无意义——它们是冲突，待人工裁决。
+      // 持久身份：在课程源维护，修改标题/年份/重排不改变身份。
+      // 禁止凭年份标题派生（旧 ms-{year}-{label} 方案已废弃）。
       milestone_id: z.string().min(1),
-      // render_key：唯一渲染键（React key），重复行靠 #N 后缀区分。
-      // 仅用于渲染层避免 key 碰撞，不是稳定身份，不得跨版本长期引用。
+      // render_key：唯一渲染键（React key），等于 milestone_id（全部唯一）。
       render_key: z.string().min(1),
       year: z.number().int(),
       period: z.string().min(1),
@@ -643,14 +642,8 @@ const timelineRailSchema = z.object({
       lesson: z.string().min(1),
       story_id: z.string().nullable(),
       story_status: z.enum(["recorded", "planned"]),
-      // narration_status：真实口述状态，从 source 编译（placeholder/unknown）。
-      // 与 story_status（是否有故事包=可打开）分离，避免占位口述被误标 recorded。
-      // recorded 需人工或 source 显式正面证据，本轮不自动推断。
       narration_status: z.enum(["recorded", "placeholder", "unknown"]).default("unknown"),
       region_id: z.string().nullable().default(null),
-      // duplicate：内容完全重复的行标记为 true（冲突状态，待人工裁决）；
-      // duplicate_index 为组内序号（0-based）；duplicate_count 为该内容基底的总副本数。
-      // 原始重复行不删除，教学去留由人工裁决。
       duplicate: z.boolean().default(false),
       duplicate_index: z.number().int().min(0).default(0),
       duplicate_count: z.number().int().min(1).default(1),
@@ -1380,19 +1373,8 @@ async function clearGeneratedStoryExports(outputDir: string) {
   );
 }
 
-// 稳定内容基底 key：由 year+label 派生，非数组位置。重复行共享同一基底。
-function milestoneContentKey(year: number, label: string): string {
-  const slug = label
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\p{L}\p{N}-]/gu, "");
-  return `ms-${year}-${slug}`;
-}
-
+// detectNarrationStatus：从「小星星讲述」source 正文编译真实口述状态。
 function detectNarrationStatus(sourceBody: string): "placeholder" | "unknown" {
-  // 证据驱动，不靠缺少占位词推断真实口述（§5：缺乏证据不得标记 recorded）。
-  // 只有检测到占位标记时才标 placeholder；其余一律 unknown，等待显式正面证据。
-  // recorded 需人工或 source 显式正面标记，本轮不自动推断。
   if (
     sourceBody.includes("占位状态") ||
     sourceBody.includes("待回填") ||
@@ -1408,101 +1390,10 @@ async function exportTimelineRail(
   narrationByStoryId: Map<string, "placeholder" | "unknown">,
   outputDir: string,
 ) {
-  // 第一遍：构建原始里程碑 + 内容基底 key。
-  const rawMilestones = timelineRows.map((row) => {
-    const year = Number(row["年份"]);
-    if (!Number.isInteger(year)) {
-      throw new Error(`Invalid timeline year: ${row["年份"]}`);
-    }
-
-    const storyId = row["story_id"]?.trim() || null;
-    const storyStatusRaw = row["故事状态"]?.trim() || (storyId ? "recorded" : "planned");
-    // region_id 为可选列：表格暂不加列时字段缺省 null，站点种子表兜底（plan.md）
-    const regionId = row["region_id"]?.trim() || null;
-    const label = stripWikiMarkup(row["事件"]?.trim() || "未命名节点");
-
-    // narration_status：有 story_id 时从编译结果取真实口述状态；
-    // 无 story_id（planned）取 unknown——不凭 story_id 存在就标 recorded。
-    // 可能值：placeholder（占位检测命中）、unknown（无证据）。
-    // recorded 需人工或 source 显式正面证据，本轮不自动推断。
-    const narrationStatus: "placeholder" | "unknown" = storyId
-      ? (narrationByStoryId.get(storyId) ?? "unknown")
-      : "unknown";
-
-    return {
-      contentKey: milestoneContentKey(year, label),
-      year,
-      period: stripWikiMarkup(row["时代"]?.trim() || "历史时间轴"),
-      label,
-      note: stripWikiMarkup(row["时间轴提示"]?.trim() || row["地图变化"]?.trim() || "历史节点"),
-      lesson: stripWikiMarkup(row["孩子要理解"]?.trim() || row["结果"]?.trim() || "理解这个历史节点的位置"),
-      story_id: storyId,
-      story_status: storyStatusRaw,
-      narration_status: narrationStatus,
-      region_id: regionId,
-    };
-  });
-
-  // 第二遍：按内容基底分组，检测重复并赋予稳定唯一 milestone_id。
-  const countByKey = new Map<string, number>();
-  for (const m of rawMilestones) {
-    countByKey.set(m.contentKey, (countByKey.get(m.contentKey) ?? 0) + 1);
-  }
-
-  const indexByKey = new Map<string, number>();
-  const milestones = rawMilestones.map((m) => {
-    const total = countByKey.get(m.contentKey) ?? 1;
-    const isDuplicate = total > 1;
-    const indexInGroup = indexByKey.get(m.contentKey) ?? 0;
-    indexByKey.set(m.contentKey, indexInGroup + 1);
-
-    // milestone_id = 内容基底（诚实身份）。重复行共享同一 id，
-    // 明确标为冲突（duplicate=true），不伪装成不同内容身份。
-    // 跨版本长期引用重复行 milestone_id 无意义——待人工裁决。
-    const milestoneId = m.contentKey;
-    // render_key = 唯一渲染键：重复行靠 #N 后缀区分（1-based），
-    // 非重复行直接用 milestone_id。仅用于 React key，不是稳定身份。
-    const renderKey = isDuplicate
-      ? `${m.contentKey}#${indexInGroup + 1}`
-      : m.contentKey;
-
-    return {
-      milestone_id: milestoneId,
-      render_key: renderKey,
-      year: m.year,
-      period: m.period,
-      label: m.label,
-      note: m.note,
-      lesson: m.lesson,
-      story_id: m.story_id,
-      story_status: m.story_status,
-      narration_status: m.narration_status,
-      region_id: m.region_id,
-      duplicate: isDuplicate,
-      duplicate_index: indexInGroup,
-      duplicate_count: total,
-    };
-  });
-
-  // 重复课程检测报告（§5：重复条目需检测并报告；教学去留由人工裁决）。
-  const duplicateGroups = new Map<string, { year: number; label: string; count: number }>();
-  for (const m of milestones) {
-    if (m.duplicate) {
-      if (!duplicateGroups.has(m.milestone_id)) {
-        duplicateGroups.set(m.milestone_id, {
-          year: m.year,
-          label: m.label,
-          count: m.duplicate_count,
-        });
-      }
-    }
-  }
-  if (duplicateGroups.size > 0) {
-    console.warn("[timeline-rail] 检测到重复课程条目（原始行未删除，教学去留需人工裁决）：");
-    for (const { year, label, count } of duplicateGroups.values()) {
-      console.warn(`  - year=${year}, label="${label}", 副本数=${count}`);
-    }
-  }
+  // 使用生产解析函数（timeline-milestone-parser.mjs）：
+  // - milestone_id 从课程源 milestone_id 列读取（持久，非年份标题派生）
+  // - 缺失/重复 milestone_id 报错（清楚列出冲突行）
+  const milestones = buildTimelineMilestones(timelineRows, narrationByStoryId);
 
   const timelineRail = timelineRailSchema.parse({ milestones });
   await writeFile(
@@ -1532,4 +1423,8 @@ async function main() {
   console.log(`Exported ${STORY_CONFIGS.length} history story bundle(s) successfully.`);
 }
 
-main().catch((error) => failWithContext("export-history-data", error));
+// 仅在直接执行时运行 main()（import 时不自动执行）
+const isMainModule = fileURLToPath(import.meta.url) === path.resolve(process.argv[1] ?? "");
+if (isMainModule) {
+  main().catch((error) => failWithContext("export-history-data", error));
+}

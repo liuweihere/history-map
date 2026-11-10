@@ -1,8 +1,8 @@
 {
   "milestones": [
     {
-      "milestone_id": "ms--5000-盘古开天",
-      "render_key": "ms--5000-盘古开天",
+      "milestone_id": "ms_001",
+      "render_key": "ms_001",
       "year": -5000,
       "period": "上古",
       "label": "盘古开天",
@@ -17,8 +17,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--4500-女娲补天",
-      "render_key": "ms--4500-女娲补天",
+      "milestone_id": "ms_002",
+      "render_key": "ms_002",
       "year": -4500,
       "period": "上古",
       "label": "女娲补天",
@@ -33,8 +33,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--2697-炎黄传说",
-      "render_key": "ms--2697-炎黄传说",
+      "milestone_id": "ms_003",
+      "render_key": "ms_003",
       "year": -2697,
       "period": "上古",
       "label": "炎黄传说",
@@ -49,8 +49,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--2357-尧舜禅让",
-      "render_key": "ms--2357-尧舜禅让",
+      "milestone_id": "ms_004",
+      "render_key": "ms_004",
       "year": -2357,
       "period": "上古",
       "label": "尧舜禅让",
@@ -65,8 +65,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--2070-大禹治水",
-      "render_key": "ms--2070-大禹治水",
+      "milestone_id": "ms_005",
+      "render_key": "ms_005",
       "year": -2070,
       "period": "上古",
       "label": "大禹治水",
@@ -81,8 +81,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--2070-大禹建夏",
-      "render_key": "ms--2070-大禹建夏",
+      "milestone_id": "ms_006",
+      "render_key": "ms_006",
       "year": -2070,
       "period": "夏",
       "label": "大禹建夏",
@@ -97,8 +97,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1970-少康中兴",
-      "render_key": "ms--1970-少康中兴",
+      "milestone_id": "ms_007",
+      "render_key": "ms_007",
       "year": -1970,
       "period": "夏",
       "label": "少康中兴",
@@ -113,8 +113,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1600-夏桀失国",
-      "render_key": "ms--1600-夏桀失国",
+      "milestone_id": "ms_008",
+      "render_key": "ms_008",
       "year": -1600,
       "period": "夏",
       "label": "夏桀失国",
@@ -129,8 +129,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1600-商汤灭夏",
-      "render_key": "ms--1600-商汤灭夏",
+      "milestone_id": "ms_009",
+      "render_key": "ms_009",
       "year": -1600,
       "period": "商",
       "label": "商汤灭夏",
@@ -145,8 +145,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1540-伊尹辅政",
-      "render_key": "ms--1540-伊尹辅政",
+      "milestone_id": "ms_010",
+      "render_key": "ms_010",
       "year": -1540,
       "period": "商",
       "label": "伊尹辅政",
@@ -161,8 +161,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1300-盘庚迁殷",
-      "render_key": "ms--1300-盘庚迁殷",
+      "milestone_id": "ms_011",
+      "render_key": "ms_011",
       "year": -1300,
       "period": "商",
       "label": "盘庚迁殷",
@@ -177,8 +177,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1250-武丁中兴",
-      "render_key": "ms--1250-武丁中兴",
+      "milestone_id": "ms_012",
+      "render_key": "ms_012",
       "year": -1250,
       "period": "商",
       "label": "武丁中兴",
@@ -193,8 +193,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1240-妇好出征",
-      "render_key": "ms--1240-妇好出征",
+      "milestone_id": "ms_013",
+      "render_key": "ms_013",
       "year": -1240,
       "period": "商",
       "label": "妇好出征",
@@ -209,8 +209,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1046-商纣失国",
-      "render_key": "ms--1046-商纣失国",
+      "milestone_id": "ms_014",
+      "render_key": "ms_014",
       "year": -1046,
       "period": "商",
       "label": "商纣失国",
@@ -225,8 +225,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1046-武王伐纣",
-      "render_key": "ms--1046-武王伐纣",
+      "milestone_id": "ms_015",
+      "render_key": "ms_015",
       "year": -1046,
       "period": "西周",
       "label": "武王伐纣",
@@ -241,8 +241,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--1043-周公辅成王",
-      "render_key": "ms--1043-周公辅成王",
+      "milestone_id": "ms_016",
+      "render_key": "ms_016",
       "year": -1043,
       "period": "西周",
       "label": "周公辅成王",
@@ -257,8 +257,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--841-国人暴动",
-      "render_key": "ms--841-国人暴动",
+      "milestone_id": "ms_017",
+      "render_key": "ms_017",
       "year": -841,
       "period": "西周",
       "label": "国人暴动",
@@ -273,8 +273,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--771-烽火戏诸侯",
-      "render_key": "ms--771-烽火戏诸侯",
+      "milestone_id": "ms_018",
+      "render_key": "ms_018",
       "year": -771,
       "period": "西周",
       "label": "烽火戏诸侯",
@@ -289,8 +289,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--770-周平王东迁",
-      "render_key": "ms--770-周平王东迁",
+      "milestone_id": "ms_019",
+      "render_key": "ms_019",
       "year": -770,
       "period": "春秋",
       "label": "周平王东迁",
@@ -305,8 +305,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--743-郑庄公小霸",
-      "render_key": "ms--743-郑庄公小霸",
+      "milestone_id": "ms_020",
+      "render_key": "ms_020",
       "year": -743,
       "period": "春秋",
       "label": "郑庄公小霸",
@@ -321,8 +321,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--685-齐桓公称霸",
-      "render_key": "ms--685-齐桓公称霸",
+      "milestone_id": "ms_021",
+      "render_key": "ms_021",
       "year": -685,
       "period": "春秋",
       "label": "齐桓公称霸",
@@ -337,8 +337,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--685-管鲍之交",
-      "render_key": "ms--685-管鲍之交",
+      "milestone_id": "ms_022",
+      "render_key": "ms_022",
       "year": -685,
       "period": "春秋",
       "label": "管鲍之交",
@@ -353,8 +353,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--655-假途灭虢",
-      "render_key": "ms--655-假途灭虢",
+      "milestone_id": "ms_023",
+      "render_key": "ms_023",
       "year": -655,
       "period": "春秋",
       "label": "假途灭虢",
@@ -369,8 +369,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--633-退避三舍",
-      "render_key": "ms--633-退避三舍",
+      "milestone_id": "ms_024",
+      "render_key": "ms_024",
       "year": -633,
       "period": "春秋",
       "label": "退避三舍",
@@ -385,8 +385,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--632-城濮之战",
-      "render_key": "ms--632-城濮之战",
+      "milestone_id": "ms_025",
+      "render_key": "ms_025",
       "year": -632,
       "period": "春秋",
       "label": "城濮之战",
@@ -401,8 +401,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--613-楚庄王问鼎",
-      "render_key": "ms--613-楚庄王问鼎",
+      "milestone_id": "ms_026",
+      "render_key": "ms_026",
       "year": -613,
       "period": "春秋",
       "label": "楚庄王问鼎",
@@ -417,8 +417,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--506-孙武练兵",
-      "render_key": "ms--506-孙武练兵",
+      "milestone_id": "ms_027",
+      "render_key": "ms_027",
       "year": -506,
       "period": "春秋",
       "label": "孙武练兵",
@@ -433,8 +433,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--496-卧薪尝胆",
-      "render_key": "ms--496-卧薪尝胆",
+      "milestone_id": "ms_028",
+      "render_key": "ms_028",
       "year": -496,
       "period": "春秋",
       "label": "卧薪尝胆",
@@ -449,8 +449,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--494-夫差败越",
-      "render_key": "ms--494-夫差败越",
+      "milestone_id": "ms_029",
+      "render_key": "ms_029",
       "year": -494,
       "period": "春秋",
       "label": "夫差败越",
@@ -465,8 +465,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--473-吴越争霸终局",
-      "render_key": "ms--473-吴越争霸终局",
+      "milestone_id": "ms_030",
+      "render_key": "ms_030",
       "year": -473,
       "period": "春秋",
       "label": "吴越争霸终局",
@@ -481,8 +481,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--453-三家分晋",
-      "render_key": "ms--453-三家分晋",
+      "milestone_id": "ms_031",
+      "render_key": "ms_031",
       "year": -453,
       "period": "战国",
       "label": "三家分晋",
@@ -497,8 +497,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--356-商鞅变法",
-      "render_key": "ms--356-商鞅变法",
+      "milestone_id": "ms_032",
+      "render_key": "ms_032",
       "year": -356,
       "period": "战国",
       "label": "商鞅变法",
@@ -513,8 +513,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--342-孙膑斗庞涓",
-      "render_key": "ms--342-孙膑斗庞涓",
+      "milestone_id": "ms_033",
+      "render_key": "ms_033",
       "year": -342,
       "period": "战国",
       "label": "孙膑斗庞涓",
@@ -529,8 +529,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--341-围魏救赵",
-      "render_key": "ms--341-围魏救赵",
+      "milestone_id": "ms_034",
+      "render_key": "ms_034",
       "year": -341,
       "period": "战国",
       "label": "围魏救赵",
@@ -545,8 +545,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--307-胡服骑射",
-      "render_key": "ms--307-胡服骑射",
+      "milestone_id": "ms_035",
+      "render_key": "ms_035",
       "year": -307,
       "period": "战国",
       "label": "胡服骑射",
@@ -561,8 +561,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--283-完璧归赵",
-      "render_key": "ms--283-完璧归赵",
+      "milestone_id": "ms_036",
+      "render_key": "ms_036",
       "year": -283,
       "period": "战国",
       "label": "完璧归赵",
@@ -577,8 +577,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--279-负荆请罪",
-      "render_key": "ms--279-负荆请罪",
+      "milestone_id": "ms_037",
+      "render_key": "ms_037",
       "year": -279,
       "period": "战国",
       "label": "负荆请罪",
@@ -593,8 +593,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--260-长平之战",
-      "render_key": "ms--260-长平之战",
+      "milestone_id": "ms_038",
+      "render_key": "ms_038",
       "year": -260,
       "period": "战国",
       "label": "长平之战",
@@ -609,8 +609,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--227-荆轲刺秦王",
-      "render_key": "ms--227-荆轲刺秦王",
+      "milestone_id": "ms_039",
+      "render_key": "ms_039",
       "year": -227,
       "period": "战国",
       "label": "荆轲刺秦王",
@@ -625,8 +625,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--221-秦统一六国",
-      "render_key": "ms--221-秦统一六国",
+      "milestone_id": "ms_040",
+      "render_key": "ms_040",
       "year": -221,
       "period": "秦",
       "label": "秦统一六国",
@@ -641,8 +641,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--214-修筑长城",
-      "render_key": "ms--214-修筑长城",
+      "milestone_id": "ms_041",
+      "render_key": "ms_041",
       "year": -214,
       "period": "秦",
       "label": "修筑长城",
@@ -657,8 +657,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--213-焚书坑儒",
-      "render_key": "ms--213-焚书坑儒",
+      "milestone_id": "ms_042",
+      "render_key": "ms_042",
       "year": -213,
       "period": "秦",
       "label": "焚书坑儒",
@@ -673,8 +673,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--210-沙丘之变",
-      "render_key": "ms--210-沙丘之变",
+      "milestone_id": "ms_043",
+      "render_key": "ms_043",
       "year": -210,
       "period": "秦",
       "label": "沙丘之变",
@@ -689,8 +689,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--209-陈胜吴广起义",
-      "render_key": "ms--209-陈胜吴广起义",
+      "milestone_id": "ms_044",
+      "render_key": "ms_044",
       "year": -209,
       "period": "秦末",
       "label": "陈胜吴广起义",
@@ -705,8 +705,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--207-巨鹿之战",
-      "render_key": "ms--207-巨鹿之战",
+      "milestone_id": "ms_045",
+      "render_key": "ms_045",
       "year": -207,
       "period": "楚汉相争",
       "label": "巨鹿之战",
@@ -721,8 +721,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--206-鸿门宴",
-      "render_key": "ms--206-鸿门宴",
+      "milestone_id": "ms_046",
+      "render_key": "ms_046",
       "year": -206,
       "period": "楚汉相争",
       "label": "鸿门宴",
@@ -737,8 +737,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--206-韩信拜将",
-      "render_key": "ms--206-韩信拜将",
+      "milestone_id": "ms_047",
+      "render_key": "ms_047",
       "year": -206,
       "period": "西汉",
       "label": "韩信拜将",
@@ -753,8 +753,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--205-楚汉相争",
-      "render_key": "ms--205-楚汉相争",
+      "milestone_id": "ms_048",
+      "render_key": "ms_048",
       "year": -205,
       "period": "楚汉相争",
       "label": "楚汉相争",
@@ -769,8 +769,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--202-四面楚歌",
-      "render_key": "ms--202-四面楚歌",
+      "milestone_id": "ms_049",
+      "render_key": "ms_049",
       "year": -202,
       "period": "楚汉相争",
       "label": "四面楚歌",
@@ -785,8 +785,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--202-项羽乌江自刎",
-      "render_key": "ms--202-项羽乌江自刎",
+      "milestone_id": "ms_050",
+      "render_key": "ms_050",
       "year": -202,
       "period": "楚汉相争",
       "label": "项羽乌江自刎",
@@ -801,8 +801,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--202-汉朝建立",
-      "render_key": "ms--202-汉朝建立",
+      "milestone_id": "ms_051",
+      "render_key": "ms_051",
       "year": -202,
       "period": "西汉",
       "label": "汉朝建立",
@@ -817,8 +817,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--200-白登之围",
-      "render_key": "ms--200-白登之围",
+      "milestone_id": "ms_052",
+      "render_key": "ms_052",
       "year": -200,
       "period": "西汉",
       "label": "白登之围",
@@ -833,8 +833,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--180-吕后专权",
-      "render_key": "ms--180-吕后专权",
+      "milestone_id": "ms_053",
+      "render_key": "ms_053",
       "year": -180,
       "period": "西汉",
       "label": "吕后专权",
@@ -849,8 +849,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--157-文景之治",
-      "render_key": "ms--157-文景之治",
+      "milestone_id": "ms_054",
+      "render_key": "ms_054",
       "year": -157,
       "period": "西汉",
       "label": "文景之治",
@@ -865,8 +865,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--154-周亚夫治军",
-      "render_key": "ms--154-周亚夫治军",
+      "milestone_id": "ms_055",
+      "render_key": "ms_055",
       "year": -154,
       "period": "西汉",
       "label": "周亚夫治军",
@@ -881,8 +881,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--154-七国之乱",
-      "render_key": "ms--154-七国之乱",
+      "milestone_id": "ms_056",
+      "render_key": "ms_056",
       "year": -154,
       "period": "西汉",
       "label": "七国之乱",
@@ -897,8 +897,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--141-汉武帝即位",
-      "render_key": "ms--141-汉武帝即位",
+      "milestone_id": "ms_057",
+      "render_key": "ms_057",
       "year": -141,
       "period": "西汉",
       "label": "汉武帝即位",
@@ -913,8 +913,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--139-张骞通西域",
-      "render_key": "ms--139-张骞通西域",
+      "milestone_id": "ms_058",
+      "render_key": "ms_058",
       "year": -139,
       "period": "西汉",
       "label": "张骞通西域",
@@ -929,8 +929,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--121-卫青霍去病",
-      "render_key": "ms--121-卫青霍去病",
+      "milestone_id": "ms_059",
+      "render_key": "ms_059",
       "year": -121,
       "period": "西汉",
       "label": "卫青霍去病",
@@ -945,8 +945,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--100-苏武牧羊",
-      "render_key": "ms--100-苏武牧羊",
+      "milestone_id": "ms_060",
+      "render_key": "ms_060",
       "year": -100,
       "period": "西汉",
       "label": "苏武牧羊",
@@ -961,8 +961,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms--33-昭君出塞",
-      "render_key": "ms--33-昭君出塞",
+      "milestone_id": "ms_061",
+      "render_key": "ms_061",
       "year": -33,
       "period": "西汉",
       "label": "昭君出塞",
@@ -977,8 +977,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-8-王莽改制",
-      "render_key": "ms-8-王莽改制",
+      "milestone_id": "ms_062",
+      "render_key": "ms_062",
       "year": 8,
       "period": "西汉",
       "label": "王莽改制",
@@ -993,8 +993,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-25-刘秀建东汉",
-      "render_key": "ms-25-刘秀建东汉",
+      "milestone_id": "ms_063",
+      "render_key": "ms_063",
       "year": 25,
       "period": "东汉",
       "label": "刘秀建东汉",
@@ -1009,8 +1009,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-30-光武中兴",
-      "render_key": "ms-30-光武中兴",
+      "milestone_id": "ms_064",
+      "render_key": "ms_064",
       "year": 30,
       "period": "东汉",
       "label": "光武中兴",
@@ -1025,8 +1025,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-67-汉明帝求法",
-      "render_key": "ms-67-汉明帝求法",
+      "milestone_id": "ms_065",
+      "render_key": "ms_065",
       "year": 67,
       "period": "东汉",
       "label": "汉明帝求法",
@@ -1041,8 +1041,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-73-班超经营西域",
-      "render_key": "ms-73-班超经营西域",
+      "milestone_id": "ms_066",
+      "render_key": "ms_066",
       "year": 73,
       "period": "东汉",
       "label": "班超经营西域",
@@ -1057,8 +1057,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-105-蔡伦造纸",
-      "render_key": "ms-105-蔡伦造纸",
+      "milestone_id": "ms_067",
+      "render_key": "ms_067",
       "year": 105,
       "period": "东汉",
       "label": "蔡伦造纸",
@@ -1073,8 +1073,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-150-江南可采莲",
-      "render_key": "ms-150-江南可采莲#1",
+      "milestone_id": "ms_068",
+      "render_key": "ms_068",
       "year": 150,
       "period": "东汉",
       "label": "江南可采莲",
@@ -1084,29 +1084,13 @@
       "story_status": "planned",
       "narration_status": "unknown",
       "region_id": null,
-      "duplicate": true,
+      "duplicate": false,
       "duplicate_index": 0,
-      "duplicate_count": 2
+      "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-150-江南可采莲",
-      "render_key": "ms-150-江南可采莲#2",
-      "year": 150,
-      "period": "东汉",
-      "label": "江南可采莲",
-      "note": "南方水乡先唱进歌里",
-      "lesson": "很早以前人们就用歌记住自己生活的地方",
-      "story_id": null,
-      "story_status": "planned",
-      "narration_status": "unknown",
-      "region_id": null,
-      "duplicate": true,
-      "duplicate_index": 1,
-      "duplicate_count": 2
-    },
-    {
-      "milestone_id": "ms-166-党锢之祸",
-      "render_key": "ms-166-党锢之祸",
+      "milestone_id": "ms_069",
+      "render_key": "ms_069",
       "year": 166,
       "period": "东汉",
       "label": "党锢之祸",
@@ -1121,8 +1105,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-184-黄巾起义",
-      "render_key": "ms-184-黄巾起义",
+      "milestone_id": "ms_070",
+      "render_key": "ms_070",
       "year": 184,
       "period": "东汉",
       "label": "黄巾起义",
@@ -1137,8 +1121,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-190-管宁割席",
-      "render_key": "ms-190-管宁割席",
+      "milestone_id": "ms_071",
+      "render_key": "ms_071",
       "year": 190,
       "period": "东汉末",
       "label": "管宁割席",
@@ -1153,8 +1137,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-199-曹操煮酒论英雄",
-      "render_key": "ms-199-曹操煮酒论英雄",
+      "milestone_id": "ms_072",
+      "render_key": "ms_072",
       "year": 199,
       "period": "东汉末",
       "label": "曹操煮酒论英雄",
@@ -1169,8 +1153,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-199-望梅止渴",
-      "render_key": "ms-199-望梅止渴",
+      "milestone_id": "ms_073",
+      "render_key": "ms_073",
       "year": 199,
       "period": "东汉末",
       "label": "望梅止渴",
@@ -1185,8 +1169,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-200-名医张仲景",
-      "render_key": "ms-200-名医张仲景",
+      "milestone_id": "ms_074",
+      "render_key": "ms_074",
       "year": 200,
       "period": "东汉末",
       "label": "名医张仲景",
@@ -1201,8 +1185,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-199-绝妙好辞",
-      "render_key": "ms-199-绝妙好辞",
+      "milestone_id": "ms_075",
+      "render_key": "ms_075",
       "year": 199,
       "period": "东汉末",
       "label": "绝妙好辞",
@@ -1217,8 +1201,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-220-三国鼎立",
-      "render_key": "ms-220-三国鼎立#1",
+      "milestone_id": "ms_076",
+      "render_key": "ms_076",
       "year": 220,
       "period": "三国",
       "label": "三国鼎立",
@@ -1228,13 +1212,13 @@
       "story_status": "planned",
       "narration_status": "unknown",
       "region_id": null,
-      "duplicate": true,
+      "duplicate": false,
       "duplicate_index": 0,
-      "duplicate_count": 2
+      "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-220-曹植七步成诗",
-      "render_key": "ms-220-曹植七步成诗",
+      "milestone_id": "ms_077",
+      "render_key": "ms_077",
       "year": 220,
       "period": "三国",
       "label": "曹植七步成诗",
@@ -1249,8 +1233,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-245-道边苦李",
-      "render_key": "ms-245-道边苦李",
+      "milestone_id": "ms_078",
+      "render_key": "ms_078",
       "year": 245,
       "period": "三国",
       "label": "道边苦李",
@@ -1265,8 +1249,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-280-鹤立鸡群",
-      "render_key": "ms-280-鹤立鸡群",
+      "milestone_id": "ms_079",
+      "render_key": "ms_079",
       "year": 280,
       "period": "西晋",
       "label": "鹤立鸡群",
@@ -1281,8 +1265,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-200-官渡之战",
-      "render_key": "ms-200-官渡之战",
+      "milestone_id": "ms_080",
+      "render_key": "ms_080",
       "year": 200,
       "period": "东汉末",
       "label": "官渡之战",
@@ -1297,8 +1281,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-207-观沧海",
-      "render_key": "ms-207-观沧海",
+      "milestone_id": "ms_081",
+      "render_key": "ms_081",
       "year": 207,
       "period": "东汉末",
       "label": "观沧海",
@@ -1313,24 +1297,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-220-三国鼎立",
-      "render_key": "ms-220-三国鼎立#2",
-      "year": 220,
-      "period": "三国",
-      "label": "三国鼎立",
-      "note": "天下分成三块",
-      "lesson": "一个大时代结束后，天下有时会分成好几块",
-      "story_id": null,
-      "story_status": "planned",
-      "narration_status": "unknown",
-      "region_id": null,
-      "duplicate": true,
-      "duplicate_index": 1,
-      "duplicate_count": 2
-    },
-    {
-      "milestone_id": "ms-280-三国归晋",
-      "render_key": "ms-280-三国归晋",
+      "milestone_id": "ms_082",
+      "render_key": "ms_082",
       "year": 280,
       "period": "西晋",
       "label": "三国归晋",
@@ -1345,8 +1313,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-313-闻鸡起舞",
-      "render_key": "ms-313-闻鸡起舞",
+      "milestone_id": "ms_083",
+      "render_key": "ms_083",
       "year": 313,
       "period": "东晋",
       "label": "闻鸡起舞",
@@ -1361,8 +1329,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-317-衣冠南渡",
-      "render_key": "ms-317-衣冠南渡",
+      "milestone_id": "ms_084",
+      "render_key": "ms_084",
       "year": 317,
       "period": "东晋",
       "label": "衣冠南渡",
@@ -1377,8 +1345,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-330-坦腹东床",
-      "render_key": "ms-330-坦腹东床",
+      "milestone_id": "ms_085",
+      "render_key": "ms_085",
       "year": 330,
       "period": "东晋",
       "label": "坦腹东床",
@@ -1393,8 +1361,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-353-兰亭雅集",
-      "render_key": "ms-353-兰亭雅集",
+      "milestone_id": "ms_086",
+      "render_key": "ms_086",
       "year": 353,
       "period": "东晋",
       "label": "兰亭雅集",
@@ -1409,8 +1377,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-360-雪夜访戴",
-      "render_key": "ms-360-雪夜访戴",
+      "milestone_id": "ms_087",
+      "render_key": "ms_087",
       "year": 360,
       "period": "东晋",
       "label": "雪夜访戴",
@@ -1425,8 +1393,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-375-咏雪之才",
-      "render_key": "ms-375-咏雪之才",
+      "milestone_id": "ms_088",
+      "render_key": "ms_088",
       "year": 375,
       "period": "东晋",
       "label": "咏雪之才",
@@ -1441,8 +1409,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-380-渐至佳境",
-      "render_key": "ms-380-渐至佳境",
+      "milestone_id": "ms_089",
+      "render_key": "ms_089",
       "year": 380,
       "period": "东晋",
       "label": "渐至佳境",
@@ -1457,8 +1425,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-383-淝水之战",
-      "render_key": "ms-383-淝水之战",
+      "milestone_id": "ms_090",
+      "render_key": "ms_090",
       "year": 383,
       "period": "东晋",
       "label": "淝水之战",
@@ -1473,8 +1441,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-406-归园田居",
-      "render_key": "ms-406-归园田居",
+      "milestone_id": "ms_091",
+      "render_key": "ms_091",
       "year": 406,
       "period": "东晋",
       "label": "归园田居",
@@ -1489,8 +1457,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-450-木兰诗",
-      "render_key": "ms-450-木兰诗",
+      "milestone_id": "ms_092",
+      "render_key": "ms_092",
       "year": 450,
       "period": "南北朝",
       "label": "木兰诗",
@@ -1505,8 +1473,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-494-孝文帝迁都洛阳",
-      "render_key": "ms-494-孝文帝迁都洛阳",
+      "milestone_id": "ms_093",
+      "render_key": "ms_093",
       "year": 494,
       "period": "南北朝",
       "label": "孝文帝迁都洛阳",
@@ -1521,8 +1489,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-546-敕勒歌",
-      "render_key": "ms-546-敕勒歌",
+      "milestone_id": "ms_094",
+      "render_key": "ms_094",
       "year": 546,
       "period": "南北朝",
       "label": "敕勒歌",
@@ -1537,8 +1505,8 @@
       "duplicate_count": 1
     },
     {
-      "milestone_id": "ms-589-隋统一南北",
-      "render_key": "ms-589-隋统一南北",
+      "milestone_id": "ms_095",
+      "render_key": "ms_095",
       "year": 589,
       "period": "隋",
       "label": "隋统一南北",
