@@ -213,6 +213,7 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
         {index ? (
           <ExplorationMapStage
             snapshot={snapshot}
+            phaseKey={cacheKey}
             corridors={corridors}
             selectedYear={selectedYear}
             initialCamera={cameraRef.current}

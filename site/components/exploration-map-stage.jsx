@@ -5,10 +5,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { REGION_GEOJSON_PATH } from "../lib/history-regions";
 import { buildBasemapAttribution } from "../lib/basemap-attribution";
 import {
-  polityColor,
-  polityAnchor,
-  corridorActiveAt,
-} from "../lib/jiangshan-data";
+  clearPolityLayers,
+  applyPolityToMap,
+  applyCorridorsToMap,
+  corridorYearFilter,
+} from "../lib/exploration-map-layers";
 
 // ── 现成矢量底图（与 history-map-stage 一致：CartoDB Positron）─────────
 const BASEMAP_STYLE_URL =
@@ -53,15 +54,21 @@ function createPolityLabelNode(props) {
  * 水系未导入（由底图自动提供）；提示「示意／近似」「现代底图参考」。
  *
  * @param {object} snapshot  当前 phase 政权快照 FeatureCollection（已加载）
+ * @param {string|null} phaseKey  显式阶段身份（dynasty.key+snapshot+from+to），
+ *   用于幂等重建判定（不用字节长度推断）；跨 phase 变化即重建。
  * @param {object|null} corridors  corridors.geojson（常驻）
  * @param {number} selectedYear  当前所选年份（用于走廊过滤）
  * @param {object|null} initialCamera  恢复的视角 {center:[lng,lat], zoom}
  * @param {function|null} onCameraChange  视角变化上报（往返恢复用）
  */
-export function ExplorationMapStage({ snapshot, corridors, selectedYear, initialCamera, onCameraChange }) {
+export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYear, initialCamera, onCameraChange }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
+  const maplibreglRef = useRef(null); // init 中保存模块，供 effect createMarker 使用
   const polityLabelsRef = useRef([]);
+  // mapReady：map "load" 后置 true，纳入 snapshot/corridors effect deps，
+  // 解决 map 异步 init 与 snapshot fetch 竞态——map ready 后重触 effect 应用待挂快照。
+  const [mapReady, setMapReady] = useState(false);
   const [basemapOnline, setBasemapOnline] = useState(null);
   const [error, setError] = useState(null);
   const cameraCbRef = useRef(onCameraChange);
@@ -75,6 +82,7 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
       if (!mapNodeRef.current || mapRef.current) return;
       const maplibregl = (await import("maplibre-gl")).default;
       if (cancelled) return;
+      maplibreglRef.current = maplibregl;
 
       const { style: basemapStyle, online: online } = await loadBasemapStyle();
       if (cancelled) return;
@@ -146,6 +154,9 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
               },
             });
           });
+        // 标记 map ready：触发 snapshot/corridors effect 重跑，应用待挂数据
+        // （解决 fetch 比 init 快、mapRef null 时 effect 早退的竞态）
+        setMapReady(true);
       });
     }
 
@@ -166,135 +177,78 @@ export function ExplorationMapStage({ snapshot, corridors, selectedYear, initial
     };
   }, []);
 
-  // ── 政权快照 + 走廊：随 snapshot / corridors / selectedYear 更新 ──
-  // 同 phase（snapshot 不变）只更新走廊过滤，不重建快照源。
-  // 防过期回写：style 未加载时延迟到 idle 应用，但用 revision 守卫——
-  // 新 snapshot 到来后旧 idle 回调捕获的旧 snapshot 不再回写。
-  const snapshotVersionRef = useRef(null);
-  const latestSnapshotRef = useRef(null);
+  // ── 政权快照：随 snapshot / phaseKey / mapReady 更新 ───────────────
+  // 竞态修复：mapReady 纳入 deps——map 异步 init 完成后重触本 effect，
+  // 应用在 map 未就绪期间到达的快照（否则地图无疆域）。
+  // 转场修复：snapshot=null（跨 phase 清空）时清除旧 polity 层/标签，不残留旧数据。
+  // 幂等：同 phaseKey 且源已存在则跳过重建（不用字节长度推断）。
+  // 图层顺序：polity insert before corridor-line（若已存在），走廊保持上层。
+  const polityVersionRef = useRef(null);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !snapshot) return;
-    latestSnapshotRef.current = snapshot;
-    const mySnapshot = snapshot;
-    if (!map.isStyleLoaded()) {
-      // 等待 style load 后再挂；用 once 避免漏挂
-      map.once("idle", () => {
-        // 守卫：若期间已有更新的 snapshot，丢弃本次（旧 snapshot 不回写）
-        if (latestSnapshotRef.current !== mySnapshot) return;
-        applySnapshot();
-      });
+    if (!mapReady || !map) return;
+    // snapshot=null：跨 phase 清空，旧 polity 不呈现（§5）
+    if (!snapshot) {
+      clearPolityLayers(map, polityLabelsRef);
+      polityVersionRef.current = null;
       return;
     }
-    applySnapshot();
-
-    function applySnapshot() {
-      if (!mapRef.current) return;
-      // 守卫：仅应用最新 snapshot（防止延迟回调过期回写）
-      if (latestSnapshotRef.current !== mySnapshot) return;
-      const version = mySnapshot.__v ?? JSON.stringify(mySnapshot).length;
-      // 同 snapshot 不重复重建
-      if (snapshotVersionRef.current === version && map.getSource("jiangshan-polity")) return;
-      snapshotVersionRef.current = version;
-
-      // 清旧
-      if (map.getLayer("polity-fill")) map.removeLayer("polity-fill");
-      if (map.getSource("jiangshan-polity")) map.removeSource("jiangshan-polity");
-      polityLabelsRef.current.forEach((m) => m.remove());
-      polityLabelsRef.current = [];
-
-      map.addSource("jiangshan-polity", {
-        type: "geojson",
-        data: mySnapshot,
+    // map 已就绪且 style 已加载：直接应用；否则等 idle 后应用。
+    // （mapReady 来自 "load"，style 通常已加载；但大区 addSource 可能仍在排队，
+    //  isStyleLoaded() 为 false 时延迟到 idle，避免 addSource 抛错。）
+    const apply = () => applyPolityToMap(map, snapshot, phaseKey, {
+      versionRef: polityVersionRef,
+      labelsRef: polityLabelsRef,
+      createMarker: (props, anchor) => {
+        const ml = maplibreglRef.current;
+        if (!ml) return null;
+        const node = createPolityLabelNode(props);
+        return new ml.Marker({ element: node, anchor: "center" })
+          .setLngLat(anchor)
+          .addTo(map);
+      },
+    });
+    if (map.isStyleLoaded()) {
+      apply();
+    } else {
+      map.once("idle", () => {
+        // 守卫：若期间 phaseKey 已变（新 snapshot 到达），不回写旧值。
+        // applyPolityToMap 内部用 phaseKey+versionRef 幂等，过期 apply 会被跳过。
+        if (mapRef.current !== map) return;
+        apply();
       });
-      // 政权填色淡化（0.32），不堆色块；色由 display_color→tint→安全色
-      map.addLayer({
-        id: "polity-fill",
-        type: "fill",
-        source: "jiangshan-polity",
-        paint: {
-          "fill-color": ["coalesce", ["get", "display_color"], ["get", "tint"], "#D9C7A8"],
-          "fill-opacity": 0.32,
-          "fill-outline-color": "rgba(60,40,20,0.18)",
-        },
-      });
-
-      // 政权锚点标签（DOM Marker，properties.title / anchor）
-      polityLabelsRef.current = (mySnapshot.features ?? [])
-        .map((f) => {
-          const props = f.properties ?? {};
-          const anchor = polityAnchor(props);
-          if (!anchor || !props.title) return null;
-          const node = createPolityLabelNode(props);
-          return new maplibregl.Marker({ element: node, anchor: "center" })
-            .setLngLat(anchor)
-            .addTo(map);
-        })
-        .filter(Boolean);
     }
-  }, [snapshot]);
+  }, [snapshot, phaseKey, mapReady]);
 
   // 走廊层：corridors 常驻，按 selectedYear 过滤（from/to 两端包含；
-  // 无 from/to 的走廊按上游定义「一直显示」，与 corridorActiveAt 一致）
+  // 无 from/to 的走廊按上游定义「一直显示」，与 corridorActiveAt 一致）。
+  // mapReady 纳入 deps 以解决与 init 的竞态。
   const corridorsVersionRef = useRef(null);
-  const latestCorridorsRef = useRef(null);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !corridors) return;
-    latestCorridorsRef.current = corridors;
-    const myCorridors = corridors;
-    if (!map.isStyleLoaded()) {
-      map.once("idle", () => {
-        if (latestCorridorsRef.current !== myCorridors) return; // 守卫：丢弃过期回写
-        applyCorridors();
+    if (!mapReady || !map || !corridors) return;
+    const apply = () => {
+      const applied = applyCorridorsToMap(map, corridors, "corridors", {
+        versionRef: corridorsVersionRef,
       });
-      return;
-    }
-    applyCorridors();
-
-    function applyCorridors() {
-      if (!mapRef.current) return;
-      if (latestCorridorsRef.current !== myCorridors) return;
-      const version = myCorridors.__v ?? JSON.stringify(myCorridors).length;
-      if (corridorsVersionRef.current === version && map.getSource("jiangshan-corridors")) {
-        // 同 corridors 只更新过滤
-        updateFilter();
-        return;
-      }
-      corridorsVersionRef.current = version;
-
-      if (map.getLayer("corridor-line")) map.removeLayer("corridor-line");
-      if (map.getSource("jiangshan-corridors")) map.removeSource("jiangshan-corridors");
-
-      map.addSource("jiangshan-corridors", { type: "geojson", data: myCorridors });
-      // 走廊在上层（polity 之上）：用 line，棕褐色虚线
-      map.addLayer({
-        id: "corridor-line",
-        type: "line",
-        source: "jiangshan-corridors",
-        paint: {
-          "line-color": ["coalesce", ["get", "color"], "#8B5A2B"],
-          "line-width": 2,
-          "line-opacity": 0.7,
-          "line-dasharray": [2, 2],
-        },
-      });
-      updateFilter();
-    }
-
-    function updateFilter() {
+      // 无论新建或已存在，都更新过滤
       const m = mapRef.current;
-      if (!m || !m.getLayer("corridor-line")) return;
-      // from<=year<=to 两端包含；from/to 缺失（无 span）→ 一直显示
-      m.setFilter("corridor-line", [
-        "any",
-        ["!", ["all", ["has", "from"], ["has", "to"]]],
-        ["all", ["<=", ["get", "from"], selectedYear], [">=", ["get", "to"], selectedYear]],
-      ]);
+      if (m && m.getLayer("corridor-line")) {
+        m.setFilter("corridor-line", corridorYearFilter(selectedYear));
+      }
+      return applied;
+    };
+    if (map.isStyleLoaded()) {
+      apply();
+    } else {
+      map.once("idle", () => {
+        if (mapRef.current !== map) return;
+        apply();
+      });
     }
-  }, [corridors, selectedYear]);
+  }, [corridors, selectedYear, mapReady]);
 
   const attributionText = buildBasemapAttribution(basemapOnline === true);
 
