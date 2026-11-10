@@ -1427,8 +1427,25 @@ class ExportRollbackIncompleteError extends Error {
 // 历史的 readFile(check)→writeFile(act) 是非原子 check-then-write，存在 TOCTOU
 // 窗口：两个并发导出可同时读到 ENOENT 后各自建锁，双双获得所有权，互斥被击穿。
 // 改用单次 open('wx') 原子排他创建：由内核保证「创建即唯一拥有」，EEXIST 即失败。
-// 文件句柄在 finally 中关闭，确保无论写入成败都不泄漏句柄。
-async function acquireExportLock(fs: PublishFs, lockPath: string, ownerTag: string) {
+//
+// open('wx') 成功后若 handle.writeFile 或 handle.close 抛错，错误在 lockHeld = true
+// 之前传播到 runExport → finally 不释放锁 → 空锁/半成品锁残留，所有后续导出永久
+// fail-closed。修复：acquireExportLock 在 open 成功后若 write/close 失败，先尝试
+// 清理自有残留（cleanupLockResidue 验证内容为空或匹配 ownerTag 才 unlink），使后续
+// 导出可恢复正常重试；所有权不明确时保留锁并抛诊断错误（fail-closed）。
+//
+// EEXIST→ENOENT 窗口（锁在 EEXIST 与读取间被释放）用有界重试收敛，杜绝无界递归。
+
+// EEXIST→ENOENT 重试上限：该窗口极小（EEXIST 后到 readFile 之间的微秒级间隙），
+// 正常情况下 0~1 次即可收敛。3 次上限覆盖极端抖动，超出则 fail-closed。
+const MAX_EEXIST_ENOENT_RETRIES = 3;
+
+async function acquireExportLock(
+  fs: PublishFs,
+  lockPath: string,
+  ownerTag: string,
+  _eexistRetry = 0,
+) {
   let handle;
   try {
     // 原子排他创建：文件不存在则创建并独占；已存在则抛 EEXIST（不覆盖他人锁）。
@@ -1436,15 +1453,21 @@ async function acquireExportLock(fs: PublishFs, lockPath: string, ownerTag: stri
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "EEXIST") {
       // 锁已存在 → fail-closed。读取现有 ownerTag 用于诊断，绝不删除/覆盖。
-      // 极小窗口：EEXIST 后读取时锁已被他人释放（ENOENT）→ 重试一次原子创建，
-      // 既不漏抢也不误判为他人锁。
+      // 极小窗口：EEXIST 后读取时锁已被他人释放（ENOENT）→ 有界重试原子创建。
       let existing: string | null = null;
       try {
         existing = await fs.readFile(lockPath, "utf8");
       } catch (readError) {
         if ((readError as NodeJS.ErrnoException).code !== "ENOENT") throw readError;
-        // 锁在 EEXIST 与读取之间被释放 → 重试原子创建（递归一次即可收敛）。
-        return acquireExportLock(fs, lockPath, ownerTag);
+        // 锁在 EEXIST 与读取之间被释放 → 重试原子创建（有界，杜绝无界递归）。
+        if (_eexistRetry >= MAX_EEXIST_ENOENT_RETRIES) {
+          throw new Error(
+            `导出锁创建反复 EEXIST→ENOENT（已重试 ${_eexistRetry} 次），` +
+            `疑似竞争抖动：${lockPath}\n` +
+            `请稍后重试；若持续失败请手动核查锁文件状态。`,
+          );
+        }
+        return acquireExportLock(fs, lockPath, ownerTag, _eexistRetry + 1);
       }
       throw new Error(
         `导出锁已存在，同目标并发导出被拒绝（fail-closed）：${lockPath}\n` +
@@ -1455,12 +1478,84 @@ async function acquireExportLock(fs: PublishFs, lockPath: string, ownerTag: stri
     }
     throw error;
   }
+
+  // open('wx') 成功 — 我们创建了文件。写入 ownerTag。
+  // 分别捕获 write/close 错误，避免 finally 中 close 抛错覆盖 write 的根因错误。
+  let writeError: unknown = null;
   try {
     await handle.writeFile(ownerTag, "utf8");
-  } finally {
-    // 无论写入成败都关闭句柄，避免泄漏。写入失败时由调用方清理半成品锁。
-    await handle.close();
+  } catch (error) {
+    writeError = error;
   }
+
+  let closeError: unknown = null;
+  try {
+    await handle.close();
+  } catch (error) {
+    closeError = error;
+  }
+
+  if (writeError !== null || closeError !== null) {
+    // 清理自有残留：我们用 open('wx') 创建了文件，但 write/close 失败后
+    // runExport 的 lockHeld 未设 → finally 不释放锁 → 残留永久阻塞后续导出。
+    // cleanupLockResidue 验证内容为空或匹配 ownerTag 才 unlink（安全约束：
+    // 所有权不明确时不删除可能是他人锁的文件）。
+    const cleaned = await cleanupLockResidue(fs, lockPath, ownerTag);
+    const cause = (writeError ?? closeError) as Error;
+    const causeMsg = cause instanceof Error ? cause.message : String(cause);
+    if (cleaned) {
+      throw new Error(
+        `导出锁写入/关闭失败，残留锁已自动清理（后续导出可正常重试）：${causeMsg}\n` +
+        `锁路径：${lockPath}`,
+      );
+    } else {
+      throw new Error(
+        `导出锁写入/关闭失败，残留锁未能自动清理（所有权不明确或读取失败）：${causeMsg}\n` +
+        `锁路径：${lockPath}\n` +
+        `请手动核查锁文件内容：若为本进程残留（空或本进程 ownerTag）可安全删除后重跑；` +
+        `若为他人锁请勿删除。`,
+      );
+    }
+  }
+}
+
+// cleanupLockResidue：open('wx') 成功后 write/close 失败时清理自有残留锁。
+// 返回 true 表示残留已清除（或本就不存在）；false 表示无法安全清除（保留为 fail-closed）。
+//
+// 安全约束：仅当锁内容可验证为本进程所有时才 unlink：
+//   - content === ownerTag → write 成功但 close 失败 → 确为本进程锁
+//   - content === "" → write 失败前未写入任何数据 → 确为本进程空残留
+//   - 其他 → 所有权不明确（可能手动删除+他人重建竞争）→ 不 unlink，fail-closed
+//
+// 注意：releaseExportLock 的 read→unlink 同样不是对手动删除活锁原子的。
+// 若用户手动删除活锁、另一进程在读取与 unlink 之间重建锁，releaseExportLock
+// 可能读到新 owner 的内容。本实现通过 ownerTag 精确匹配缓解（仅删除内容完全
+// 匹配本进程 ownerTag 的锁），但不能声称对他人锁的原子解除。常规路径（持有者
+// 正常释放）和错误路径（write/close 失败清理）均明确可诊断。
+async function cleanupLockResidue(
+  fs: PublishFs,
+  lockPath: string,
+  ownerTag: string,
+): Promise<boolean> {
+  let content: string | null = null;
+  try {
+    content = await fs.readFile(lockPath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return true; // 已不存在
+    // 无法读取 → 无法验证所有权 → 保留为 fail-closed。
+    return false;
+  }
+  if (content === ownerTag || content === "") {
+    try {
+      await fs.unlink(lockPath);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return true;
+      return false; // unlink 失败 → 保留为 fail-closed。
+    }
+    return true;
+  }
+  // 内容不匹配本进程 ownerTag 且非空 → 所有权不明确 → 不 unlink，fail-closed。
+  return false;
 }
 
 // releaseExportLock：仅当锁内容仍是本进程 ownerTag 才删除，绝不误删他人锁。

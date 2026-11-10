@@ -18,6 +18,7 @@ import {
   readdir,
   readFile,
   writeFile,
+  open as realOpen,
 } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
@@ -148,16 +149,19 @@ function makeTwoPartyBarrier() {
   };
 }
 
-// 注入 writeFile：仅对 lockPath 先屏障对齐再写（默认 'w' 非原子，复现竞态）；
-// 其余路径透传真实 writeFile。
-// 修复后 acquireExportLock 改用 open('wx') 原子创建、不再调用 writeFile 建锁，
-// 此注入对修复后代码无副作用（writeFile 在发布阶段仅被旧 acquireExportLock 使用）。
-function makeBarrierWriteFile(realWriteFile, lockPath, barrier) {
-  return async (file, data, ...rest) => {
-    if (path.resolve(String(file)) === path.resolve(lockPath)) {
+// 注入 open：仅对 lockPath 的 'wx' 创建先屏障对齐再真实 open（原子排他创建）；
+// 其余路径透传真实 open。
+// acquireExportLock 已改用 open('wx') 原子创建，屏障必须注入 open（而非旧
+// writeFile）才能在真实创建窗口前严格对齐两方，确定性复现 open('wx') 竞争。
+function makeBarrierOpen(realOpenFn, lockPath, barrier) {
+  return async (file, flags, ...rest) => {
+    if (
+      flags === "wx" &&
+      path.resolve(String(file)) === path.resolve(lockPath)
+    ) {
       await barrier.arrive();
     }
-    return realWriteFile(file, data, ...rest);
+    return realOpenFn(file, flags, ...rest);
   };
 }
 
@@ -167,8 +171,7 @@ test("RED→GREEN: 两个真实 runExport 同目标并发，仅一个获得锁�
   await seedOldOutputs(outputDir);
   const lockPath = path.join(path.dirname(outputDir), ".export-lock");
   const barrier = makeTwoPartyBarrier();
-  const realWriteFile = (await import("node:fs/promises")).writeFile;
-  const fsOps = { writeFile: makeBarrierWriteFile(realWriteFile, lockPath, barrier) };
+  const fsOps = { open: makeBarrierOpen(realOpen, lockPath, barrier) };
 
   try {
     const results = await Promise.allSettled([
@@ -294,6 +297,230 @@ test("发布失败不错误删除不同目标的他人锁", async () => {
       otherAfter,
       otherOwner,
       "发布失败不得删除或覆盖不同目标的他人锁",
+    );
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+// ===== 故障注入：open('wx') 成功后 writeFile/close 抛错的残留清理 =====
+//
+// acquireExportLock 改用 open('wx') 后，open 创建成功但后续 handle.writeFile
+// 或 handle.close 抛错时，错误传播到 runExport 但 lockHeld 未设（acquireExportLock
+// 抛错在 lockHeld = true 之前），finally 不释放锁 → 空锁/半成品锁残留，所有
+// 后续导出永久 fail-closed。修复：acquireExportLock 在 open 成功后若 write/close
+// 失败，清理自有残留（验证内容为空或匹配 ownerTag 才 unlink），使后续导出可恢复。
+
+// 包装真实 open 返回的 FileHandle：仅覆盖 writeFile/close，其余透传。
+// acquireExportLock 只调用 handle.writeFile 和 handle.close，故只需提供这两个方法。
+function wrapHandle(realHandle, overrides) {
+  return {
+    writeFile: (data, ...args) => realHandle.writeFile(data, ...args),
+    close: () => realHandle.close(),
+    ...overrides,
+  };
+}
+
+// 注入 open：对 lockPath 的 'wx' 返回包装 handle，writeFile 抛错（复现写入失败）。
+function makeWriteFailOpen(lockPath) {
+  const lp = path.resolve(lockPath);
+  return async (file, flags, ...rest) => {
+    const handle = await realOpen(file, flags, ...rest);
+    if (flags === "wx" && path.resolve(String(file)) === lp) {
+      return wrapHandle(handle, {
+        writeFile: async () => {
+          throw new Error("injected writeFile failure");
+        },
+      });
+    }
+    return handle;
+  };
+}
+
+// 注入 open：对 lockPath 的 'wx' 返回包装 handle，close 抛错（复现关闭失败）。
+function makeCloseFailOpen(lockPath) {
+  const lp = path.resolve(lockPath);
+  return async (file, flags, ...rest) => {
+    const handle = await realOpen(file, flags, ...rest);
+    if (flags === "wx" && path.resolve(String(file)) === lp) {
+      return wrapHandle(handle, {
+        close: async () => {
+          // 仍关闭真实 fd 避免泄漏，然后抛注入错误（模拟 close 失败）。
+          try { await handle.close(); } catch {}
+          throw new Error("injected close failure");
+        },
+      });
+    }
+    return handle;
+  };
+}
+
+test("故障注入：open 成功后 writeFile 抛错 → 清理残留锁，后续导出可恢复", async () => {
+  const rootDir = await makeFixtureRoot("wf-fail");
+  const outputDir = path.join(rootDir, "06_Exports/json-wf-fail-out");
+  await seedOldOutputs(outputDir);
+  const lockPath = path.join(path.dirname(outputDir), ".export-lock");
+  const fsOps = { open: makeWriteFailOpen(lockPath) };
+
+  try {
+    await assert.rejects(
+      () => runExport({ rootDir, outputDir, fsOps }),
+      /injected writeFile failure|写入.*失败|残留/,
+      "writeFile 失败应抛错",
+    );
+
+    // 残留锁应被清理（open 创建了空文件，writeFile 未写入任何内容）。
+    await assert.rejects(
+      () => readFile(lockPath, "utf8"),
+      /ENOENT/,
+      "writeFile 失败后残留锁应被清理，不应永久阻塞后续导出",
+    );
+
+    // 后续导出应可正常恢复（锁已清理）。
+    await runExport({ rootDir, outputDir });
+    const files = await readdir(outputDir);
+    assert.equal(
+      files.filter((f) => f.startsWith("event_")).length,
+      17,
+      "恢复后应输出 17 个 event",
+    );
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+test("故障注入：open 成功后 close 抛错 → 清理残留锁，后续导出可恢复", async () => {
+  const rootDir = await makeFixtureRoot("cl-fail");
+  const outputDir = path.join(rootDir, "06_Exports/json-cl-fail-out");
+  await seedOldOutputs(outputDir);
+  const lockPath = path.join(path.dirname(outputDir), ".export-lock");
+  const fsOps = { open: makeCloseFailOpen(lockPath) };
+
+  try {
+    await assert.rejects(
+      () => runExport({ rootDir, outputDir, fsOps }),
+      /injected close failure|关闭.*失败|残留/,
+      "close 失败应抛错",
+    );
+
+    // 残留锁应被清理（writeFile 成功写入 ownerTag，close 失败 → 内容匹配 ownerTag）。
+    await assert.rejects(
+      () => readFile(lockPath, "utf8"),
+      /ENOENT/,
+      "close 失败后残留锁应被清理（内容匹配 ownerTag），不应永久阻塞后续导出",
+    );
+
+    // 后续导出应可正常恢复。
+    await runExport({ rootDir, outputDir });
+    const files = await readdir(outputDir);
+    assert.equal(
+      files.filter((f) => f.startsWith("event_")).length,
+      17,
+      "恢复后应输出 17 个 event",
+    );
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+test("故障注入：清理残留时不删除他人锁（所有权不明确 → fail-closed）", async () => {
+  const rootDir = await makeFixtureRoot("oth-race");
+  const outputDir = path.join(rootDir, "06_Exports/json-oth-race-out");
+  await seedOldOutputs(outputDir);
+  const lockPath = path.join(path.dirname(outputDir), ".export-lock");
+  const otherOwner = "77777\n2026-01-01T00:00:00.000Z\n/other/staging";
+  const lp = path.resolve(lockPath);
+
+  // 注入 open：对 lockPath 的 'wx' 返回包装 handle，writeFile 在抛错前
+  // 先用他人 ownerTag 覆写锁文件（模拟手动删除+他人重建的竞争窗口）。
+  const fsOps = {
+    open: async (file, flags, ...rest) => {
+      const handle = await realOpen(file, flags, ...rest);
+      if (flags === "wx" && path.resolve(String(file)) === lp) {
+        return wrapHandle(handle, {
+          writeFile: async () => {
+            // 模拟竞争：他人删除我们的空锁并创建了自己的锁。
+            await writeFile(lockPath, otherOwner, "utf8");
+            throw new Error("injected writeFile failure with race");
+          },
+        });
+      }
+      return handle;
+    },
+  };
+
+  try {
+    await assert.rejects(
+      () => runExport({ rootDir, outputDir, fsOps }),
+      /injected writeFile failure with race|写入.*失败|残留/,
+      "writeFile 失败应抛错",
+    );
+
+    // 他人锁不应被清理（内容不匹配本进程 ownerTag，所有权不明确 → 不 unlink）。
+    const after = await readFile(lockPath, "utf8");
+    assert.equal(
+      after,
+      otherOwner,
+      "所有权不明确时不得 unlink 他人锁（fail-closed 保留）",
+    );
+  } finally {
+    await rm(rootDir, { recursive: true, force: true });
+  }
+});
+
+// ===== EEXIST→ENOENT 有界重试（杜绝无界递归）=====
+
+test("EEXIST→ENOENT 反复时有限重试后 fail-closed，不无界递归", async () => {
+  const rootDir = await makeFixtureRoot("eexist-loop");
+  const outputDir = path.join(rootDir, "06_Exports/json-eexist-loop-out");
+  await seedOldOutputs(outputDir);
+  const lockPath = path.join(path.dirname(outputDir), ".export-lock");
+  const lp = path.resolve(lockPath);
+  const realReadFile = (await import("node:fs/promises")).readFile;
+
+  // open 始终抛 EEXIST（锁"已存在"），readFile 始终抛 ENOENT（锁"已消失"）。
+  // 修复前：无界递归 → 挂起/栈溢出。修复后：有限重试后抛诊断错误。
+  let openCalls = 0;
+  const fsOps = {
+    open: async (file, flags, ...rest) => {
+      if (flags === "wx" && path.resolve(String(file)) === lp) {
+        openCalls += 1;
+        const err = new Error("EEXIST injected");
+        err.code = "EEXIST";
+        throw err;
+      }
+      return realOpen(file, flags, ...rest);
+    },
+    readFile: async (file, ...args) => {
+      if (path.resolve(String(file)) === lp) {
+        const err = new Error("ENOENT injected");
+        err.code = "ENOENT";
+        throw err;
+      }
+      return realReadFile(file, ...args);
+    },
+  };
+
+  try {
+    // 用 Promise.race 防止无界递归挂起整个测试进程。
+    const result = await Promise.race([
+      runExport({ rootDir, outputDir, fsOps }).then(
+        () => "fulfilled",
+        (e) => `rejected: ${e instanceof Error ? e.message : String(e)}`,
+      ),
+      new Promise((resolve) =>
+        setTimeout(() => resolve("TIMEOUT"), 5000),
+      ),
+    ]);
+
+    assert.notEqual(result, "TIMEOUT", "不应无界递归挂起");
+    assert.ok(
+      result.startsWith("rejected"),
+      `应 fail-closed 拒绝，实际：${result}`,
+    );
+    assert.ok(
+      openCalls <= 10,
+      `重试次数应有界（≤10），实际 open 调用 ${openCalls} 次`,
     );
   } finally {
     await rm(rootDir, { recursive: true, force: true });
