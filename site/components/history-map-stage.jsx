@@ -313,6 +313,13 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
                   manifest,
                   "index.json",
                 );
+                // Phase 2 缺陷修复②（F3）：index 字节校验 digest 是 async 续体的
+                // 关键让出点。切故事发生在该 digest 内时，cleanup 已把
+                // storyIdentityRef 改写为新故事、旧 map 已 remove、旧 signal 已
+                // abort，但本续体在 digest 前的 line 302 守卫已过 —— 此处必须
+                // 重新校验身份，否则会向已 remove 的旧 map addSource("story001-overlay")
+                // 等并继续 resolveStorySnapshotRef/decideMapRefLoad（§7 竞态护栏）。
+                if (!storyStillCurrent() || !mapRef.current || signal.aborted) return;
                 if (indexOk) {
                   index = JSON.parse(new TextDecoder().decode(indexResult.buf));
                 }
