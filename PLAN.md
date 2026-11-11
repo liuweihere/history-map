@@ -812,6 +812,42 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 > 本节由验证协议产出物按时间倒序追加；每条记录含：日期、Phase、
 > PASS/FAIL 总表、commit/tag 清单、给人类的决策清单。
 
+#### 2026-11-11 · 控制端补记 Phase 1/3 实施留痕 + 数据入库 + 验收启动
+
+> 背景：2026-11-10 深夜至 11-11 晨，实现 agent 完成了 Phase 1/3 的
+> 实现与多轮修复并 commit，但未按协议留痕 §8（§8 曾一度断档于
+> 「11-10 用户授权继续实施」）。本条由控制端（主 agent）事后依据
+> git 历史逐 commit 核实补记，非实现者自报。协议教训记入本条末尾。
+
+**Phase 1 + Phase 3 实施四轮提交（控制端核实后的留痕）**：
+
+| 轮次 | commit | 内容摘要 |
+|------|--------|----------|
+| 1 | `5a934a4` | Phase 3 探索模式 UI：`jiangshan-time.js`（无零年序号）、`jiangshan-data.js`（index/快照/走廊/里程碑解析 + 有界 LRU + AbortController 取 stale）、exploration-* 组件（舞台/朝代比例时间轴/双标签抽屉/双状态往返）、`history-atlas-app.jsx` 双模切换。自报 122/122 测试 |
+| 2 | `83612ce` | Phase 1 适配器管线：`scripts/import-jiangshan.mjs`（上游导出脚本复制至 temp 执行，绝不污染上游目录）+ `scripts/lib/jiangshan-transform.mjs`（pastelize/确定性序列化/断言族）+ fixture 测试 42 项 |
+| 3 | `f6dba93` | 独立审查 5 缺陷修复：空态 CTA、视角往返持久（initialCamera/onCameraChange + exploreCameraRef）、idle 回调 revision 守卫、走廊 always-show 过滤修正、phase 缺失文案、数据来源署名浮层。自报 125/125 |
+| 4 | `35820f2` | Phase 1 加固：prefecture 断言移至过滤前（原先后置无效）、阶段连续性含 BCE/CE 无零年例外、必需文件严格化、`--publish` 禁用（拒绝覆盖任何既有目录）。42/42 |
+| 5 | `084ffa2` | 探索地图致命渲染缺陷修复：map 异步 init 竞态（mapReady 纳入 deps）、snapshot=null 清旧层、polity insert before corridor（走廊永在上层）、phaseKey 显式身份替代 JSON.length 推断；图层逻辑抽为 `lib/exploration-map-layers.js` 纯函数。**含早间报告的 ESM `.js` 后缀修复**（控制端复核：严格 Node ESM 下 `import` 与 `node --test` 均 PASS，10/10） |
+
+**控制端晨间独立核查（2026-11-11 08:47，真浏览器 + 测试）**：
+- 真实浏览器（localhost:3457，HEAD `084ffa2`）：探索模式默认进入年份 220 →
+  正确解析阶段 `三国 · s_sanguo_a (220—237)`；网络仅请求 index/corridors/
+  milestones + 1 个快照（LRU 生效）；MapLibre canvas 2896×1910 正常渲染、
+  21 个事件 marker 上图；抽屉双标签实测可切换（我们的故事：220 曹植七步
+  成诗 / 245 王戎道边苦李；重大事件：220—280 完整列表含聚焦标注）；
+  「江山时序 / historical-basemaps / 示意·近似复原」署名浮层实测可见。
+- 测试（标准命令 `node --import tsx --test test/*.test.mjs`）：**145/145**。
+- 发现并决策：28MB 数据包 untracked → 依 §4 评审#8 预决策（全量几何入库
+  ~30MB 量级）**提交入库**（`94888bf`，203 文件，LICENSE/NOTICE 随包，
+  不引入 LFS）。
+
+**协议偏差记录（如实）**：① Phase 3 实现先于 Phase 1 tag（违反「Phase
+不叠加」字面序，但 Phase 3 组件在数据缺失时有友好退化、不阻塞 Phase 1
+验收，属并行实现、串行验收）；② 四轮实现无 §8 留痕（本条补记）；
+③ 实现者自报测试数未经独立复验（145/145 为控制端实跑，非实现者口径）。
+下一步：独立验证者全量重跑 §5 P1/P3 验收项 + browser 产品验证 →
+PASS 后补打 `phase-1-verified` / `phase-3-verified`。
+
 #### 2026-11-10 · Phase 0 产品验证完成（主 agent 亲自执行）→ `phase-0-verified`
 
 浏览器（cursor-ide-browser，localhost:3457）逐项实测：
