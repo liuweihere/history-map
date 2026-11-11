@@ -535,7 +535,9 @@ test("verifySnapshotBytes passes for correct content", async () => {
 
 // ── 16. 导出端到端：真实生成的 story JSON 透传 map_ref ─────────────
 // 覆盖 wiki frontmatter → export → site sync → generated JSON 的真实属性链。
-test("exported xiang-yu story JSON carries proposed map_ref from wiki frontmatter", async () => {
+// 2026-11-11 人工审定生效：项羽 map_ref 由 proposed 翻转为 approved
+// （理由 + 版本哈希由用户填写），断言随真数据更新。
+test("exported xiang-yu story JSON carries approved map_ref from wiki frontmatter", async () => {
   const { readFile } = await import("node:fs/promises");
   const { fileURLToPath } = await import("node:url");
   const story = JSON.parse(
@@ -549,14 +551,16 @@ test("exported xiang-yu story JSON carries proposed map_ref from wiki frontmatte
   const mapRef = story.map_plan?.map_ref;
   assert.ok(mapRef, "generated story JSON must carry map_ref");
   assert.equal(mapRef.snapshot_id, "s_qin_chuhan");
-  assert.equal(mapRef.status, "proposed");
-  assert.equal(mapRef.rationale, "", "candidate rationale must be empty (awaiting human review)");
+  assert.equal(mapRef.status, "approved", "人工审定后 status=approved");
+  assert.ok(mapRef.rationale.length > 0, "approved 必须携带人工审定理由");
   assert.ok(mapRef.data_version?.index_sha256, "data_version.index_sha256 bound");
   assert.ok(mapRef.data_version?.snapshot_sha256, "data_version.snapshot_sha256 bound");
 });
 
-// ── 17. 真实生成的候选经 resolveStorySnapshotRef → proposed（非已审定）──
-test("real generated xiang-yu JSON resolves to proposed candidate (not approved)", async () => {
+// ── 17. 真实生成的审定参考经 resolveStorySnapshotRef → approved ──
+// proposed 路径的行为覆盖由 §13 fixture 用例（"proposed does not activate"）
+// 保证；本用例验证真数据审定后端到端解析为 approved。
+test("real generated xiang-yu JSON resolves to approved after human review", async () => {
   const { readFile } = await import("node:fs/promises");
   const { fileURLToPath } = await import("node:url");
   const story = JSON.parse(
@@ -580,7 +584,7 @@ test("real generated xiang-yu JSON resolves to proposed candidate (not approved)
     ),
   );
   const ref = resolveStorySnapshotRef(realIndex, realManifest, story);
-  assert.equal(ref.kind, "proposed");
+  assert.equal(ref.kind, "approved", "审定 + 版本匹配 → approved");
   assert.equal(ref.snapshot_id, "s_qin_chuhan");
 });
 
