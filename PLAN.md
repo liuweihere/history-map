@@ -812,6 +812,37 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 > 本节由验证协议产出物按时间倒序追加；每条记录含：日期、Phase、
 > PASS/FAIL 总表、commit/tag 清单、给人类的决策清单。
 
+#### 2026-11-11 · 实现会话留痕：朝代色带时间轴重做 + 疆域可读性（验收锚点后提交，本会话自验回归）
+
+> 背景：上条 Phase 1/3 验收记录的过程备注指明「`74127f2` 朝代色带、
+> `e752388` 疆域描边晚于验证锚点 `f63befc`，回归验证由实现会话自行负责」。
+> 本条即该实现会话的留痕与自验证据，不构成新的 Phase 验收，不移动既有 tag。
+
+**用户指令（当轮简报）**：① 时间轴布局须在页面底部、颜色完全参考
+jiangshan-map 上游原样（此前自拟的右栏浅棕设计被驳回：「位置不符合预期，
+颜色没有参考 jiangshan-map」）；② 补 `.js` 扩展名（已在 `9546f5e` 完成，
+见上条控制端核实记录）；③ 重建后真浏览器实测：220 → 三国疆域显示？
+-204/-206 → 楚汉并立？；④ §8 留痕 + 核查数据包 commit 状态。
+
+| 项 | commit | 证据 |
+|----|--------|------|
+| 时间轴按上游原样重做 | `74127f2` | 新增纯函数 `lib/dynasty-bands.js` 移植上游 `_initTimelineBands`（minSpan=60 权重地板）与分段线性 year↔progress 映射；组件重写为全宽底栏 + 各朝 tint 色带 + 深色气泡 + 4px 手柄 + 阶段刻线 + 事件点（钳位 3..97% 去重）；TDD：dynasty-bands 8 项 + exploration-ui 5 项时间轴测试均先 RED 后 GREEN；含「朝代右缘归后一朝代」（无零年）边界测试 |
+| 疆域可读性修复 | `e752388` | 浏览器截图实测 pastel display_color × 0.32 叠大区水彩几乎不可见 → fill-opacity 提至 0.5 + 新增独立 `polity-outline` 线图层按每政权饱和 tint 描边（fill-outline-color 不支持数据驱动表达式）；2 项新测试先 RED 后 GREEN |
+| 真浏览器回归（HEAD `e752388`） | `site/scripts/verify-exploration.mjs`（随 e752388 入库） | **14/14 PASS**（本条写入前重跑）：220 → 气泡「220 · 三国」、三国带 is-active、魏/蜀汉/吴标签上图、17 色带 17 色各异、时间轴与舞台同宽（1404px）位于地图下方；拖至 -204 →「前204 · 秦」+ 汉（刘邦）/西楚（项羽）标签 + s_qin_chuhan 阶段；-206 同阶段不换快照（快照请求序列仅 2 次：s_sanguo_a → s_qin_chuhan，LRU 不重取）；全程零 JS 异常 |
+| 全量测试 | — | `node --import tsx --test test/*.test.mjs` 实跑 **163/163**（本条写入前） |
+
+**数据包状态核查（更正简报中的过时信息）**：「数据包还没提交」不成立——
+数据包已于 `94888bf` 入库（203 文件，LICENSE/NOTICE 随包），manifest 经
+`144d346`/`f63befc` 补齐哈希与末尾换行；核查时工作树干净，无需重复提交。
+
+**决策与遗留（不阻塞，移交清单）**：
+- `phase-1-verified` / `phase-3-verified` 锚定 `f63befc` 不动；本条两个
+  commit 为锚点后增强，自验证据如上，如需 tag 覆盖须人工决定。
+- 数据质量：`s_qin_chuhan` 阶段缺 `overview` 字段，阶段卡标题回退显示
+  原始 key（见截图），待数据侧补文案。
+- 小事两项：`story-bridge.json` 缺失时控制台 404（可选文件，可静默化）；
+  点击故事未同步 `document.title`。
+
 #### 2026-11-11 · Phase 1 + Phase 3 验收通过 → `phase-1-verified` / `phase-3-verified`
 
 **协议执行**（控制端主导，§7 RED→GREEN→VERIFY→GATE 一轮完成）：
