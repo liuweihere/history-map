@@ -252,6 +252,47 @@ test("createSnapshotCache：失败不缓存，下次重试", async () => {
   assert.deepEqual(r, { ok: true }, "失败后可重试");
 });
 
+test("createSnapshotCache：cancelOthers 取消在途并拒绝，保留 keepKey", async () => {
+  const cache = createSnapshotCache(5);
+  const settle = {};
+  const slowLoader = (key) => (signal) =>
+    new Promise((resolve, reject) => {
+      settle[key] = { resolve, reject };
+      signal?.addEventListener("abort", () => reject(new Error("aborted:" + key)), { once: true });
+    });
+  const stale = cache.load("stale", slowLoader("stale"));
+  const keepP = cache.load("keep", slowLoader("keep"));
+  // 切换 phase：只保留 keep，stale 在途被取消
+  cache.cancelOthers("keep");
+  await assert.rejects(() => stale, /aborted:stale/, "stale 在途请求被 abort");
+  settle.keep.resolve({ ok: "keep" });
+  assert.deepEqual(await keepP, { ok: "keep" }, "keepKey 请求不受影响");
+  // stale 失败后不缓存，可重试
+  const retry = cache.load("stale", async () => ({ ok: "retry" }));
+  assert.deepEqual(await retry, { ok: "retry" }, "被取消的 key 不缓存、可重试");
+});
+
+test("createSnapshotCache：LRU 超上限逐出最旧（完成后逐出，缓存有界）", async () => {
+  const cache = createSnapshotCache(2);
+  const loader = async () => ({ ok: true });
+  await cache.load("a", loader);
+  await cache.load("b", loader);
+  assert.equal(cache._cache.size, 2);
+  // touch("a") 使 b 变为最旧 → 载入 c 时静默逐出 b
+  await cache.load("a", loader);
+  await cache.load("c", loader);
+  assert.equal(cache._cache.size, 2, "缓存条目不超过 maxEntries");
+  assert.ok(cache._cache.has("a"), "最近使用的 a 保留");
+  assert.ok(cache._cache.has("c"), "新载入的 c 保留");
+  assert.equal(cache._cache.has("b"), false, "最旧的 b 被逐出");
+  // 被逐出后再次 load 同 key 会重新执行 loader（不残留旧值）
+  let reloads = 0;
+  const counting = async () => { reloads++; return { ok: "fresh" }; };
+  const r = await cache.load("b", counting);
+  assert.equal(reloads, 1, "逐出后的 key 重新 load");
+  assert.deepEqual(r, { ok: "fresh" });
+});
+
 test("inRange 两端包含且拒绝非整数", () => {
   assert.ok(inRange(220, 220, 265));
   assert.ok(inRange(265, 220, 265));

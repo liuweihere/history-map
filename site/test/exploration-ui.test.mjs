@@ -447,3 +447,91 @@ test("走廊过滤：无 from/to 的走廊一直显示（与 corridorActiveAt �
   assert.ok(corridorActiveAt({ properties: { from: 220, to: 265 } }, 245), "在区间内显示");
   assert.ok(!corridorActiveAt({ properties: { from: 220, to: 265 } }, 300), "区间外不显示");
 });
+
+// ── 探索↔故事往返状态还原（§5 地图与状态验收）────────────────────
+
+test("restoredState 恢复年份/抽屉/标签，onStateChange 仅在实际变化时上报", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+
+  // mock fetch：index/corridors/milestones/bridge + 快照全部成功（jsdom 无 WebGL，
+  // 地图 init 失败被组件 .catch 承载，不影响状态机验证）
+  const origFetch = globalThis.fetch;
+  const fetchLog = [];
+  globalThis.fetch = async (url) => {
+    fetchLog.push(String(url));
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (String(url).includes("index.json")) return json(MOCK_INDEX);
+    if (String(url).includes("corridors")) return json({ features: [] });
+    if (String(url).includes("milestones")) return json(MOCK_MILESTONES);
+    if (String(url).includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] }); // snapshots
+  };
+
+  const saved = { selectedYear: 245, drawerOpen: true, drawerTab: "events", camera: { zoom: 6.5, center: [110, 30] } };
+  const emissions = [];
+
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: (s) => emissions.push(s),
+        restoredState: saved,
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 150));
+
+    // 1) 年份恢复：阶段卡显示恢复年份 245（sanguo 241–265 阶段）
+    const body = document.body.textContent || "";
+    assert.match(body, /245/, "恢复年份 245 呈现");
+    assert.match(body, /三国/, "恢复到三国朝代");
+
+    // 2) 抽屉恢复为展开 + 重大事件标签
+    assert.ok(document.querySelector(".exploration-drawer__body"), "抽屉按 saved.drawerOpen=true 展开");
+    const activeTab = document.querySelector(".exploration-drawer__tab.is-active");
+    assert.ok(activeTab, "存在激活标签");
+    assert.match(activeTab.textContent, /重大事件/, "恢复 saved.drawerTab=milestones");
+
+    // 3) 上报的首个快照含恢复值（父级据此可再次保存现场）
+    const first = emissions[0];
+    assert.ok(first, "onStateChange 至少上报一次");
+    assert.equal(first.selectedYear, 245);
+    assert.equal(first.drawerOpen, true);
+    assert.equal(first.drawerTab, "events");
+    assert.deepEqual(first.camera, { zoom: 6.5, center: [110, 30] }, "camera 透传恢复值");
+    // 无变化时不重复上报
+    const count = emissions.length;
+    await new Promise((r) => setTimeout(r, 60));
+    assert.equal(emissions.length, count, "状态未变化不重复上报");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("无 restoredState 时默认 220 年、抽屉收起（首次进入探索）", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (String(url).includes("index.json")) return json(MOCK_INDEX);
+    if (String(url).includes("milestones")) return json(MOCK_MILESTONES);
+    if (String(url).includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] });
+  };
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: () => {},
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 150));
+    assert.match(document.body.textContent || "", /220/, "默认年份 220");
+    assert.ok(!document.querySelector(".exploration-drawer__body"), "默认抽屉收起");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
