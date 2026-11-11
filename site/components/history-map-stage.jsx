@@ -157,6 +157,9 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
   const polityLabelsRef = useRef([]);
   const maplibreglRef = useRef(null);
   const loadAbortRef = useRef(null);
+  // Phase 2 缺陷修复②：当前挂载故事的身份锚（effect 每次运行时写入）。
+  // 旧 load 回调的 async 续体凭 boundStoryId 与此值比对，判定自己是否过期。
+  const storyIdentityRef = useRef(null);
   const [regionsReady, setRegionsReady] = useState(false);
   const [basemapOnline, setBasemapOnline] = useState(null);
   // Phase 2 · 故事地图参考审定绑定 UI 状态。
@@ -167,6 +170,8 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
 
   useEffect(() => {
     let cancelled = false;
+    // 缺陷修复②：进入即声明本 effect 拥有的故事身份；卸载/重跑时清空。
+    storyIdentityRef.current = story?.story_id ?? null;
 
     async function init() {
       if (!mapNodeRef.current || mapRef.current) return;
@@ -247,6 +252,14 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
           throw new Error(`No map scene geojson exported for ${story.story_id}.`);
         }
 
+        // Phase 2 缺陷修复②：本 load 回调绑定的故事身份。所有 async 续体
+        // （index 字节校验、快照 fetch、overlay fetch）在写图层/状态前必须
+        // 比对此 id 与最新挂载故事一致 —— 仅靠 cancelled/signal 不足以覆盖
+        // 「effect 重跑但旧 map 未销毁前的新旧回调交错」窗口（§7 竞态护栏）。
+        const boundStoryId = story.story_id;
+        const storyStillCurrent = () =>
+          !cancelled && storyIdentityRef.current === boundStoryId;
+
         // AbortController：故事切换/卸载时取消在途 fetch，旧请求不向已移除 map
         // addSource 或 set state（§5 stale 不覆盖；§7 竞态护栏）。
         const loadController = new AbortController();
@@ -286,7 +299,7 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
 
         Promise.all([regionsPromise, indexPromise, manifestPromise]).then(
           async ([regions, indexResult, manifest]) => {
-            if (cancelled || !mapRef.current || signal.aborted) return;
+            if (!storyStillCurrent() || !mapRef.current || signal.aborted) return;
 
             const byteCheckAvailable = isByteVerificationAvailable();
 
@@ -442,9 +455,9 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
                 if (snapResponse.ok !== true) {
                   throw new Error(`snapshot HTTP ${snapResponse.status}`);
                 }
-                if (cancelled || !mapRef.current || signal.aborted) return;
+                if (!storyStillCurrent() || !mapRef.current || signal.aborted) return;
                 const snapBuf = await snapResponse.arrayBuffer();
-                if (cancelled || !mapRef.current || signal.aborted) return;
+                if (!storyStillCurrent() || !mapRef.current || signal.aborted) return;
                 const bytesOk = await verifySnapshotBytes(
                   new Uint8Array(snapBuf),
                   manifest,
@@ -454,16 +467,20 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
                   throw new Error("snapshot byte integrity check failed");
                 }
                 const snapshot = JSON.parse(new TextDecoder().decode(snapBuf));
-                if (cancelled || !mapRef.current || signal.aborted) return;
-                if (!map.getLayer("regions-fill")) return;
+                if (!storyStillCurrent() || !mapRef.current || signal.aborted) return;
+                // Phase 2 缺陷修复①：regions 缺失（404）只跳过政权叠加大区让位，
+                // 不再提前 return —— approved 快照仍可加载（政权层不依赖大区层），
+                // 后续路线/标记/徽章装配继续（§5「加载失败不展示过期地图」反面：
+                // 局部缺失不得坍塌整个故事现场）。
+                const hasRegionsLayer = map.getLayer("regions-fill");
                 applyPolityToMap(map, snapshot, `story-ref::${ref.snapshot_id}`, {
                   versionRef: polityVersionRef,
                   labelsRef: polityLabelsRef,
                   createMarker: (props, anchor) =>
                     createPolityMarker(props, anchor, maplibreglRef.current, map),
                 });
-                // 大区让位（与手绘 overlay 一致），政权浮于其上
-                if (map.getLayer("regions-fill")) {
+                // 大区让位（与手绘 overlay 一致），政权浮于其上；无大区则跳过
+                if (hasRegionsLayer) {
                   map.setPaintProperty("regions-fill", "fill-opacity", [
                     "case",
                     ["boolean", ["feature-state", "highlight"], false],
@@ -478,12 +495,13 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
                   rationale: ref.rationale,
                 });
               } catch (err) {
-                if (signal.aborted) return; // 切换取消，静默
+                if (signal.aborted || !storyStillCurrent()) return; // 切换取消/过期续体，静默
                 console.warn(
                   "[history-map] approved snapshot load failed, fallback to hand-drawn:",
                   err,
                 );
-                // 关键：降级为 none，不得保留 approved（地图回退却谎称审定）
+                // 关键：降级为 none，不得保留 approved（地图回退却谎称审定）；
+                // 且仅当本续体仍是当前故事时才允许覆盖状态（缺陷修复②）。
                 setMapRefStatus(mapRefStatusOnApprovedFailure(ref, "snapshot_load_failed"));
               }
             }
@@ -501,9 +519,9 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
               .catch(() => null);
 
             boundaryPromise.then((boundary) => {
-              if (cancelled || !mapRef.current || !boundary) return;
-              if (!map.getLayer("regions-fill")) return;
-
+              if (!storyStillCurrent() || !mapRef.current || !boundary) return;
+              // Phase 2 缺陷修复①：手绘回退政权层不依赖大区层存在；
+              // regions 缺失时仍添加 overlay（后续 setPaintProperty 自守卫）。
               map.addSource("historical-boundary", {
                 type: "geojson",
                 data: boundary,
@@ -623,6 +641,7 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
 
     return () => {
       cancelled = true;
+      storyIdentityRef.current = null;
       try { loadAbortRef.current?.abort(); } catch { /* noop */ }
       loadAbortRef.current = null;
       markersRef.current.forEach((marker) => marker.remove());
