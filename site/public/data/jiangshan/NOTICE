@@ -1,0 +1,15 @@
+This data package is derived from:
+
+1. jiangshan-map (Chronicles of the Realm)
+   https://github.com/DeanChensj/jiangshan-map  License: GPL-3.0
+   Historical borders are schematic approximations.
+
+2. historical-basemaps by aourednik
+   https://github.com/aourednik/historical-basemaps
+
+3. CartoDB Positron (site frontend only)
+   https://basemaps.cartocdn.com
+
+Prefecture layer (CHGIS V6 / Hartwell) NOT included — adapter asserts zero.
+Rights release for public/commercial deployment: PENDING HUMAN REVIEW.
+
