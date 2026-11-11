@@ -142,6 +142,9 @@ async function setupJsdom() {
   } catch { /* Node 22+ navigator 只读，React 19 不强依赖 */ }
   globalThis.requestAnimationFrame = (cb) => setTimeout(() => cb(Date.now()), 0);
   globalThis.cancelAnimationFrame = (id) => clearTimeout(id);
+  // React 19 act 环境标记：让 act() 同步冲刷 render/effect 队列，
+  // 消除「固定 sleep 等状态提交」的时序依赖（并发全量跑时的 flake 根因）。
+  globalThis.IS_REACT_ACT_ENVIRONMENT = true;
   if (!dom.window.HTMLCanvasElement.prototype.getContext) {
     dom.window.HTMLCanvasElement.prototype.getContext = () => null;
   }
@@ -191,20 +194,28 @@ async function createTestApp(milestones, initialStoryId) {
 
 async function mountApp(milestones, initialStoryId) {
   await setupJsdom();
+  const React = await import("react");
+  const act = React.act;
   const { createRoot } = await import("react-dom/client");
   const { TestApp, createElement } = await createTestApp(milestones, initialStoryId);
   const container = document.getElementById("root");
   container.innerHTML = "";
   const root = createRoot(container);
-  root.render(createElement(TestApp));
-  await new Promise((resolve) => setTimeout(resolve, 80));
-  return { root, container };
+  await act(async () => {
+    root.render(createElement(TestApp));
+  });
+  return { root, container, act };
 }
 
-function pressKey(slider, key) {
+// 每次派发前重新查询 slider：React 重渲染可能替换 DOM 节点，
+// 缓存旧引用会把键盘事件派发到已分离的节点上（事件丢失，不是时序慢）。
+async function pressKey(act, key) {
+  const slider = document.querySelector('[role="slider"]');
+  assert.ok(slider, "slider 元素必须存在（每次按键前重新查询）");
   slider.focus();
-  const event = new window.KeyboardEvent("keydown", { key, bubbles: true });
-  slider.dispatchEvent(event);
+  await act(async () => {
+    slider.dispatchEvent(new window.KeyboardEvent("keydown", { key, bubbles: true }));
+  });
 }
 
 function getAriaValueNow() {
@@ -219,25 +230,21 @@ test("React 集成：连续 ArrowRight 经 planned 节点后 aria-valuenow 前�
   const next = milestones[dockedIndex + 1];
   assert.equal(milestoneInteractive(next), false, "下一个里程碑应为 planned");
 
-  await mountApp(milestones, DOCKED_STORY);
+  const { act } = await mountApp(milestones, DOCKED_STORY);
 
-  let slider = document.querySelector('[role="slider"]');
-  assert.ok(slider, "slider 元素必须存在");
+  assert.ok(document.querySelector('[role="slider"]'), "slider 元素必须存在");
 
   const before = getAriaValueNow();
   assert.equal(before, dockedIndex, `初始 aria-valuenow 应为 ${dockedIndex}`);
 
-  // 第一次 ArrowRight → 到达 planned 节点（汉朝建立）
-  pressKey(slider, "ArrowRight");
-  await new Promise((r) => setTimeout(r, 50));
-
+  // 第一次 ArrowRight → 到达 planned 节点（汉朝建立）。
+  // act 同步冲刷：派发返回时状态已提交，无需 sleep/轮询（并发全量跑亦确定性）。
+  await pressKey(act, "ArrowRight");
   const after1 = getAriaValueNow();
   assert.equal(after1, dockedIndex + 1, "ArrowRight 后 aria-valuenow 必须前进到 planned 节点（不卡死）");
 
   // 第二次 ArrowRight → 继续前进（证明不卡在 planned）
-  pressKey(slider, "ArrowRight");
-  await new Promise((r) => setTimeout(r, 50));
-
+  await pressKey(act, "ArrowRight");
   const after2 = getAriaValueNow();
   assert.ok(after2 > dockedIndex + 1 || after2 === milestones.length - 1,
     `第二次 ArrowRight 后 aria-valuenow 必须继续前进（${after2} > ${dockedIndex + 1}），不卡在 planned`);
@@ -248,14 +255,12 @@ test("React 集成：ArrowLeft 连续按到 index 0 后不越界（卡在 0）",
   const firstInteractive = milestones.find((m) => m.interactive);
   const firstStoryId = storyIdFromMilestone(firstInteractive);
 
-  await mountApp(milestones, firstStoryId);
-  const slider = document.querySelector('[role="slider"]');
-  assert.ok(slider);
+  const { act } = await mountApp(milestones, firstStoryId);
+  assert.ok(document.querySelector('[role="slider"]'));
 
   // 连续按左直到 index 0（经过 planned 节点）
   for (let i = 0; i < milestones.length + 5; i++) {
-    pressKey(slider, "ArrowLeft");
-    await new Promise((r) => setTimeout(r, 20));
+    await pressKey(act, "ArrowLeft");
   }
   const after = getAriaValueNow();
   assert.equal(after, 0, `ArrowLeft 连续后必须停在 index 0（不越界），实际 ${after}`);
@@ -266,14 +271,12 @@ test("React 集成：ArrowRight 连续按到末节点后不越界（卡在末尾
   const lastInteractive = [...milestones].reverse().find((m) => m.interactive);
   const lastStoryId = storyIdFromMilestone(lastInteractive);
 
-  await mountApp(milestones, lastStoryId);
-  const slider = document.querySelector('[role="slider"]');
-  assert.ok(slider);
+  const { act } = await mountApp(milestones, lastStoryId);
+  assert.ok(document.querySelector('[role="slider"]'));
 
   // 连续按右直到末尾（经过 planned 节点）
   for (let i = 0; i < milestones.length + 5; i++) {
-    pressKey(slider, "ArrowRight");
-    await new Promise((r) => setTimeout(r, 20));
+    await pressKey(act, "ArrowRight");
   }
   const after = getAriaValueNow();
   assert.equal(after, milestones.length - 1, `ArrowRight 连续后必须停在末节点（${milestones.length - 1}），实际 ${after}`);

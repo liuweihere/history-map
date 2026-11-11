@@ -10,7 +10,7 @@ import {
   milestoneSourceKey,
   milestoneSiteCoordinate,
   bridgeStoryIds,
-} from "../lib/jiangshan-data";
+} from "../lib/jiangshan-data.js";
 
 /**
  * 探索状态右侧抽屉（PLAN.md V3 §2）。

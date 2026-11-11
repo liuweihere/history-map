@@ -12,7 +12,7 @@
 //    跳过重建）。→ 改用显式 phaseKey 字符串身份（dynasty.key+snapshot+from+to），
 //    由父组件传入；同 phaseKey 且源已存在才跳过，否则清空重建。
 
-import { polityAnchor } from "./jiangshan-data";
+import { polityAnchor } from "./jiangshan-data.js";
 
 /**
  * 清除政权快照层（layer / source / 标签）。

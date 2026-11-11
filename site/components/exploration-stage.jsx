@@ -22,7 +22,7 @@ import {
   snapshotUrlForPhase,
   milestonesForDynasty,
   createSnapshotCache,
-} from "../lib/jiangshan-data";
+} from "../lib/jiangshan-data.js";
 
 /**
  * 探索状态编排（PLAN.md V3 §2 探索状态）。

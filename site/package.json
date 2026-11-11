@@ -6,7 +6,8 @@
     "sync:data": "node scripts/sync-history-data.mjs",
     "dev": "node scripts/run-next.mjs dev",
     "build": "node scripts/run-next.mjs build",
-    "start": "node scripts/run-next.mjs start"
+    "start": "node scripts/run-next.mjs start",
+    "test": "node --import tsx --test --test-isolation=process test/*.test.mjs"
   },
   "dependencies": {
     "maplibre-gl": "^5.24.0",
