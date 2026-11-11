@@ -812,6 +812,27 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 > 本节由验证协议产出物按时间倒序追加；每条记录含：日期、Phase、
 > PASS/FAIL 总表、commit/tag 清单、给人类的决策清单。
 
+#### 2026-11-11 · Phase 2 终验通过（人工审定后）→ `phase-2-verified`
+
+**人工关卡完成**：用户在 wiki frontmatter 填写项羽 `s_qin_chuhan` 审定理由
+并将 `map_ref_status` 置 `approved`（含 index/快照 sha256 与 adapter 版本，
+控制端核验与入库数据逐字符一致）。
+
+| 环节 | commit | 证据 |
+|---|---|---|
+| wiki 导出 + site 同步 | `6b7aa1c`/`89819f8` | `export:history` 17 bundle 成功；`sync:data` 35 文件；site generated 项羽 map_ref=approved+理由+版本哈希 |
+| 断言随真数据更新 | `89819f8` | story-map-ref 两断言 proposed→approved 翻转（proposed 行为覆盖保留于 fixture §13）；**201/201** 全绿 |
+| 浏览器终验（prod build @ 3457，控制端） | — | **场景 A**：项羽故事 approved 徽章全文案（含人工理由）+ `s_qin_chuhan.geojson` fetch + 字节校验通过后上图 + 汉（刘邦）/西楚（项羽）政权标签；**场景 B**：管宁↔项羽往返，approved 徽章/政权标签稳定重现、无交叉污染 |
+| 版本失配浏览器级注入 | — | **不可行（如实记录）**：CDP 自动化运行于 isolated world，改写主世界 fetch 不生效（两次尝试 intercepted=false）；篡改检测覆盖 = 字节级单测（verifyBytesAgainstManifest/verifySnapshotBytes 篡改拒绝）+ 独立验证者第一轮探针 PASS |
+| 竞态修复链完整性 | `e44dd9a` | 并发会话复验发现 F3 digest 窗口残留竞态并补修 + 契约测试升级为真实组件挂载测试（esbuild+jsdom+假 maplibre）3/3；独立复验表见下条 §8 |
+
+**Tag**：`phase-2-verified` @ `89819f8`。
+**遗留（不阻塞，入 Phase 5 清单）**：局域网非安全上下文（http://LAN IP）
+下 approved 降级文案实测；iPad 实机；许可与儿童体验人工项。
+**协议备注**：Phase 2 共三轮（两轮预算用尽→人工授权第三轮→F3 补修由并发
+会话独立复验），全程未伪造验收、每次停止均留痕；人工审定只做了一次
+决策（本条开头），符合 §7 人工关卡设计。
+
 #### 2026-11-11 · Phase 2 两缺陷独立复验与竞态补修
 
 用户明确授权接管现有改动，范围限故事切换竞态与大区缺失时故事现场。
