@@ -827,7 +827,8 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 | 2 | `83612ce` | Phase 1 适配器管线：`scripts/import-jiangshan.mjs`（上游导出脚本复制至 temp 执行，绝不污染上游目录）+ `scripts/lib/jiangshan-transform.mjs`（pastelize/确定性序列化/断言族）+ fixture 测试 42 项 |
 | 3 | `f6dba93` | 独立审查 5 缺陷修复：空态 CTA、视角往返持久（initialCamera/onCameraChange + exploreCameraRef）、idle 回调 revision 守卫、走廊 always-show 过滤修正、phase 缺失文案、数据来源署名浮层。自报 125/125 |
 | 4 | `35820f2` | Phase 1 加固：prefecture 断言移至过滤前（原先后置无效）、阶段连续性含 BCE/CE 无零年例外、必需文件严格化、`--publish` 禁用（拒绝覆盖任何既有目录）。42/42 |
-| 5 | `084ffa2` | 探索地图致命渲染缺陷修复：map 异步 init 竞态（mapReady 纳入 deps）、snapshot=null 清旧层、polity insert before corridor（走廊永在上层）、phaseKey 显式身份替代 JSON.length 推断；图层逻辑抽为 `lib/exploration-map-layers.js` 纯函数。**含早间报告的 ESM `.js` 后缀修复**（控制端复核：严格 Node ESM 下 `import` 与 `node --test` 均 PASS，10/10） |
+| 5 | `084ffa2` | 探索地图致命渲染缺陷修复：map 异步 init 竞态（mapReady 纳入 deps）、snapshot=null 清旧层、polity insert before corridor（走廊永在上层）、phaseKey 显式身份替代 JSON.length 推断；图层逻辑抽为 `lib/exploration-map-layers.js` 纯函数（该文件内 import 已带 `.js`，控制端复核严格 ESM 下 10/10） |
+| 6 | `9546f5e` | 测试基建（11-11 09:02 外部 agent  interleaved 提交，控制端核实）：drawer/stage/layers 三处 `jiangshan-data` import 补 `.js` 扩展名（此前 plain `node --test` 假失败、tsx 容忍造成红绿假象）；npm test 固化 `--import tsx`；键盘集成 flake 根因（分离 DOM 节点派发丢失）改 act() 冲刷 + 重新查询。自报全量 145/145 三轮绿 |
 
 **控制端晨间独立核查（2026-11-11 08:47，真浏览器 + 测试）**：
 - 真实浏览器（localhost:3457，HEAD `084ffa2`）：探索模式默认进入年份 220 →
