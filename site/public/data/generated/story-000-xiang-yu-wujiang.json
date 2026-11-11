@@ -254,6 +254,16 @@
   "map_plan": {
     "id": "map_plan_202_bce_xiang_yu_wujiang",
     "display_type": "retreat_corridor",
-    "certainty": "medium"
+    "certainty": "medium",
+    "map_ref": {
+      "snapshot_id": "s_qin_chuhan",
+      "rationale": "",
+      "status": "proposed",
+      "data_version": {
+        "index_sha256": "795a2d105d418ad249c93271a8e9c338dad69eae2250e87e4fa0b0ae422c8c63",
+        "snapshot_sha256": "66e072c2bc0313eab33e6195b8d0ebfaf36e3420254e3ad79e9bd4330009dcd3",
+        "adapter_version": "0.1.0"
+      }
+    }
   }
 }

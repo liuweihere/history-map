@@ -4,6 +4,24 @@ import { useEffect, useRef, useState } from "react";
 
 import { REGION_GEOJSON_PATH, regionIdForStory } from "../lib/history-regions";
 import { buildBasemapAttribution } from "../lib/basemap-attribution";
+import {
+  resolveStorySnapshotRef,
+  snapshotUrlForRef,
+  verifySnapshotBytes,
+  verifyBytesAgainstManifest,
+  mapRefBadgeText,
+  decideMapRefLoad,
+  mapRefStatusOnApprovedFailure,
+  isByteVerificationAvailable,
+  JIANGSHAN_INDEX_URL,
+} from "../lib/jiangshan-data.js";
+import {
+  applyPolityToMap,
+  clearPolityLayers,
+} from "../lib/exploration-map-layers.js";
+
+// jiangshan manifest 路径（与 index 同目录）
+const JIANGSHAN_MANIFEST_URL = "/data/jiangshan/manifest.json";
 
 function formatYear(year) {
   if (year < 0) return `前${Math.abs(year)}`;
@@ -81,6 +99,23 @@ function createFactionLabelNode(props) {
   return wrapper;
 }
 
+// 政权快照标签节点构造：jiangshan polity feature properties 用 title 字段（非 name）。
+// applyPolityToMap 的 createMarker 回调签名是 (props, anchor) → Marker；
+// 必须返回真正的 maplibregl.Marker（setLngLat + addTo），否则标签不挂地图且
+// 无法正确 remove（探索态参考 ExplorationMapStage 同款实现）。
+function createPolityMarker(props, anchor, maplibregl, map) {
+  const ml = maplibregl;
+  if (!ml || !map) return null;
+  const node = createFactionLabelNode({
+    name: props.title ?? "",
+    capital: props.capital ?? null,
+  });
+  node.classList.add("faction-label--polity");
+  return new ml.Marker({ element: node, anchor: "center" })
+    .setLngLat(anchor)
+    .addTo(map);
+}
+
 // ── 现成矢量底图（CartoDB Positron）─────────────────────────────────
 // 暖米色极简底图，自带海岸线/大江大河/水系，业务数据只作半透明 overlay。
 // 离线或 CDN 不可达时退化为羊皮纸纯色底，保证地图永不空白。
@@ -118,8 +153,17 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
   const historicalLabelsRef = useRef([]);
   const regionsGeojsonRef = useRef(null);
   const flyToRegionRef = useRef(null);
+  const polityVersionRef = useRef(null);
+  const polityLabelsRef = useRef([]);
+  const maplibreglRef = useRef(null);
+  const loadAbortRef = useRef(null);
   const [regionsReady, setRegionsReady] = useState(false);
   const [basemapOnline, setBasemapOnline] = useState(null);
+  // Phase 2 · 故事地图参考审定绑定 UI 状态。
+  // mapRefStatus: { kind: "approved"|"proposed"|"none", snapshot_id, rationale, reason? }
+  // approved → 已加载审定快照（显示理由）；proposed → 候选待审（手绘回退，显示候选）；
+  // none → 手绘回退（reason 标明退化原因）。
+  const [mapRefStatus, setMapRefStatus] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -130,6 +174,7 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
       const maplibregl = (await import("maplibre-gl")).default;
 
       if (cancelled) return;
+      maplibreglRef.current = maplibregl;
 
       const { style: basemapStyle, online: basemapOnline } = await loadBasemapStyle();
       if (cancelled) return;
@@ -202,7 +247,28 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
           throw new Error(`No map scene geojson exported for ${story.story_id}.`);
         }
 
-        const regionsPromise = fetch(REGION_GEOJSON_PATH)
+        // AbortController：故事切换/卸载时取消在途 fetch，旧请求不向已移除 map
+        // addSource 或 set state（§5 stale 不覆盖；§7 竞态护栏）。
+        const loadController = new AbortController();
+        loadAbortRef.current = loadController;
+        const { signal } = loadController;
+
+        const regionsPromise = fetch(REGION_GEOJSON_PATH, { signal })
+          .then((response) => (response.ok ? response.json() : null))
+          .catch(() => null);
+
+        // Phase 2 · 审定地图参考：并行加载 jiangshan index + manifest 解析 map_ref。
+        // index 以 arrayBuffer 取回，用于 phase 解析前先校验响应字节完整性
+        // （防止 index 内容变更而 manifest 不变 → phase 解析基于被篡改的 index）。
+        // 字节校验不可用（非安全上下文）→ approved 不得加载（见 decideMapRefLoad）。
+        const indexPromise = fetch(JIANGSHAN_INDEX_URL, { signal })
+          .then(async (response) => {
+            if (!response.ok) return null;
+            const buf = await response.arrayBuffer();
+            return { buf, json: null }; // json 延迟到字节校验后解析
+          })
+          .catch(() => null);
+        const manifestPromise = fetch(JIANGSHAN_MANIFEST_URL, { signal })
           .then((response) => (response.ok ? response.json() : null))
           .catch(() => null);
 
@@ -218,8 +284,57 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
           },
         );
 
-        Promise.all([regionsPromise]).then(([regions]) => {
-            if (cancelled || !mapRef.current) return;
+        Promise.all([regionsPromise, indexPromise, manifestPromise]).then(
+          async ([regions, indexResult, manifest]) => {
+            if (cancelled || !mapRef.current || signal.aborted) return;
+
+            const byteCheckAvailable = isByteVerificationAvailable();
+
+            // index 字节校验：manifest 存在且字节校验可用时，先校验 index 响应
+            // 字节再解析；失败 → data_load_failed（不基于未校验 index 解析 phase）。
+            let index = null;
+            if (indexResult && manifest && byteCheckAvailable) {
+              try {
+                const indexOk = await verifyBytesAgainstManifest(
+                  indexResult.buf,
+                  manifest,
+                  "index.json",
+                );
+                if (indexOk) {
+                  index = JSON.parse(new TextDecoder().decode(indexResult.buf));
+                }
+              } catch {
+                index = null;
+              }
+            }
+            // 字节校验不可用时仍允许 index 解析（approved 会被 decideMapRefLoad 拦截）；
+            // 这里只在没有 buf 的旧路径上兼容直接 json。
+            if (!index && indexResult?.json) index = indexResult.json;
+
+            // 解析审定参考；index/manifest 加载失败 → data_load_failed（诚实退化）
+            const ref = index && manifest
+              ? resolveStorySnapshotRef(index, manifest, story)
+              : {
+                  kind: "none",
+                  reason: "data_load_failed",
+                  snapshot_id: story?.map_plan?.map_ref?.snapshot_id ?? null,
+                  rationale: null,
+                };
+
+            // approved 准入：字节校验不可用（非安全 LAN）→ 不加载，降级提示
+            const loadPlan = decideMapRefLoad(ref, { byteCheckAvailable });
+
+            // 先记录 proposed/none 状态（approved 成功后才覆盖为 approved）
+            if (!loadPlan.shouldLoad) {
+              setMapRefStatus(loadPlan.statusOnSkip ?? {
+                kind: ref.kind,
+                snapshot_id: ref.snapshot_id,
+                rationale: ref.rationale,
+                reason: ref.reason,
+              });
+            }
+
+            let approvedApplied = false;
 
             // 业务 overlay：只挂故事路线（海岸线/水系由底图自动提供）
             map.addSource("story001-overlay", {
@@ -315,11 +430,72 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
               setRegionsReady(true);
             }
 
+          // ── approved 审定快照：在 regions-fill 之后加载，保证政权层在大区
+          //    之上（issue 4：approved 先于 regions-fill 会被大区遮盖）。
+          //    字节校验失败 / fetch 失败 / 切换竞态 → mapRefStatusOnApprovedFailure
+          //    降级为 none（不得保留 approved 谎称审定），走手绘回退。
+          if (loadPlan.shouldLoad) {
+            const snapUrl = snapshotUrlForRef(ref);
+            if (snapUrl) {
+              try {
+                const snapResponse = await fetch(snapUrl, { signal });
+                if (snapResponse.ok !== true) {
+                  throw new Error(`snapshot HTTP ${snapResponse.status}`);
+                }
+                if (cancelled || !mapRef.current || signal.aborted) return;
+                const snapBuf = await snapResponse.arrayBuffer();
+                if (cancelled || !mapRef.current || signal.aborted) return;
+                const bytesOk = await verifySnapshotBytes(
+                  new Uint8Array(snapBuf),
+                  manifest,
+                  ref.snapshot_id,
+                );
+                if (!bytesOk) {
+                  throw new Error("snapshot byte integrity check failed");
+                }
+                const snapshot = JSON.parse(new TextDecoder().decode(snapBuf));
+                if (cancelled || !mapRef.current || signal.aborted) return;
+                if (!map.getLayer("regions-fill")) return;
+                applyPolityToMap(map, snapshot, `story-ref::${ref.snapshot_id}`, {
+                  versionRef: polityVersionRef,
+                  labelsRef: polityLabelsRef,
+                  createMarker: (props, anchor) =>
+                    createPolityMarker(props, anchor, maplibreglRef.current, map),
+                });
+                // 大区让位（与手绘 overlay 一致），政权浮于其上
+                if (map.getLayer("regions-fill")) {
+                  map.setPaintProperty("regions-fill", "fill-opacity", [
+                    "case",
+                    ["boolean", ["feature-state", "highlight"], false],
+                    0.45,
+                    0.28,
+                  ]);
+                }
+                approvedApplied = true;
+                setMapRefStatus({
+                  kind: "approved",
+                  snapshot_id: ref.snapshot_id,
+                  rationale: ref.rationale,
+                });
+              } catch (err) {
+                if (signal.aborted) return; // 切换取消，静默
+                console.warn(
+                  "[history-map] approved snapshot load failed, fallback to hand-drawn:",
+                  err,
+                );
+                // 关键：降级为 none，不得保留 approved（地图回退却谎称审定）
+                setMapRefStatus(mapRefStatusOnApprovedFailure(ref, "snapshot_load_failed"));
+              }
+            }
+          }
+
           // ── 历史政权叠加层（可选，第 3 层）────────────────────────
           // 战争/割据故事（scene.overlay_boundary 有值）淡入政权色块，
           // 同时压低常驻 8 大区透明度让位；传记故事保持纯净大区底座。
+          // Phase 2：approved 审定快照已加载时跳过手绘回退；proposed/none/
+          // approved失败均走手绘 overlay_boundary（保留回退，§3）。
           const overlayId = story.scene?.overlay_boundary ?? null;
-          if (overlayId) {
+          if (overlayId && !approvedApplied) {
             const boundaryPromise = fetch(`/data/historical/${overlayId}.geojson`)
               .then((response) => (response.ok ? response.json() : null))
               .catch(() => null);
@@ -447,17 +623,22 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
 
     return () => {
       cancelled = true;
+      try { loadAbortRef.current?.abort(); } catch { /* noop */ }
+      loadAbortRef.current = null;
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current = [];
       regionLabelsRef.current.forEach((marker) => marker.remove());
       regionLabelsRef.current = [];
       historicalLabelsRef.current.forEach((marker) => marker.remove());
       historicalLabelsRef.current = [];
+      polityLabelsRef.current.forEach((marker) => marker && marker.remove && marker.remove());
+      polityLabelsRef.current = [];
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
       }
       setRegionsReady(false);
+      setMapRefStatus(null);
     };
   }, [story]);
 
@@ -503,11 +684,19 @@ export function HistoryMapStage({ story, onSelectPlace, focusRegion }) {
 
   const attributionText = buildBasemapAttribution(basemapOnline === true);
 
+  // Phase 2 · 审定地图参考状态徽章（§2 故事学习状态：所选参考快照、理由分别显示）
+  const refBadge = mapRefBadgeText(mapRefStatus);
+
   return (
     <div className="history-map-canvas" ref={mapNodeRef}>
       {basemapOnline !== null ? (
         <div className="history-map-attribution" role="contentinfo">
           {attributionText}
+        </div>
+      ) : null}
+      {refBadge ? (
+        <div className={refBadge.className} role="status">
+          {refBadge.text}
         </div>
       ) : null}
     </div>

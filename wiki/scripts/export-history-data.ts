@@ -443,6 +443,23 @@ const parentNoteFrontmatterSchema = z.object({
   event: z.string().min(1),
 });
 
+// Phase 2 · 故事地图参考审定绑定（PLAN V3 §2/§3/§7 夜间变体）。
+// map_ref 由 wiki 在地图计划 frontmatter 以扁平 map_ref_* 键维护（现有
+// frontmatter 解析器为扁平结构），导出时组装为嵌套 map_ref 对象透传至
+// story JSON。status="proposed" = 候选待人工审定（不作正式地图激活，手绘
+// 回退）；status="approved" = 人工批准（须非空理由 + 可校验版本），批准后
+// 无需改码激活。候选不含 AI 审定理由；rationale 由人工填写。
+const mapRefOutputSchema = z.object({
+  snapshot_id: z.string().min(1),
+  rationale: z.string(),
+  status: z.enum(["proposed", "approved"]),
+  data_version: z.object({
+    index_sha256: z.string().optional(),
+    snapshot_sha256: z.string().optional(),
+    adapter_version: z.string().optional(),
+  }).optional(),
+}).optional();
+
 const mapLayerFrontmatterSchema = z.object({
   type: z.literal("map_layer"),
   id: z.string().min(1),
@@ -462,6 +479,12 @@ const mapLayerFrontmatterSchema = z.object({
   ),
   related_factions: stringArraySchema,
   related_places: stringArraySchema,
+  map_ref_snapshot_id: z.string().optional(),
+  map_ref_rationale: z.string().optional(),
+  map_ref_status: z.enum(["proposed", "approved"]).optional(),
+  map_ref_index_sha256: z.string().optional(),
+  map_ref_snapshot_sha256: z.string().optional(),
+  map_ref_adapter_version: z.string().optional(),
 });
 
 const factionFrontmatterSchema = z.object({
@@ -624,6 +647,7 @@ const storyBundleSchema = z.object({
     id: z.string().min(1),
     display_type: z.string().min(1),
     certainty: z.enum(["high", "medium", "low"]),
+    map_ref: mapRefOutputSchema,
   }),
 });
 
@@ -1346,6 +1370,18 @@ async function compileStory(
       id: mapLayer.id,
       display_type: mapLayer.display_type,
       certainty: mapLayer.certainty,
+      map_ref: mapLayer.map_ref_snapshot_id
+        ? {
+            snapshot_id: mapLayer.map_ref_snapshot_id,
+            rationale: mapLayer.map_ref_rationale ?? "",
+            status: mapLayer.map_ref_status,
+            data_version: {
+              index_sha256: mapLayer.map_ref_index_sha256,
+              snapshot_sha256: mapLayer.map_ref_snapshot_sha256,
+              adapter_version: mapLayer.map_ref_adapter_version,
+            },
+          }
+        : undefined,
     },
   });
 

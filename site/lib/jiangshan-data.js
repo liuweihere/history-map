@@ -302,4 +302,255 @@ export function snapshotUrlForPhase(phase) {
   return file;
 }
 
+// ── Phase 2 · 故事地图参考（map_ref）审定绑定 ───────────────────────
+//
+// 设计依据 PLAN.md V3 §2/§3/§4/§5、§7 夜间变体：
+// - 故事的地图参考由 wiki 审定的 map_ref 字段绑定（snapshot_id + rationale +
+//   status + data_version），不按故事年份自动猜快照（§3：项羽 -202 通用解析
+//   会落到 s_xihan_a，审定应指向 s_qin_chuhan 楚汉局势）。
+// - status="proposed" = 候选待人工审定；不作正式地图激活，正式地图仍走手绘
+//   overlay_boundary 回退，UI 可显示待审候选信息（§7 夜间变体：proposed 写入
+//   并实现渲染逻辑，但未批准前不激活）。
+// - status="approved" 必须有非空人工理由 + 可校验版本；缺失/失配/快照缺失/
+//   加载失败均显式回退手绘，绝不静默复用（§5 地图与状态验收）。
+// - 候选不含 AI 审定的理由；人工填理由并改 approved 后无需改码即激活。
+//
+// 版本身份 vs 字节完整性：
+// - resolveStorySnapshotRef 仅做版本身份元数据匹配（map_ref.data_version 的
+//   sha256 与 manifest 声明的 sha256 一致），不核验实际加载响应字节。
+// - verifySnapshotBytes 在 fetch 后实际计算响应字节 sha256 与 manifest 比对，
+//   才能声称字节完整性（防止内容变更但 manifest 不变的情况）。
+
+/**
+ * 在 index 所有 phases 中查找 snapshot_id 对应的 phase。
+ * @returns {object|null} phase 对象或 null（未找到）。
+ */
+export function findPhaseBySnapshot(index, snapshotId) {
+  if (!index || !Array.isArray(index.dynasties) || !snapshotId) return null;
+  for (const d of index.dynasties) {
+    for (const p of d.phases ?? []) {
+      if (p.snapshot === snapshotId) return p;
+    }
+  }
+  return null;
+}
+
+/**
+ * 从 manifest 中取指定文件路径的 sha256。
+ * @returns {string|null}
+ */
+export function manifestShaFor(manifest, relPath) {
+  if (!manifest || !Array.isArray(manifest.output_files)) return null;
+  const entry = manifest.output_files.find((f) => f.path === relPath);
+  return entry ? entry.sha256 : null;
+}
+
+/**
+ * 解析故事的审定地图参考（map_ref）。
+ *
+ * 返回 { kind, snapshot_id, phase, rationale, version_ok, reason? }：
+ * - kind="approved"：已审定且版本/理由齐备，可作正式地图加载。
+ * - kind="proposed"：候选待人工审定；不作正式地图激活（手绘回退），UI 可
+ *   显示候选信息。快照不存在时退化为 none。
+ * - kind="none"：不加载审定快照，走手绘 overlay_boundary 回退。reason 标明
+ *   退化原因：no_map_ref / invalid_status / snapshot_not_found /
+ *   approved_rationale_missing / version_mismatch。
+ *
+ * 版本身份元数据匹配（非字节完整性）：仅比对 map_ref.data_version 声明的
+ * sha256 与 manifest 记录值是否一致；不核验实际加载字节。字节完整性由
+ * verifySnapshotBytes 在 fetch 后负责。
+ */
+export function resolveStorySnapshotRef(index, manifest, story) {
+  const mapRef = story?.map_plan?.map_ref;
+  if (!mapRef || typeof mapRef !== "object") {
+    return { kind: "none", reason: "no_map_ref", snapshot_id: null, phase: null, rationale: null, version_ok: false };
+  }
+  const snapshotId = typeof mapRef.snapshot_id === "string" ? mapRef.snapshot_id : null;
+  const status = typeof mapRef.status === "string" ? mapRef.status : null;
+  const rationale = typeof mapRef.rationale === "string" ? mapRef.rationale : "";
+
+  if (status !== "proposed" && status !== "approved") {
+    return { kind: "none", reason: "invalid_status", snapshot_id: snapshotId, phase: null, rationale, version_ok: false };
+  }
+
+  const phase = findPhaseBySnapshot(index, snapshotId);
+  if (!phase) {
+    return { kind: "none", reason: "snapshot_not_found", snapshot_id: snapshotId, phase: null, rationale, version_ok: false };
+  }
+
+  if (status === "proposed") {
+    // proposed：候选态，不作正式地图激活；版本是否匹配不影响候选展示，
+    // 但 phase 必须存在（已校验）。version_ok 仅作信息，不阻塞候选显示。
+    return { kind: "proposed", snapshot_id: snapshotId, phase, rationale, version_ok: null };
+  }
+
+  // status === "approved"：必须有非空人工理由 + 可校验版本
+  if (!rationale || rationale.trim().length === 0) {
+    return { kind: "none", reason: "approved_rationale_missing", snapshot_id: snapshotId, phase, rationale, version_ok: false };
+  }
+
+  const dataVersion = mapRef.data_version;
+  if (!dataVersion || typeof dataVersion !== "object") {
+    return { kind: "none", reason: "version_mismatch", snapshot_id: snapshotId, phase, rationale, version_ok: false };
+  }
+  const expectedIndexSha = manifestShaFor(manifest, "index.json");
+  const expectedSnapSha = manifestShaFor(manifest, `snapshots/${snapshotId}.geojson`);
+  const boundIndexSha = typeof dataVersion.index_sha256 === "string" ? dataVersion.index_sha256 : null;
+  const boundSnapSha = typeof dataVersion.snapshot_sha256 === "string" ? dataVersion.snapshot_sha256 : null;
+  if (!expectedIndexSha || !expectedSnapSha || boundIndexSha !== expectedIndexSha || boundSnapSha !== expectedSnapSha) {
+    return { kind: "none", reason: "version_mismatch", snapshot_id: snapshotId, phase, rationale, version_ok: false };
+  }
+
+  return { kind: "approved", snapshot_id: snapshotId, phase, rationale, version_ok: true };
+}
+
+/**
+ * 审定快照 URL（approved 或 proposed 候选展示用）。
+ * none 返回 null。
+ */
+export function snapshotUrlForRef(ref) {
+  if (!ref || !ref.phase || !ref.phase.file) return null;
+  const file = ref.phase.file.startsWith("/") ? ref.phase.file : `${JIANGSHAN_DATA_BASE}/${ref.phase.file}`;
+  return file;
+}
+
+/**
+ * 通用字节完整性校验：实际计算响应字节 sha256 并与 manifest 声明比对。
+ *
+ * 版本身份元数据匹配（resolveStorySnapshotRef）不等于字节完整性——若实际
+ * 文件内容被改动而 manifest 未更新，元数据匹配仍会通过。本函数在 fetch
+ * 响应到达后调用，对响应字节计算 sha-256，与 manifest 中对应文件 sha256
+ * 比对，才能真正声称内容完整。
+ *
+ * @param {Uint8Array|ArrayBuffer} bytes  fetch 响应字节
+ * @param {object} manifest  jiangshan manifest.json
+ * @param {string} relPath  manifest output_files 中的相对路径（如 "index.json"）
+ * @returns {Promise<boolean>}
+ */
+export async function verifyBytesAgainstManifest(bytes, manifest, relPath) {
+  if (!manifest || !relPath) return false;
+  const expected = manifestShaFor(manifest, relPath);
+  if (!expected) return false;
+  const data = bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes;
+  if (!data || !(data.byteLength >= 0)) return false;
+  const hashBuf = await crypto.subtle.digest("SHA-256", data);
+  const hex = [...new Uint8Array(hashBuf)]
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+  return hex === expected;
+}
+
+/**
+ * 快照字节完整性校验（verifyBytesAgainstManifest 的快照专用包装）。
+ * @param {Uint8Array|ArrayBuffer} bytes
+ * @param {object} manifest
+ * @param {string} snapshotId  快照标识（如 s_qin_chuhan）
+ * @returns {Promise<boolean>}
+ */
+export async function verifySnapshotBytes(bytes, manifest, snapshotId) {
+  if (!snapshotId) return false;
+  return verifyBytesAgainstManifest(bytes, manifest, `snapshots/${snapshotId}.geojson`);
+}
+
+/**
+ * 故事地图参考审定状态的 UI 徽章文案（§2 故事学习状态：所选参考快照、
+ * 选择理由分别显示）。纯函数，供组件与测试共用。
+ *
+ * 所有退化原因（version_mismatch / snapshot_not_found /
+ * approved_rationale_missing / invalid_status / data_load_failed /
+ * snapshot_load_failed / byte_check_unavailable）均显示失效回退提示，
+ * 不得静默。no_map_ref 返回 null（纯底座故事本无审定参考，无需徽章）。
+ *
+ * @returns {{className:string,text:string}|null}
+ */
+export function mapRefBadgeText(refStatus) {
+  if (!refStatus) return null;
+  if (refStatus.kind === "approved") {
+    const rationale = refStatus.rationale ? `：${refStatus.rationale}` : "";
+    return {
+      className: "history-map-ref-badge history-map-ref-badge--approved",
+      text: `审定参考·${refStatus.snapshot_id}${rationale}`,
+    };
+  }
+  if (refStatus.kind === "proposed") {
+    return {
+      className: "history-map-ref-badge history-map-ref-badge--proposed",
+      text: `待审候选·${refStatus.snapshot_id}（理由待人工审定，正式地图走手绘示意）`,
+    };
+  }
+  // none：按退化原因显示回退提示（no_map_ref 不在表中 → null）
+  const reasonText = DEGRADATION_REASONS[refStatus.reason] ?? null;
+  return reasonText
+    ? { className: "history-map-ref-badge history-map-ref-badge--fallback", text: reasonText }
+    : null;
+}
+
+// 退化原因 → UI 文案映射（no_map_ref 不在此表 → null，纯底座无徽章）。
+const DEGRADATION_REASONS = {
+  version_mismatch: "快照版本不符，回退手绘示意",
+  snapshot_not_found: "参考快照缺失，回退手绘示意",
+  approved_rationale_missing: "审定理由缺失，回退手绘示意",
+  invalid_status: "审定状态无效，回退手绘示意",
+  data_load_failed: "参考数据加载失败，回退手绘示意",
+  snapshot_load_failed: "审定快照加载失败，回退手绘示意",
+  byte_check_unavailable: "字节校验不可用（非安全上下文），回退手绘示意",
+};
+
+/**
+ * 当前环境是否可用 WebCrypto subtle（字节完整性校验前提）。
+ * 非安全上下文（http LAN、部分浏览器）无 crypto.subtle → 字节校验不可用，
+ * approved 不得加载（不得假装已验证）。
+ */
+export function isByteVerificationAvailable() {
+  return (
+    typeof crypto !== "undefined" &&
+    !!crypto &&
+    !!crypto.subtle &&
+    typeof crypto.subtle.digest === "function"
+  );
+}
+
+/**
+ * 决定是否应加载审定快照（approved 路径准入）。
+ *
+ * @param {object} ref  resolveStorySnapshotRef 返回值
+ * @param {{byteCheckAvailable:boolean}} options
+ * @returns {{shouldLoad:boolean, statusOnSkip:object|null}}
+ *   - ref.kind !== "approved" → 不加载（proposed/none 维持原状）
+ *   - approved 但字节校验不可用 → 不加载，statusOnSkip 降级为 none(byte_check_unavailable)
+ *   - approved 且字节校验可用 → shouldLoad=true
+ */
+export function decideMapRefLoad(ref, { byteCheckAvailable } = {}) {
+  if (!ref || ref.kind !== "approved") {
+    return { shouldLoad: false, statusOnSkip: null };
+  }
+  if (!byteCheckAvailable) {
+    return {
+      shouldLoad: false,
+      statusOnSkip: {
+        kind: "none",
+        reason: "byte_check_unavailable",
+        snapshot_id: ref.snapshot_id,
+        rationale: ref.rationale,
+      },
+    };
+  }
+  return { shouldLoad: true, statusOnSkip: null };
+}
+
+/**
+ * approved 加载/字节校验失败后的降级状态。
+ * 关键：失败后状态必须是 none（带原因），不得保留 approved（地图回退却谎称审定）。
+ * @param {object} ref  原始 approved ref
+ * @param {"snapshot_load_failed"|"byte_check_failed"} reason
+ */
+export function mapRefStatusOnApprovedFailure(ref, reason = "snapshot_load_failed") {
+  return {
+    kind: "none",
+    reason,
+    snapshot_id: ref?.snapshot_id ?? null,
+    rationale: ref?.rationale ?? null,
+  };
+}
+
 export { JIANGSHAN_MIN_YEAR, JIANGSHAN_MAX_YEAR };
