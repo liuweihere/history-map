@@ -257,8 +257,8 @@
     "certainty": "medium",
     "map_ref": {
       "snapshot_id": "s_qin_chuhan",
-      "rationale": "",
-      "status": "proposed",
+      "rationale": "前202 属楚汉并立期，s_qin_chuhan（前206—前203）为最接近的审定快照；垓下至乌江路线与快照西楚、汉两政权格局一致",
+      "status": "approved",
       "data_version": {
         "index_sha256": "795a2d105d418ad249c93271a8e9c338dad69eae2250e87e4fa0b0ae422c8c63",
         "snapshot_sha256": "66e072c2bc0313eab33e6195b8d0ebfaf36e3420254e3ad79e9bd4330009dcd3",
