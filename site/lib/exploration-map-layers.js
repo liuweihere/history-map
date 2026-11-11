@@ -21,6 +21,7 @@ import { polityAnchor } from "./jiangshan-data.js";
 export function clearPolityLayers(map, labelsRef) {
   if (!map) return;
   if (map.getLayer && map.getLayer("polity-fill")) map.removeLayer("polity-fill");
+  if (map.getLayer && map.getLayer("polity-outline")) map.removeLayer("polity-outline");
   if (map.getSource && map.getSource("jiangshan-polity")) map.removeSource("jiangshan-polity");
   if (labelsRef) {
     const labels = labelsRef.current ?? [];
@@ -58,8 +59,27 @@ export function applyPolityToMap(map, snapshot, phaseKey, { versionRef, labelsRe
       source: "jiangshan-polity",
       paint: {
         "fill-color": ["coalesce", ["get", "display_color"], ["get", "tint"], "#D9C7A8"],
-        "fill-opacity": 0.32,
-        "fill-outline-color": "rgba(60,40,20,0.18)",
+        // 浏览器实测：pastel display_color × 0.32 叠在 0.22 大区水彩上疆域几乎不可见；
+        // 0.5 + 可辨描边才能让「疆域」成为可读信息（儿童产品核心）。
+        "fill-opacity": 0.5,
+        "fill-outline-color": "rgba(60,40,20,0.35)",
+      },
+    },
+    beforeId,
+  );
+
+  // 疆界描边独立 line 层：fill-outline-color 不支持数据驱动，
+  // 而界线要用每政权饱和 tint（魏#4a6fa5/蜀汉#c98a2b/吴#3f8f6a）才可辨——
+  // pastel 填充读「面」、饱和描边读「界」。
+  map.addLayer(
+    {
+      id: "polity-outline",
+      type: "line",
+      source: "jiangshan-polity",
+      paint: {
+        "line-color": ["coalesce", ["get", "tint"], ["get", "display_color"], "#8a7a66"],
+        "line-width": 1.6,
+        "line-opacity": 0.6,
       },
     },
     beforeId,

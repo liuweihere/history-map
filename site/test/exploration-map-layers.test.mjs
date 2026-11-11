@@ -87,6 +87,38 @@ test("applyPolityToMap：添加 polity-fill 源与层，创建锚点标签", () 
   assert.equal(versionRef.current, "phase:chuhan", "versionRef 记录 phaseKey");
 });
 
+test("polity 疆域填色可读性：opacity ≥ 0.5 + 描边可辨（浏览器实测 0.32 几乎不可见）", () => {
+  // 浏览器实测（2026-11-11 verify-explore）：pastel display_color × 0.32 opacity
+  // 叠在 0.22 大区水彩上 → 疆域肉眼几乎不可见，儿童产品核心信息丢失。
+  const map = createFakeMap();
+  applyPolityToMap(map, SNAP_A, "phase:chuhan", {
+    versionRef: { current: null }, labelsRef: { current: [] },
+  });
+  const layer = map.getLayer("polity-fill");
+  assert.ok(layer.spec.paint["fill-opacity"] >= 0.5,
+    `fill-opacity 应 ≥0.5（当前 ${layer.spec.paint["fill-opacity"]}），否则疆域不可读`);
+  const outline = String(layer.spec.paint["fill-outline-color"]);
+  const alpha = parseFloat(outline.match(/([\d.]+)\s*\)$/)?.[1] ?? "0");
+  assert.ok(alpha >= 0.3, `描边 alpha 应 ≥0.3（当前 ${outline}）`);
+});
+
+test("polity 疆界线图层：数据驱动 tint 描边（pastel 填充读面、饱和 tint 读界）", () => {
+  // display_color 是 ~80% 亮度的 pastel，再提 opacity 也读不出「面」；
+  // 上游 tint 是每政权饱和色（魏#4a6fa5/蜀汉#c98a2b/吴#3f8f6a）——用它描边，
+  // 疆域轮廓才真正可辨（fill-outline-color 不做数据驱动，故独立 line 层）。
+  const map = createFakeMap();
+  applyPolityToMap(map, SNAP_A, "phase:chuhan", {
+    versionRef: { current: null }, labelsRef: { current: [] },
+  });
+  const line = map.getLayer("polity-outline");
+  assert.ok(line, "polity-outline 线图层必须存在");
+  assert.equal(line.spec.type, "line");
+  const color = line.spec.paint["line-color"];
+  assert.ok(Array.isArray(color) && JSON.stringify(color).includes("tint"),
+    "line-color 必须数据驱动读取 tint（每政权饱和色）");
+  assert.ok(line.spec.paint["line-opacity"] >= 0.5, "界线须清晰可辨");
+});
+
 test("snapshot=null 时 clearPolityLayers 清除层/源/标签，转场不残留旧数据", () => {
   const map = createFakeMap();
   const labelsRef = { current: [] };
