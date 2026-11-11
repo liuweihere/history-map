@@ -277,6 +277,7 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
 
       <DynastyTimeline
         index={index}
+        milestones={milestones}
         selectedYear={selectedYear}
         onYearChange={setSelectedYear}
         onPhaseStep={stepPhase}

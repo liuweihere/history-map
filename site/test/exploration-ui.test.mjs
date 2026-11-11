@@ -96,11 +96,12 @@ async function render(jsx) {
 // ── mock 数据 ─────────────────────────────────────────────────────
 const MOCK_INDEX = {
   dynasties: [
-    { key: "chuhan", title: "楚汉相争", from: -203, to: -202, phases: [
+    { key: "chuhan", title: "楚汉相争", tint: "#7a4a3a", from: -203, to: -202, phases: [
       { snapshot: "chuhan", from: -203, to: -202, file: "snapshots/chuhan.geojson", overview: "楚汉" },
     ] },
-    { key: "sanguo", title: "三国", from: 220, to: 265, phases: [
-      { snapshot: "sanguo", from: 220, to: 265, file: "snapshots/sanguo.geojson", overview: "三国鼎立" },
+    { key: "sanguo", title: "三国", tint: "#4a6fa5", from: 220, to: 265, phases: [
+      { snapshot: "sanguo", from: 220, to: 240, file: "snapshots/sanguo.geojson", overview: "三国鼎立" },
+      { snapshot: "sanguo_b", from: 241, to: 265, file: "snapshots/sanguo_b.geojson", overview: "三家归晋前夜" },
     ] },
   ],
 };
@@ -231,27 +232,112 @@ test("重大事件：突出所选年份、有审定关联才显示查看相关�
   assert.equal(links.length, 1, "只有一个 approved 链接（proposed 不显示）");
 });
 
-// ── DynastyTimeline 测试 ──────────────────────────────────────────
+// ── DynastyTimeline 测试（江山时序上游原样布局，PLAN §2）─────────────────
+//
+// 上游对照（jiangshan-map index.html #scrubber-dock / css .band-cell）：
+// - 朝代色带：background = 该朝代 tint（不是统一淡色）；
+// - 当前朝代 is-active；年份气泡在轨道上方；4px 竖条手柄；
+// - 带内阶段刻度（phases>1 时）与里程碑事件点（milestones prop）；
+// - 点击/回车朝代带 → 跳到该朝代起始年。
 
-test("朝代时间轴渲染朝代段、当前年份指针、上下一年按钮", async () => {
+test("朝代时间轴：色带用各朝代 tint、当前朝代 is-active、气泡显示年份与朝代", async () => {
   const { createElement } = await import("react");
   const { DynastyTimeline } = await import("../components/dynasty-timeline.jsx");
   const { document } = await render(
     createElement(DynastyTimeline, {
       index: MOCK_INDEX,
+      milestones: MOCK_MILESTONES,
       selectedYear: 220,
       onYearChange: () => {},
       onPhaseStep: () => {},
     }),
   );
   assert.ok(document.querySelector(".dynasty-timeline__track"), "轨道存在");
-  assert.ok(document.querySelector(".dynasty-timeline__pin"), "当前年份指针存在");
-  assert.ok(document.querySelector(".dynasty-timeline__flag").textContent.includes("220"), "年份气泡显示 220");
-  const segs = [...document.querySelectorAll(".dynasty-timeline__seg")];
-  assert.equal(segs.length, 2, "两个朝代段");
-  // 上一年 / 下一年按钮
+  const bands = [...document.querySelectorAll(".dynasty-timeline__band")];
+  assert.equal(bands.length, 2, "两个朝代色带");
+  assert.equal(bands[0].style.background, "rgb(122, 74, 58)", "楚汉带用自身 tint（非统一淡色）");
+  assert.equal(bands[1].style.background, "rgb(74, 111, 165)", "三国带用自身 tint");
+  // 当前年 220 → 三国带 is-active
+  assert.ok(bands[1].classList.contains("is-active"), "当前朝代带 is-active");
+  assert.ok(!bands[0].classList.contains("is-active"), "非当前朝代不带 is-active");
+  // 气泡：年份 + 朝代名（上游「公元前403年 · 周威烈王二十三年」对应结构）
+  const bubble = document.querySelector(".dynasty-timeline__bubble");
+  assert.ok(bubble, "年份气泡存在");
+  assert.ok(bubble.textContent.includes("220"), "气泡含年份");
+  assert.ok(bubble.textContent.includes("三国"), "气泡含朝代名");
+  // 4px 竖条手柄
+  assert.ok(document.querySelector(".dynasty-timeline__handle"), "竖条手柄存在");
+  // 上/下一年按钮保留
   const btns = [...document.querySelectorAll(".dynasty-timeline__btn")].map((b) => b.textContent.trim());
   assert.ok(btns.some((t) => t.includes("年")), "有年份切换按钮");
+});
+
+test("朝代时间轴：带内阶段刻度与事件点（milestones prop）", async () => {
+  const { createElement } = await import("react");
+  const { DynastyTimeline } = await import("../components/dynasty-timeline.jsx");
+  const { document } = await render(
+    createElement(DynastyTimeline, {
+      index: MOCK_INDEX,
+      milestones: MOCK_MILESTONES,
+      selectedYear: 220,
+      onYearChange: () => {},
+      onPhaseStep: () => {},
+    }),
+  );
+  // 三国 mock 有 2 个 phase → 1 条阶段刻度；楚汉单 phase → 0 条
+  const phaseTicks = [...document.querySelectorAll(".dynasty-timeline__phase-tick")];
+  assert.equal(phaseTicks.length, 1, "phases>1 的朝代带渲染阶段刻度");
+  // 事件点：楚汉 2 条（-203/-202，pct 3 与 97 不撞）+ 三国 1 条（220 → clamp 3）= 3
+  const dots = [...document.querySelectorAll(".dynasty-timeline__ev-dot")];
+  assert.equal(dots.length, 3, "里程碑事件点按朝代归入色带");
+});
+
+test("朝代时间轴：点击朝代带跳到该朝代起始年", async () => {
+  const { createElement } = await import("react");
+  const { DynastyTimeline } = await import("../components/dynasty-timeline.jsx");
+  let jumped = null;
+  const { document } = await render(
+    createElement(DynastyTimeline, {
+      index: MOCK_INDEX,
+      milestones: MOCK_MILESTONES,
+      selectedYear: 220,
+      onYearChange: (y) => { jumped = y; },
+      onPhaseStep: () => {},
+    }),
+  );
+  const win = document.defaultView;
+  const chuBand = document.querySelectorAll(".dynasty-timeline__band")[0];
+  chuBand.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 20));
+  assert.equal(jumped, -203, "点击楚汉带 → 跳到 from=-203（上游 focusYear ?? fromYear 语义）");
+});
+
+test("朝代时间轴：刻度行渲染各朝代起点年与末年", async () => {
+  const { createElement } = await import("react");
+  const { DynastyTimeline } = await import("../components/dynasty-timeline.jsx");
+  const { document } = await render(
+    createElement(DynastyTimeline, {
+      index: MOCK_INDEX,
+      milestones: MOCK_MILESTONES,
+      selectedYear: 220,
+      onYearChange: () => {},
+      onPhaseStep: () => {},
+    }),
+  );
+  const ticks = [...document.querySelectorAll(".dynasty-timeline__ticks span")].map((t) => t.textContent);
+  assert.deepEqual(ticks, ["前203", "220", "265"], "刻度=各朝代起点+末年");
+});
+
+test("时间轴布局：globals.css 中 .dynasty-timeline 全宽底栏（grid-column 1/-1）", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const { fileURLToPath } = await import("node:url");
+  const css = await readFile(
+    fileURLToPath(new URL("../app/globals.css", import.meta.url)),
+    "utf8",
+  );
+  const block = css.match(/\.dynasty-timeline\s*\{[^}]*\}/s);
+  assert.ok(block, ".dynasty-timeline 规则存在");
+  assert.match(block[0], /grid-column:\s*1\s*\/\s*-1/, "全宽底栏（不再局限右栏）");
 });
 
 test("年份输入超界显示范围错误，不静默 clamp（PLAN §3）", async () => {
