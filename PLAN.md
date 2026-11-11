@@ -812,6 +812,28 @@ PASS/FAIL 总表与 tag 建议。」——主 agent 据此调度子代理并汇�
 > 本节由验证协议产出物按时间倒序追加；每条记录含：日期、Phase、
 > PASS/FAIL 总表、commit/tag 清单、给人类的决策清单。
 
+#### 2026-11-11 · Phase 2 第三轮（用户明示授权）：两 FAIL 修复 + 浏览器五场景验证
+
+**授权与范围**：用户 14:39 明示授权第三轮预算（超两轮上限，人工关卡解锁）。
+控制端亲自实现（实现者角色），范围限两缺陷最小修复，不动其他代码。
+
+| 项 | commit | 证据 |
+|---|---|---|
+| 缺陷① regions 404 场景坍塌 | `b811f36` | 两处 `if(!map.getLayer("regions-fill")) return` 提前终止主续体 → 改为 `hasRegionsLayer` 记录 + 让位 setPaintProperty 自守卫；政权层/手绘 overlay 不依赖大区层，路线/标记/回退/徽章照常装配 |
+| 缺陷② 切故事竞态 | `b811f36` | 新增 `storyIdentityRef` 身份锚（effect 进入写 story_id、卸载清空）；`storyStillCurrent()` 贯穿全部 async 续体守卫（主续体/approved fetch/解析后/overlay 回调/失败 catch）；旧故事续体不得写新故事图层或徽章 |
+| 契约测试 | `b811f36` | 新增 `test/history-map-stage.test.mjs` 3 项（修复前结构断言必 RED：提前 return 禁令、身份锚存在性、裸 cancelled 守卫清零） |
+| 全量测试 | — | `node --import tsx --test test/*.test.mjs`：**201/201**（--test-repeat 2 + 3 连跑均绿；首轮曾现 1 次 timing flake 不可复现，如实记录） |
+| 浏览器五场景（控制端，prod build @ 3457） | — | ① 项羽 proposed 徽章「待审候选·s_qin_chuhan」+ 手绘回退 PASS；② 项羽→管宁旧徽章不残留（缺陷②复现路径）PASS；③ 5 故事快速切换现场纯净（无徽章/政权标签泄漏）PASS；④ 返回探索回归（西汉 s_xihan_a + 17 色带 + 疆域描边）PASS；⑤ 重进项羽徽章稳定 PASS |
+
+**服务器备注**：`next start` 需 `-H 127.0.0.1`（沙箱禁 `uv_interface_addresses`，
+Next 枚举网卡崩溃）；`nohup` 后台不存活，须前台占位进程。访问 http://localhost:3457/。
+
+**状态**：两 FAIL 的复现路径（验证者 jsdom+假 MapLibre 手法 + 本轮真实浏览器）
+均翻绿。**仍未打 tag**——剩两类遗留：① approved 合成场景（版本失配/字节篡改/
+快照 404 的浏览器级验证）未做，因当前无任何 approved 真数据可验；② 项羽
+`proposed→approved` 审定（理由填写）为人工专属。建议：用户完成 ③ 后重跑
+独立验证者终验（approved 真路径 + 五场景复验）再打 `phase-2-verified`。
+
 #### 2026-11-11 · Phase 2 两轮独立验收后停止（未通过，不打 tag）
 
 **范围与预算**：在 `overnight/phase-0-5` 的 `b08a713` 基线上实现故事地图
