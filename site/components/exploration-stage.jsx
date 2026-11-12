@@ -46,6 +46,9 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
   const [index, setIndex] = useState(null);
   const [indexError, setIndexError] = useState(null);
   const [corridors, setCorridors] = useState(null);
+  // R2 修复（2026-11-12）：走廊获取失败须向用户显示明确降级提示，不再静默 null。
+  // 真实错误（非 abort/非卸载）→ 设此 state，地图仍可用（仅缺走廊路线）。
+  const [corridorsError, setCorridorsError] = useState(null);
   const [milestones, setMilestones] = useState(null);
   const [bridge, setBridge] = useState({ entries: [] });
 
@@ -86,6 +89,11 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
   }, [selectedYear, drawerOpen, drawerTab, enabledKinds]);
 
   // ── 加载 index / corridors / milestones / bridge ──────────────────
+  // R2 修复（2026-11-12）：走廊获取失败不再静默 null。
+  // - 真实错误（HTTP/网络，非 abort）→ 设 corridorsError，地图仍可用（走廊层不挂）；
+  // - abort（卸载 cleanup / 切换）→ 静默，不显示降级提示（done 守卫未挂载 state 竞争）；
+  // - 成功 → 正常，不显示降级提示。
+  // done 守卫确保卸载后的 setState 不触发（无未挂载 state 竞争）。
   useEffect(() => {
     const controller = new AbortController();
     let done = false;
@@ -93,7 +101,13 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
       try {
         const [idx, corr, ms, br] = await Promise.all([
           fetchJiangshanIndex(controller.signal),
-          fetchCorridors(controller.signal).catch(() => null),
+          fetchCorridors(controller.signal).catch((err) => {
+            // abort（卸载/切换）→ 静默，不显示降级提示
+            if (done || err?.name === "AbortError") return null;
+            // 真实错误 → 记录并向用户显示降级提示（地图仍可用）
+            setCorridorsError(String(err?.message ?? err));
+            return null;
+          }),
           fetchMilestones(controller.signal).catch(() => null),
           fetchBridge(controller.signal),
         ]);
@@ -231,6 +245,15 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
         ) : (
           <div className="exploration-loading">正在加载历史地图数据…</div>
         )}
+
+        {/* R2：走廊路线加载失败降级提示（地图仍可用，仅缺走廊路线）。
+            区别于 index 失败（进入空态卡）：index 成功但走廊失败时，朝代/快照/
+            时间轴正常工作，仅走廊路线与点击不可用，须向用户明确说明。 */}
+        {corridorsError ? (
+          <div className="exploration-corridor-error" data-corridor-error role="note">
+            走廊路线加载失败：{corridorsError}（地图与朝代仍可用，走廊路线暂不可见）
+          </div>
+        ) : null}
 
         {/* 左下阶段说明卡（§2：仅说明当前地图参考和图例，不强制修改选中年份）*/}
         <div className="exploration-phase-card">

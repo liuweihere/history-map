@@ -8,10 +8,9 @@ import {
   clearPolityLayers,
   applyPolityToMap,
   applyCorridorsToMap,
-  corridorYearFilter,
-  corridorCombinedFilter,
-  corridorLayerFilter,
+  applyCorridorFilters,
   attachCorridorInteractions,
+  scheduleOnIdle,
   CORRIDOR_KINDS,
   CORRIDOR_KIND_COLORS,
   CORRIDOR_KIND_STYLES,
@@ -266,22 +265,13 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
         versionRef: corridorsVersionRef,
       });
       // 无论新建或已存在，都更新过滤（年份 + 分组联合）。
-      // 四类线层各自 kind 隔离过滤（corridorLayerFilter）；标签层共用
-      // 联合过滤（标签 feature 无 from/to → 年份分支恒真，实际由分组 in 生效）。
-      // 2026-11-12 实测：漏掉标签层导致关组后名称仍显示。
+      // R2 修复（2026-11-12）：委托 applyCorridorFilters 同步过滤四类可见线层
+      // corridor-line-{kind} + 四类透明命中层 corridor-hit-{kind} + 标签层 +
+      // 兼容旧单层。此前只过滤 line/label 漏掉 hit 层 → 不可见线路仍可被点击
+      // （幽灵命中）。hit 与 line 同表达式，确保不可见即不可点击。
+      // 初始 / 重建 / 切年 / 关组均经此路径；事件监听 target 仍为 corridor-hit-{kind}。
       const m = mapRef.current;
-      for (const kind of CORRIDOR_KINDS) {
-        if (m && m.getLayer(`corridor-line-${kind}`)) {
-          m.setFilter(`corridor-line-${kind}`, corridorLayerFilter(kind, selectedYear, effectiveKinds));
-        }
-      }
-      // 兼容旧单层（防残留）+ 标签层
-      if (m && m.getLayer("corridor-line")) {
-        m.setFilter("corridor-line", corridorCombinedFilter(selectedYear, effectiveKinds));
-      }
-      if (m && m.getLayer("corridor-label")) {
-        m.setFilter("corridor-label", corridorCombinedFilter(selectedYear, effectiveKinds));
-      }
+      if (m) applyCorridorFilters(m, selectedYear, effectiveKinds);
       return applied;
     };
     if (map.isStyleLoaded()) {
@@ -293,6 +283,40 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
       });
     }
   }, [corridors, selectedYear, effectiveKinds, mapReady]);
+
+  // P4 走廊点击/悬停接线：attach 一次（仅 corridors 数据或 mapReady 变化时重建）。
+  // year/kind 变化不重 attach（防注册泄漏），由下方 close-on-change 只关过时 popup。
+  // 多实例/重点击防重复 popup：helper 内 close 旧再开新，仅跟踪一个 currentPopup。
+  // idle 泄漏修复：scheduleOnIdle 返回 cancel，cleanup 在 idle 未发生时显式取消 once。
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!mapReady || !map || !corridors) return;
+    const attach = () => {
+      if (mapRef.current !== map) return;
+      const ml = maplibreglRef.current;
+      // closeOnClick:true → 触屏点击线路外区域自动关闭（MapLibre Popup 内建）
+      const createPopup = ml && ml.Popup ? () => new ml.Popup({ closeOnClick: true }) : null;
+      interactionsRef.current = attachCorridorInteractions(map, {
+        createPopup,
+        document: typeof document !== "undefined" ? document : undefined,
+      });
+    };
+    const cancelSchedule = scheduleOnIdle(map, attach);
+    return () => {
+      cancelSchedule(); // idle 未发生时取消 once(idle)，防监听泄漏
+      // 卸载 / corridors 重建：注销全部监听 + 关掉残留/屏幕外 popup
+      if (interactionsRef.current) {
+        interactionsRef.current.detach();
+        interactionsRef.current = null;
+      }
+    };
+  }, [corridors, mapReady]);
+
+  // P4 切年 / 关分组：关掉过时 popup（其线路可能已被过滤掉/移出屏幕），不重 attach、
+  // 不影响他人过滤逻辑。
+  useEffect(() => {
+    interactionsRef.current?.close();
+  }, [selectedYear, effectiveKinds]);
 
   const attributionText = buildBasemapAttribution(basemapOnline === true);
 

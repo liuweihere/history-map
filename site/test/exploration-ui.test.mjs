@@ -705,7 +705,7 @@ test("corridorInfoContent：有 summary 的走廊渲染 名称+分组+起止+摘
   assert.ok(el, "返回 Element");
   assert.equal(el.querySelector(".corridor-info__name").textContent, "秦长城", "名称 textContent");
   assert.equal(el.querySelector(".corridor-info__kind").textContent, "长城", "分组中文标签");
-  assert.equal(el.querySelector(".corridor-info__years").textContent, "-214–-122 年", "起止年份");
+  assert.equal(el.querySelector(".corridor-info__years").textContent, "前214–前122 年", "起止年份（BCE→前N）");
   assert.ok(el.querySelector(".corridor-info__summary"), "摘要渲染（数据已入库）");
   assert.equal(el.querySelector(".corridor-info__summary").textContent.includes("蒙恬"), true, "摘要为入库原文");
   // 安全：无 innerHTML 注入风险（title 含 <script> 时原样文本）
@@ -734,4 +734,104 @@ test("corridorInfoContent：缺 from/to 时不渲染年份段（不编造区间�
   const el = corridorInfoContent({ title: "无名路", kind: "road" }, { document: doc });
   assert.equal(el.querySelector(".corridor-info__years"), null, "无 from/to 不渲染年份");
   assert.equal(el.querySelector(".corridor-info__summary"), null, "无 summary 不渲染摘要");
+});
+
+// ── Phase 4 R2 复验缺陷：走廊数据获取失败须向用户显示明确降级提示 ──
+// 缺陷：exploration-stage.jsx 的 fetchCorridors(controller.signal).catch(() => null)
+//    把真实错误静默转为 null，地图仍可用但用户不知道走廊路线加载失败。
+// 验收：真实错误（非 abort/非卸载）→ 显示走廊失败提示 + 地图仍可用；
+//    abort（卸载/切换）→ 不显示；成功 → 不显示。无未挂载 state 竞争。
+
+test("走廊数据获取失败时显示明确降级提示，地图仍可用（不静默 null）", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes("corridors")) throw new Error("corridor 503");
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (u.includes("index.json")) return json(MOCK_INDEX);
+    if (u.includes("milestones")) return json(MOCK_MILESTONES);
+    if (u.includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] }); // snapshots
+  };
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: () => {},
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 160));
+    const notice = document.querySelector("[data-corridor-error]");
+    assert.ok(notice, "走廊获取失败时显示降级提示（data-corridor-error）");
+    assert.match(notice.textContent, /走廊|路线/, "提示文案提及走廊/路线");
+    // 地图仍可用：index 成功 → 不显示空态卡（不锁死）
+    assert.ok(!document.querySelector(".exploration-empty-stage__card"), "index 成功不进入空态卡");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("走廊数据获取成功时不显示降级提示", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (u.includes("index.json")) return json(MOCK_INDEX);
+    if (u.includes("corridors")) return json({ features: [] });
+    if (u.includes("milestones")) return json(MOCK_MILESTONES);
+    if (u.includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] });
+  };
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: () => {},
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 160));
+    assert.ok(!document.querySelector("[data-corridor-error]"), "成功时无降级提示");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("走廊获取因 AbortError（卸载/切换）不显示降级提示（区别真实错误）", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const u = String(url);
+    if (u.includes("corridors")) {
+      const err = new Error("aborted");
+      err.name = "AbortError";
+      throw err;
+    }
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (u.includes("index.json")) return json(MOCK_INDEX);
+    if (u.includes("milestones")) return json(MOCK_MILESTONES);
+    if (u.includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] });
+  };
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: () => {},
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 160));
+    assert.ok(!document.querySelector("[data-corridor-error]"), "AbortError 不显示降级提示");
+    // 地图仍可用：index 成功
+    assert.ok(!document.querySelector(".exploration-empty-stage__card"), "index 成功不进入空态卡");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
 });

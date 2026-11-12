@@ -106,13 +106,16 @@ export function applyPolityToMap(map, snapshot, phaseKey, { versionRef, labelsRe
 }
 
 /**
- * 清除走廊层（四类线层 + 标签层 + 两源）。
- * 四类线层 id 形如 corridor-line-{kind}；旧单层 corridor-line 也兼容清除（防残留）。
+ * 清除走廊层（四类可见线层 + 四类 hit 层 + 标签层 + 两源）。
+ * 四类线层 id 形如 corridor-line-{kind}、命中层 corridor-hit-{kind}；旧单层 corridor-line 也兼容清除（防残留）。
  */
 export function clearCorridorLayers(map) {
   if (!map) return;
   const removeLayer = (id) => { if (map.getLayer && map.getLayer(id)) map.removeLayer(id); };
-  for (const kind of CORRIDOR_KINDS) removeLayer(`corridor-line-${kind}`);
+  for (const kind of CORRIDOR_KINDS) {
+    removeLayer(`corridor-hit-${kind}`);
+    removeLayer(`corridor-line-${kind}`);
+  }
   removeLayer("corridor-line"); // 兼容旧单层残留
   removeLayer("corridor-label");
   if (map.getSource && map.getSource("jiangshan-corridors")) map.removeSource("jiangshan-corridors");
@@ -158,16 +161,23 @@ export const CORRIDOR_KIND_LABELS = {
 /**
  * 从走廊数据提取 label_at 名称标签点（上游 corridor-caption 对照：
  * label_at 锚点 + 标题文字；无 label_at 的走廊不生成标签）。
+ * 复制 from/to（有则带、缺则不带）：使标签层与线层同年同组过滤。
+ * 保留原「缺 from/to = 常显」语义——源无 from/to 时标签也不带，corridorYearFilter
+ * 的缺区间分支仍命中（常显）。R1 复验缺陷：此前漏 from/to → 标签 feature 无区间
+ * 被当作常显，任意年份全 16 标签都显示（含明长城出现在唐代）。
  */
 export function corridorLabelPoints(corridors) {
   const features = [];
   for (const f of corridors?.features ?? []) {
     const p = f?.properties ?? {};
     if (!Array.isArray(p.label_at) || p.label_at.length < 2 || !p.title) continue;
+    const props = { key: p.key ?? null, kind: p.kind ?? null, title: p.title };
+    if (p.from != null) props.from = p.from; // 仅当源有 from/to 才带（保留缺失=常显语义）
+    if (p.to != null) props.to = p.to;
     features.push({
       type: "Feature",
       geometry: { type: "Point", coordinates: [p.label_at[0], p.label_at[1]] },
-      properties: { key: p.key ?? null, kind: p.kind ?? null, title: p.title },
+      properties: props,
     });
   }
   return { type: "FeatureCollection", features };
@@ -203,6 +213,22 @@ export function applyCorridorsToMap(map, corridors, corridorsKey, { versionRef }
         "line-width": style.width,
         "line-opacity": 0.85,
         "line-dasharray": style.dasharray,
+      },
+      layout: {
+        "line-cap": "round",
+        "line-join": "round",
+      },
+    });
+    // 触屏命中区：透明宽线层（≥12px），叠在可见线上方，捕获点击/悬停。
+    // 细线（1.7–2.4px）在触屏上几乎无法命中，宽透明 hit 层保证可靠点击。
+    map.addLayer({
+      id: `corridor-hit-${kind}`,
+      type: "line",
+      source: "jiangshan-corridors",
+      paint: {
+        "line-color": CORRIDOR_KIND_COLORS[kind],
+        "line-width": 14,
+        "line-opacity": 0,
       },
       layout: {
         "line-cap": "round",
@@ -283,6 +309,53 @@ export function corridorLayerFilter(kind, selectedYear, enabledKinds) {
 }
 
 /**
+ * 同步过滤全部走廊层：四类可见线层 corridor-line-{kind} + 四类透明命中层
+ * corridor-hit-{kind} + 标签层 corridor-label + 兼容旧单层 corridor-line。
+ *
+ * R2 缺陷修复（2026-11-12 独立复验 FAIL）：此前组件 effect 只对
+ * corridor-line-{kind} 与 corridor-label 调 setFilter，漏掉 corridor-hit-{kind}，
+ * 导致透明宽命中层无过滤——明长城在 700 年不可见但仍可被点击（幽灵命中），
+ * 关组后该组线路不可见但仍可被点击，多类 hit 层可对同一要素重复命中。
+ *
+ * 本函数是组件 effect 的生产接线委托（初始 / 重建 / 切年 / 关组均经此路径）：
+ * 每类 hit 层与 line 层采用完全相同的 kind+year+enabled 过滤表达式，确保
+ * 「不可见的线路不可点击」。事件监听 target 仍是 corridor-hit-{kind}（见
+ * attachCorridorInteractions），过滤后仅本类年份内 + 开启组的要素可命中。
+ *
+ * @param {object} map  map-like（需 getLayer / setFilter）
+ * @param {number} selectedYear  当前所选年份
+ * @param {string[]|null} enabledKinds  开启分组（null=全开，[]=全关）
+ */
+export function applyCorridorFilters(map, selectedYear, enabledKinds) {
+  if (!map || !map.getLayer || !map.setFilter) return;
+  for (const kind of CORRIDOR_KINDS) {
+    const lineId = `corridor-line-${kind}`;
+    const hitId = `corridor-hit-${kind}`;
+    const expr = corridorLayerFilter(kind, selectedYear, enabledKinds);
+    if (map.getLayer(lineId)) map.setFilter(lineId, expr);
+    // hit 层与 line 层同一表达式：不可见的线路不可点击（幽灵命中修复）
+    if (map.getLayer(hitId)) map.setFilter(hitId, expr);
+  }
+  // 标签层：联合过滤（标签 feature 无 kind 隔离需求，按年+分组整体过滤）
+  if (map.getLayer("corridor-label")) {
+    map.setFilter("corridor-label", corridorCombinedFilter(selectedYear, enabledKinds));
+  }
+  // 兼容旧单层 corridor-line（防残留）
+  if (map.getLayer("corridor-line")) {
+    map.setFilter("corridor-line", corridorCombinedFilter(selectedYear, enabledKinds));
+  }
+}
+
+/**
+ * 公元年份展示格式化：负数 → 「前N」（BCE），如 -121 → "前121"；正数原样。
+ * 真实数据无 0 年（PLAN §3 无 0 年边界）。
+ */
+export function formatDynastyYear(year) {
+  if (year == null) return "";
+  return year < 0 ? `前${-year}` : String(year);
+}
+
+/**
  * 走廊点击识别内容（纯 DOM，textContent 安全，不伪造）。
  * 仅使用已入库字段：title / kind / from / to / summary；summary 缺失则不渲染，
  * 绝不编造。返回一个可挂到 MapLibre Popup.setDOMContent 的 Element。
@@ -308,11 +381,12 @@ export function corridorInfoContent(props, opts) {
     k.textContent = kindLabel;
     wrap.appendChild(k);
   }
-  // 起止年份（仅当数据有 from/to）
+  // 起止年份（仅当数据有 from/to）。负年份显示「前N」（BCE），如 -121 → 前121。
+  // 真实数据无 0 年（PLAN §3 无 0 年边界），此处不特殊处理 0。
   if (p.from != null && p.to != null) {
     const span = doc.createElement("span");
     span.className = "corridor-info__years";
-    span.textContent = `${p.from}–${p.to} 年`;
+    span.textContent = `${formatDynastyYear(p.from)}–${formatDynastyYear(p.to)} 年`;
     wrap.appendChild(span);
   }
   // 摘要：仅当数据已入库（10/16 条有 summary），缺失不渲染、不编造
@@ -361,7 +435,8 @@ export function attachCorridorInteractions(map, opts = {}) {
   };
 
   for (const kind of CORRIDOR_KINDS) {
-    const id = `corridor-line-${kind}`;
+    // 注册在透明宽 hit 层（corridor-hit-{kind}）而非细可见线层：保证触屏可靠命中。
+    const id = `corridor-hit-${kind}`;
     const onClick = (e) => {
       close(); // 切线路/重点击：先关旧 popup，避免叠加与过时残留
       const f = e && e.features && e.features[0];
@@ -393,5 +468,35 @@ export function attachCorridorInteractions(map, opts = {}) {
       regs.length = 0;
       close();
     },
+  };
+}
+
+/**
+ * 在 map style loaded 后执行 fn；若未 loaded 则注册 once("idle")，并返回可取消函数。
+ * 解决 effect 在 idle 未发生时先 cleanup 的监听泄漏：cleanup 调用返回的 cancel，
+ * 显式 off("idle") 并置 cancelled，避免 idle 延迟触发时 attach 到已销毁/过时 map。
+ * @returns {() => void} cancel —— 在 effect cleanup 中调用。
+ */
+export function scheduleOnIdle(map, fn) {
+  if (!map) return () => {};
+  let cancelled = false;
+  const guarded = () => {
+    if (cancelled) return;
+    try { fn(); } catch { /* 忽略 */ }
+  };
+  let registered = false;
+  try {
+    if (map.isStyleLoaded && map.isStyleLoaded()) {
+      guarded();
+    } else if (map.once) {
+      map.once("idle", guarded);
+      registered = true;
+    }
+  } catch { /* 忽略 */ }
+  return () => {
+    cancelled = true;
+    if (registered && map.off) {
+      try { map.off("idle", guarded); } catch { /* 忽略 */ }
+    }
   };
 }

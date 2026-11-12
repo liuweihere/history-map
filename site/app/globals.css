@@ -2225,6 +2225,27 @@ button {
   filter: contrast(0.97) brightness(1.01);
 }
 
+/* ── P4 R2：走廊加载失败降级提示（地图仍可用，仅缺走廊路线）──────────
+   放置：地图区顶部居中、图层面板下方偏移，不遮挡左下阶段卡与底部时间轴；
+   视觉：暖色警示条（区别于普通信息），与站点羊皮纸风格一致。 */
+.exploration-corridor-error {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  max-width: min(70%, 480px);
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(248, 240, 224, 0.94);
+  border: 1px solid rgba(124, 61, 45, 0.35);
+  color: var(--capital);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(72, 48, 28, 0.12);
+}
+
 /* ── P4 走廊分组开关（地图左上角图层面板，触控 ≥44px）────────── */
 .layer-panel {
   position: absolute;

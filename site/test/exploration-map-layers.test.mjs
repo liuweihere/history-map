@@ -13,22 +13,31 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import fs from "node:fs";
 
 import {
   clearPolityLayers,
   applyPolityToMap,
   applyCorridorsToMap,
+  applyCorridorFilters,
   clearCorridorLayers,
+  corridorLabelPoints,
   corridorYearFilter,
   corridorGroupFilter,
   corridorCombinedFilter,
   corridorLayerFilter,
   attachCorridorInteractions,
+  scheduleOnIdle,
   corridorInfoContent,
   CORRIDOR_KINDS,
   CORRIDOR_KIND_COLORS,
   CORRIDOR_KIND_STYLES,
 } from "../lib/exploration-map-layers.js";
+
+// 真实入库数据（复现标签/线同年、全关、部分关、端点）
+const CORRIDOR_DATA = JSON.parse(
+  fs.readFileSync(new URL("../public/data/jiangshan/corridors.geojson", import.meta.url), "utf8"),
+);
 
 // ── fake map：记录 addLayer 顺序与 beforeId，支持 getLayer/getSource/
 // removeLayer/removeSource/addSource/addLayer/isStyleLoaded/once ─────────
@@ -534,12 +543,12 @@ function fakePopupFactory(log) {
   };
 }
 
-test("attachCorridorInteractions：为四类线层注册 click/mouseenter/mouseleave，不泄漏", async () => {
+test("attachCorridorInteractions：为四类 hit 层注册 click/mouseenter/mouseleave，不泄漏", async () => {
   const doc = await interactionDoc();
   const map = createInteractionFakeMap();
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory({ popups: [] }), document: doc });
   for (const kind of CORRIDOR_KINDS) {
-    const id = `corridor-line-${kind}`;
+    const id = `corridor-hit-${kind}`;
     assert.equal(map.count("click", id), 1, `${id} 注册 1 个 click`);
     assert.equal(map.count("mouseenter", id), 1, `${id} 注册 mouseenter`);
     assert.equal(map.count("mouseleave", id), 1, `${id} 注册 mouseleave`);
@@ -547,7 +556,7 @@ test("attachCorridorInteractions：为四类线层注册 click/mouseenter/mousel
   const before = map.totalListeners();
   handle.detach();
   for (const kind of CORRIDOR_KINDS) {
-    const id = `corridor-line-${kind}`;
+    const id = `corridor-hit-${kind}`;
     assert.equal(map.count("click", id), 0, `detach 后 ${id} click 已注销`);
     assert.equal(map.count("mouseenter", id), 0);
     assert.equal(map.count("mouseleave", id), 0);
@@ -562,7 +571,7 @@ test("attachCorridorInteractions：点击线路 → Popup.setDOMContent(textCont
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
   const feat = { properties: { title: "秦长城", kind: "wall", from: -214, to: -122, summary: "蒙恬连接旧长城" } };
-  map.fire("click", "corridor-line-wall", { features: [feat], lngLat: { lng: 112.6, lat: 41.9 } });
+  map.fire("click", "corridor-hit-wall", { features: [feat], lngLat: { lng: 112.6, lat: 41.9 } });
   assert.equal(log.popups.length, 1, "创建 1 个 Popup");
   const p = log.popups[0];
   assert.equal(p.added, 1, "addTo 调用");
@@ -578,7 +587,7 @@ test("attachCorridorInteractions：文本来自 textContent，title 含 <script>
   const map = createInteractionFakeMap();
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
-  map.fire("click", "corridor-line-road", { features: [{ properties: { title: "<script>x</script>", kind: "road" } }], lngLat: {} });
+  map.fire("click", "corridor-hit-road", { features: [{ properties: { title: "<script>x</script>", kind: "road" } }], lngLat: {} });
   const el = log.popups[0]._content;
   assert.equal(el.querySelector(".corridor-info__name").textContent, "<script>x</script>", "title 原样文本");
   assert.equal(el.querySelectorAll("script").length, 0, "无 script 节点");
@@ -590,10 +599,10 @@ test("attachCorridorInteractions：再次点击他线路先关旧 popup（触屏
   const map = createInteractionFakeMap();
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
-  map.fire("click", "corridor-line-wall", { features: [{ properties: { title: "汉长城", kind: "wall" } }], lngLat: {} });
+  map.fire("click", "corridor-hit-wall", { features: [{ properties: { title: "汉长城", kind: "wall" } }], lngLat: {} });
   const first = log.popups[0];
   assert.equal(first.removed, 0, "首个 popup 初始未关");
-  map.fire("click", "corridor-line-canal", { features: [{ properties: { title: "邗沟", kind: "canal" } }], lngLat: {} });
+  map.fire("click", "corridor-hit-canal", { features: [{ properties: { title: "邗沟", kind: "canal" } }], lngLat: {} });
   assert.equal(first.removed, 1, "点击他线路时先关旧 popup");
   assert.equal(log.popups.length, 2, "再开新 popup");
   handle.detach();
@@ -604,7 +613,7 @@ test("attachCorridorInteractions：close() 清掉过时 popup（切年/关组时
   const map = createInteractionFakeMap();
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
-  map.fire("click", "corridor-line-sea", { features: [{ properties: { title: "郑和下西洋", kind: "sea" } }], lngLat: {} });
+  map.fire("click", "corridor-hit-sea", { features: [{ properties: { title: "郑和下西洋", kind: "sea" } }], lngLat: {} });
   assert.equal(log.popups[0].removed, 0, "点击后 popup 打开");
   handle.close();
   assert.equal(log.popups[0].removed, 1, "close() 关掉过时 popup");
@@ -616,7 +625,7 @@ test("attachCorridorInteractions：detach 卸载时关闭残留 popup + 注销�
   const map = createInteractionFakeMap();
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
-  map.fire("click", "corridor-line-wall", { features: [{ properties: { title: "明长城", kind: "wall" } }], lngLat: {} });
+  map.fire("click", "corridor-hit-wall", { features: [{ properties: { title: "明长城", kind: "wall" } }], lngLat: {} });
   const before = map.totalListeners();
   handle.detach();
   assert.equal(log.popups[0].removed, 1, "卸载时关闭残留 popup");
@@ -629,12 +638,12 @@ test("attachCorridorInteractions：悬停设指针，离开复位；无 feature 
   const map = createInteractionFakeMap();
   const log = { popups: [] };
   const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
-  map.fire("mouseenter", "corridor-line-canal", {});
+  map.fire("mouseenter", "corridor-hit-canal", {});
   assert.equal(map.cursor(), "pointer", "悬停线路 → pointer");
-  map.fire("mouseleave", "corridor-line-canal", {});
+  map.fire("mouseleave", "corridor-hit-canal", {});
   assert.equal(map.cursor(), "", "离开 → 复位");
   // 点击无 feature（命中但无 properties）→ 不弹窗
-  map.fire("click", "corridor-line-canal", { features: [], lngLat: {} });
+  map.fire("click", "corridor-hit-canal", { features: [], lngLat: {} });
   assert.equal(log.popups.length, 0, "无 feature 不创建 popup");
   handle.detach();
 });
@@ -646,9 +655,283 @@ test("attachCorridorInteractions：重复 attach 不共享句柄，各自 detach
   const h1 = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
   const h2 = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
   // 两次 attach → 每层 click 各 2 个监听（实现者有责任只 attach 一次；此处验证隔离语义）
-  assert.equal(map.count("click", "corridor-line-wall"), 2, "两次注册各 1");
+  assert.equal(map.count("click", "corridor-hit-wall"), 2, "两次注册各 1");
   h1.detach();
-  assert.equal(map.count("click", "corridor-line-wall"), 1, "h1 detach 后剩 h2 的 1 个");
+  assert.equal(map.count("click", "corridor-hit-wall"), 1, "h1 detach 后剩 h2 的 1 个");
   h2.detach();
-  assert.equal(map.count("click", "corridor-line-wall"), 0, "h2 detach 后清零");
+  assert.equal(map.count("click", "corridor-hit-wall"), 0, "h2 detach 后清零");
+});
+
+// ── Phase 4 R1 复验缺陷回归：标签层必须与线层同年同组（真实 featureFilter + 实际数据）──
+// 缺陷：corridorLabelPoints 只复制 key/kind/title，漏 from/to → 标签 feature 无 from/to
+// 被 corridorYearFilter 的「缺 from/to = 常显」分支命中，全部 16 标签任意年份都显示。
+
+test("corridorLabelPoints：复制 from/to（有则带、缺则不带，保留原常显语义）", () => {
+  const labels = corridorLabelPoints(CORRIDOR_DATA).features;
+  // 真实数据 16 条全有 from/to → 每个标签都应带 from/to
+  for (const l of labels) {
+    const src = CORRIDOR_DATA.features.find((f) => f.properties.key === l.properties.key);
+    assert.ok(src, `标签 ${l.properties.title} 有对应源走廊`);
+    assert.equal(l.properties.from, src.properties.from, `${l.properties.title} 复制 from`);
+    assert.equal(l.properties.to, src.properties.to, `${l.properties.title} 复制 to`);
+  }
+  // 缺 from/to 的源 → 标签也不带（保留「缺 from/to = 常显」原语义）
+  const noRange = corridorLabelPoints({
+    type: "FeatureCollection",
+    features: [{ geometry: { type: "LineString", coordinates: [[1, 1], [2, 2]] },
+      properties: { key: "no_range", kind: "road", title: "无区间路", label_at: [1.5, 1.5] } }],
+  });
+  assert.equal("from" in noRange.features[0].properties, false, "源无 from → 标签不带 from（常显语义）");
+  assert.equal("to" in noRange.features[0].properties, false, "源无 to → 标签不带 to");
+});
+
+test("标签层 vs 线层：唐 700 年真实线路 7 条，标签也应 7 个（含名称一致）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const f = featureFilter(corridorCombinedFilter(700, null));
+  const lineVis = CORRIDOR_DATA.features.filter((c) => f.filter({ zoom: 0 }, { properties: c.properties }));
+  const labels = corridorLabelPoints(CORRIDOR_DATA).features;
+  const labelVis = labels.filter((l) => f.filter({ zoom: 0 }, { properties: l.properties }));
+  assert.equal(lineVis.length, 7, "700 年真实线路 7 条");
+  assert.equal(labelVis.length, 7, "700 年标签也 7 个（与线同年）");
+  const lineTitles = new Set(lineVis.map((c) => c.properties.title));
+  for (const l of labelVis) {
+    assert.ok(lineTitles.has(l.properties.title), `标签 ${l.properties.title} 对应线在 700 年可见`);
+  }
+  // 明长城(1368–1948) 标签在 700 年不应显示（缺陷回归）
+  assert.equal(labelVis.some((l) => l.properties.title === "明长城"), false, "明长城标签在 700 年不显示");
+});
+
+test("标签层：全关 [] → 0 标签（与线层一致）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const f = featureFilter(corridorCombinedFilter(700, []));
+  const labels = corridorLabelPoints(CORRIDOR_DATA).features;
+  const vis = labels.filter((l) => f.filter({ zoom: 0 }, { properties: l.properties }));
+  assert.equal(vis.length, 0, "全关 → 0 标签");
+});
+
+test("标签层：仅 wall 组 → 只显示年份内的长城标签（缺陷：原 only wall 时无墙线仍显 6 墙标签）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  // -200 年：秦长城(-214..-122)、战国长城(-300..-215) 在内；明长城(1368..1948) 不在
+  const f = featureFilter(corridorCombinedFilter(-200, ["wall"]));
+  const labels = corridorLabelPoints(CORRIDOR_DATA).features;
+  const vis = labels.filter((l) => f.filter({ zoom: 0 }, { properties: l.properties }));
+  const visTitles = vis.map((l) => l.properties.title);
+  assert.ok(vis.some((l) => l.properties.title === "秦长城"), "秦长城标签 -200 年可见");
+  assert.equal(vis.some((l) => l.properties.title === "明长城"), false, "明长城标签 -200 年不显示");
+  // 仅 wall 组 → 不含运河/道路/海路标签
+  assert.equal(vis.every((l) => l.properties.kind === "wall"), true, "仅 wall 标签");
+});
+
+test("标签层：端点包含（year=from 或 year=to 都显示）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  // 秦长城 from=-214, to=-122
+  const fFrom = featureFilter(corridorCombinedFilter(-214, null));
+  const fTo = featureFilter(corridorCombinedFilter(-122, null));
+  const qin = corridorLabelPoints(CORRIDOR_DATA).features.find((l) => l.properties.title === "秦长城");
+  assert.equal(fFrom.filter({ zoom: 0 }, { properties: qin.properties }), true, "year=from 端点显示");
+  assert.equal(fTo.filter({ zoom: 0 }, { properties: qin.properties }), true, "year=to 端点显示");
+  assert.equal(featureFilter(corridorCombinedFilter(-215, null)).filter({ zoom: 0 }, { properties: qin.properties }), false, "year=from-1 不显示");
+});
+
+// ── R1：popup 负年份 BCE 显示（-121 → 前121）──
+test("corridorInfoContent：负年份显示为「前N」（BCE），不显示 -121", async () => {
+  const { JSDOM } = await import("jsdom");
+  const doc = new JSDOM("<!DOCTYPE html><html><body></body></html>").window.document;
+  // 秦长城 -214..-122
+  const el1 = corridorInfoContent({ title: "秦长城", kind: "wall", from: -214, to: -122 }, { document: doc });
+  assert.equal(el1.querySelector(".corridor-info__years").textContent, "前214–前122 年", "两端 BCE");
+  // 汉长城 -121..220（跨 BCE/CE）
+  const el2 = corridorInfoContent({ title: "汉长城", kind: "wall", from: -121, to: 220 }, { document: doc });
+  assert.equal(el2.querySelector(".corridor-info__years").textContent, "前121–220 年", "BCE→CE 跨段");
+  // 京杭大运河 1293..1948（纯 CE）
+  const el3 = corridorInfoContent({ title: "京杭大运河", kind: "canal", from: 1293, to: 1948 }, { document: doc });
+  assert.equal(el3.querySelector(".corridor-info__years").textContent, "1293–1948 年", "纯 CE 不加「前」");
+});
+
+// ── R1：可点击触屏命中区（透明宽 hit 层）──
+test("applyCorridorsToMap：每类含透明宽 hit 线层（触屏命中），id=corridor-hit-{kind}", () => {
+  const map = createFakeMap();
+  applyCorridorsToMap(map, { type: "FeatureCollection", features: [] }, "corridors", {
+    versionRef: { current: null },
+  });
+  for (const kind of CORRIDOR_KINDS) {
+    const hit = map.getLayer(`corridor-hit-${kind}`);
+    assert.ok(hit, `corridor-hit-${kind} 命中层存在`);
+    assert.equal(hit.spec.type, "line", "hit 层为 line");
+    assert.ok(hit.spec.paint["line-width"] >= 12, `${kind} hit 层宽度 ≥12（触屏命中区）`);
+    assert.equal(hit.spec.paint["line-opacity"], 0, `${kind} hit 层透明（不干扰视觉）`);
+  }
+});
+
+test("attachCorridorInteractions：点击注册在 corridor-hit-{kind}（宽命中区），非细线层", async () => {
+  const { JSDOM } = await import("jsdom");
+  const doc = new JSDOM("<!DOCTYPE html><html><body></body></html>").window.document;
+  const map = createInteractionFakeMap();
+  const log = { popups: [] };
+  const handle = attachCorridorInteractions(map, { createPopup: fakePopupFactory(log), document: doc });
+  for (const kind of CORRIDOR_KINDS) {
+    assert.equal(map.count("click", `corridor-hit-${kind}`), 1, `click 注册在 corridor-hit-${kind}`);
+    assert.equal(map.count("mouseenter", `corridor-hit-${kind}`), 1, `mouseenter 注册在 hit 层`);
+  }
+  handle.detach();
+});
+
+// ── R1：idle 未发生先 cleanup 的监听泄漏（scheduleOnIdle 可取消）──
+test("scheduleOnIdle：style 未 loaded 时注册 once(idle)，cleanup 在 idle 前取消（不泄漏）", () => {
+  // fake map：style 未 loaded，记录 once/off
+  let idleCb = null;
+  const offLog = [];
+  const map = {
+    isStyleLoaded: () => false,
+    once(type, cb) { idleCb = cb; },
+    off(type, cb) { offLog.push(cb); },
+    getCanvas: () => ({ style: {} }),
+    on() {}, fire() {}, count() { return 0; },
+  };
+  let attached = false;
+  const cancel = scheduleOnIdle(map, () => { attached = true; });
+  assert.equal(attached, false, "idle 未发生，未 attach");
+  assert.notEqual(idleCb, null, "已注册 once(idle)");
+  cancel(); // cleanup 在 idle 前调用
+  assert.ok(offLog.includes(idleCb), "cleanup 取消了 once(idle) 监听（不泄漏）");
+  // 之后 idle 触发也不再 attach（已取消）
+  if (idleCb) idleCb();
+  assert.equal(attached, false, "取消后 idle 触发不再 attach");
+});
+
+test("scheduleOnIdle：style 已 loaded 时立即 attach，不注册 once", () => {
+  const map = {
+    isStyleLoaded: () => true,
+    once() { throw new Error("不应注册 once"); },
+    off() {},
+  };
+  let attached = false;
+  const cancel = scheduleOnIdle(map, () => { attached = true; });
+  assert.equal(attached, true, "style loaded → 立即 attach");
+  cancel(); // 不抛
+});
+
+// ── Phase 4 R2 复验缺陷：corridor-hit-{kind} 透明命中层必须与可见线层
+//    采用同一 kind+year+enabled 过滤（初始/重建/切年/关组均如此）。
+// 缺陷：组件 effect 只对 corridor-line-{kind} 与 corridor-label 调 setFilter，
+//    漏掉 corridor-hit-{kind} → 明长城在 700 年不可见但仍可被点击（幽灵命中），
+//    关组后该组线路不可见但仍可被点击，多类 hit 层可对同一要素重复命中。
+// 用真实 @maplibre/maplibre-gl-style-spec featureFilter + 真实 corridors.geojson
+// + fake map（记录 setFilter）测生产接线路径 applyCorridorFilters（组件 effect 委托）。
+
+test("applyCorridorFilters：每类 hit 层与 line 层过滤表达式完全一致（同步过滤）", async () => {
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  applyCorridorFilters(map, 700, null);
+  for (const kind of CORRIDOR_KINDS) {
+    const line = map.getLayer(`corridor-line-${kind}`);
+    const hit = map.getLayer(`corridor-hit-${kind}`);
+    assert.ok(hit.filter, `corridor-hit-${kind} 必须设置 filter（缺陷：原未设置 → 幽灵命中）`);
+    assert.ok(line.filter, `corridor-line-${kind} 设置了 filter`);
+    assert.deepEqual(hit.filter, line.filter,
+      `corridor-hit-${kind} 与 corridor-line-${kind} 过滤表达式一致`);
+  }
+});
+
+test("applyCorridorFilters：700 年明长城不可命中（hit 层与线层同年过滤）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  applyCorridorFilters(map, 700, null);
+  const mingWall = CORRIDOR_DATA.features.find((f) => f.properties.title === "明长城");
+  assert.ok(mingWall, "真实数据含明长城");
+  const wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: mingWall.properties }), false,
+    "700 年：corridor-hit-wall 不可命中明长城（1368–1948，年份外）");
+  const wallLine = featureFilter(map.getLayer("corridor-line-wall").filter);
+  assert.equal(wallLine.filter({ zoom: 0 }, { properties: mingWall.properties }), false,
+    "700 年：corridor-line-wall 也不可见明长城（线/hit 同年）");
+  // 同 year=700 真实命中数：hit 与 line 一致（7 条，无幽灵增减）
+  const hitVis = CORRIDOR_DATA.features.filter((f) => wallHit.filter({ zoom: 0 }, { properties: f.properties }) && f.properties.kind === "wall");
+  // wall 类在 700 年：汉长城(-121..220)已结束、明长城未开始 → 0 条墙线
+  // 此处仅断言 hit 与 line 行为一致，不强制数量
+});
+
+test("applyCorridorFilters：全关 [] → 每类 hit 层无任何命中（与 line 层一致，无幽灵）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  applyCorridorFilters(map, 700, []);
+  for (const kind of CORRIDOR_KINDS) {
+    const hitFilter = map.getLayer(`corridor-hit-${kind}`).filter;
+    assert.ok(hitFilter, `corridor-hit-${kind} 设置了 filter`);
+    const compiled = featureFilter(hitFilter);
+    for (const f of CORRIDOR_DATA.features) {
+      assert.equal(compiled.filter({ zoom: 0 }, { properties: f.properties }), false,
+        `全关：corridor-hit-${kind} 不命中 ${f.properties.title}（含本类）`);
+    }
+    // hit 与 line 一致
+    assert.deepEqual(hitFilter, map.getLayer(`corridor-line-${kind}`).filter,
+      `全关：corridor-hit-${kind} 与 line 过滤一致`);
+  }
+});
+
+test("applyCorridorFilters：only wall → 仅 wall hit 层命中本类年份内，他类 hit 层无命中（每层隔离）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  applyCorridorFilters(map, -200, ["wall"]);
+  const qin = CORRIDOR_DATA.features.find((f) => f.properties.title === "秦长城");
+  const zhanguo = CORRIDOR_DATA.features.find((f) => f.properties.title.includes("战国"));
+  const ming = CORRIDOR_DATA.features.find((f) => f.properties.title === "明长城");
+  // wall hit 层：秦长城(-214..-122) 在 -200 命中；战国长城(-300..-215) 在 -200 已结束不命中；
+  // 明长城(1368..1948) 年份外不命中
+  const wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: qin.properties }), true, "秦长城 -200 在 wall hit 命中");
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: zhanguo.properties }), false, "战国长城 -200 不在 wall hit 命中（to=-215 已结束）");
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: ming.properties }), false, "明长城 -200 不在 wall hit 命中（年份外）");
+  // 他类 hit 层：无任何命中（分组隔离，无跨层重复命中）
+  for (const kind of ["canal", "road", "sea"]) {
+    const f = featureFilter(map.getLayer(`corridor-hit-${kind}`).filter);
+    for (const feat of CORRIDOR_DATA.features) {
+      assert.equal(f.filter({ zoom: 0 }, { properties: feat.properties }), false,
+        `only wall：corridor-hit-${kind} 不命中 ${feat.properties.title}（每层隔离）`);
+    }
+  }
+});
+
+test("applyCorridorFilters：from/to 边界年份命中（端点包含，hit 与 line 一致）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  const qin = CORRIDOR_DATA.features.find((f) => f.properties.title === "秦长城");
+  // 秦长城 from=-214, to=-122
+  applyCorridorFilters(map, -214, null);
+  let wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: qin.properties }), true, "year=from 端点 hit 命中");
+  applyCorridorFilters(map, -122, null);
+  wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: qin.properties }), true, "year=to 端点 hit 命中");
+  applyCorridorFilters(map, -215, null);
+  wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: qin.properties }), false, "year=from-1 hit 不命中");
+  applyCorridorFilters(map, -121, null);
+  wallHit = featureFilter(map.getLayer("corridor-hit-wall").filter);
+  assert.equal(wallHit.filter({ zoom: 0 }, { properties: qin.properties }), false, "year=to+1 hit 不命中");
+});
+
+test("applyCorridorFilters：对未存在的层安全跳过（不抛，兼容旧单层 corridor-line）", () => {
+  const map = createFakeMap();
+  // 不调用 applyCorridorsToMap → 无走廊层
+  assert.doesNotThrow(() => applyCorridorFilters(map, 700, null), "无走廊层时不抛");
+});
+
+test("applyCorridorFilters：标签层也同步过滤（关组后名称不残留，与 hit/line 一致）", async () => {
+  const { featureFilter } = await import("@maplibre/maplibre-gl-style-spec");
+  const map = createFakeMap();
+  applyCorridorsToMap(map, CORRIDOR_DATA, "corridors", { versionRef: { current: null } });
+  applyCorridorFilters(map, 700, ["canal", "road", "sea"]); // 关 wall
+  const labelFilter = map.getLayer("corridor-label").filter;
+  assert.ok(labelFilter, "标签层设置 filter");
+  const compiled = featureFilter(labelFilter);
+  const mingLabel = corridorLabelPoints(CORRIDOR_DATA).features
+    .find((l) => l.properties.title === "明长城");
+  assert.ok(mingLabel, "明长城标签存在");
+  assert.equal(compiled.filter({ zoom: 0 }, { properties: mingLabel.properties }), false,
+    "关 wall：明长城标签不可见（与 hit/line 同步）");
 });
