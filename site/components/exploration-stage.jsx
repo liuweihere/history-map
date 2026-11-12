@@ -54,6 +54,8 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
   );
   const [drawerOpen, setDrawerOpen] = useState(restoredState?.drawerOpen ?? false);
   const [drawerTab, setDrawerTab] = useState(restoredState?.drawerTab ?? "stories");
+  // P4 走廊分组开关：随探索现场持久化（null = 全开默认，见 exploration-map-stage）
+  const [enabledKinds, setEnabledKinds] = useState(restoredState?.enabledKinds ?? null);
 
   const [snapshot, setSnapshot] = useState(null);
   const [snapshotError, setSnapshotError] = useState(null);
@@ -68,19 +70,20 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
   const lastEmittedRef = useRef(null);
 
   useEffect(() => {
-    const next = { selectedYear, drawerOpen, drawerTab, camera: cameraRef.current };
+    const next = { selectedYear, drawerOpen, drawerTab, enabledKinds, camera: cameraRef.current };
     const prev = lastEmittedRef.current;
     if (
       prev &&
       prev.selectedYear === next.selectedYear &&
       prev.drawerOpen === next.drawerOpen &&
-      prev.drawerTab === next.drawerTab
+      prev.drawerTab === next.drawerTab &&
+      prev.enabledKinds === next.enabledKinds
     ) {
       return; // 实际值未变，不上报（避免无限循环）
     }
     lastEmittedRef.current = next;
     onStateChangeRef.current?.(next);
-  }, [selectedYear, drawerOpen, drawerTab]);
+  }, [selectedYear, drawerOpen, drawerTab, enabledKinds]);
 
   // ── 加载 index / corridors / milestones / bridge ──────────────────
   useEffect(() => {
@@ -216,6 +219,8 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
             phaseKey={cacheKey}
             corridors={corridors}
             selectedYear={selectedYear}
+            enabledKinds={enabledKinds}
+            onLayersChange={setEnabledKinds}
             initialCamera={cameraRef.current}
             onCameraChange={(cam) => {
               cameraRef.current = cam;
@@ -269,7 +274,7 @@ export function ExplorationStage({ entries, onEnterStory, onGoToStories, onCamer
         selectedYear={selectedYear}
         bridge={bridge}
         onSelectStory={(sid) =>
-          onEnterStory(sid, { selectedYear, drawerOpen, drawerTab, camera: cameraRef.current })
+          onEnterStory(sid, { selectedYear, drawerOpen, drawerTab, enabledKinds, camera: cameraRef.current })
         }
         onSelectYear={(y) => setSelectedYear(clampYear(y))}
         onFocusSite={() => {}}

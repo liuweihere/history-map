@@ -2225,6 +2225,57 @@ button {
   filter: contrast(0.97) brightness(1.01);
 }
 
+/* ── P4 走廊分组开关（地图左上角图层面板，触控 ≥44px）────────── */
+.layer-panel {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(255, 250, 244, 0.88);
+  border: 1px solid rgba(72, 48, 28, 0.14);
+  backdrop-filter: blur(4px);
+}
+.layer-panel__toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;   /* P4 触控目标 ≥44×44 CSS px */
+  min-width: 44px;
+  padding: 4px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(72, 48, 28, 0.16);
+  background: rgba(255, 250, 244, 0.92);
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+.layer-panel__toggle.is-on {
+  border-color: rgba(124, 61, 45, 0.4);
+  background: rgba(236, 224, 200, 0.6);
+  color: var(--ink);
+}
+.layer-panel__toggle.is-on .layer-panel__dot {
+  opacity: 1;
+}
+.layer-panel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--ink-soft); /* 兜底色；实际颜色由内联 style 给分组色 */
+  opacity: 0.35;
+  flex: none;
+}
+/* 图例线样片：与 corridor-line-{kind} 真实 color+dasharray+width 一一对应 */
+.layer-panel__swatch {
+  flex: none;
+  vertical-align: middle;
+}
+
 .exploration-map-notice {
   position: absolute;
   left: 16px;
@@ -2448,7 +2499,7 @@ button {
   padding: 0 14px 10px;
 }
 .exploration-event-list__link {
-  min-height: 36px;
+  min-height: 44px; /* P4 触控 ≥44×44 */
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid rgba(124, 61, 45, 0.3);
@@ -2483,8 +2534,8 @@ button {
   flex-shrink: 0;
 }
 .dynasty-timeline__btn {
-  min-height: 36px;
-  min-width: 36px;
+  min-height: 44px; /* P4 触控 ≥44×44 */
+  min-width: 44px;
   padding: 4px 10px;
   border-radius: 10px;
   border: 1px solid rgba(72, 48, 28, 0.18);
@@ -2507,7 +2558,7 @@ button {
 }
 .dynasty-timeline__input {
   width: 110px;
-  min-height: 36px;
+  min-height: 44px; /* P4 触控 ≥44×44 */
   padding: 6px 10px;
   border-radius: 8px;
   border: 1px solid rgba(72, 48, 28, 0.2);
@@ -2516,7 +2567,7 @@ button {
   font-size: 0.84rem;
 }
 .dynasty-timeline__go {
-  min-height: 36px;
+  min-height: 44px; /* P4 触控 ≥44×44 */
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid rgba(72, 48, 28, 0.2);
@@ -2568,7 +2619,7 @@ button {
 /* 轨道（上游 #scrubber-track：34px、圆角 8、内阴影）*/
 .dynasty-timeline__track {
   position: relative;
-  height: 34px;
+  height: 44px; /* P4 触控 ≥44×44（原 34px 视觉带高度不足触控标准）*/
   border-radius: 8px;
   background: #e3dac8;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);

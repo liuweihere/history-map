@@ -9,6 +9,12 @@ import {
   applyPolityToMap,
   applyCorridorsToMap,
   corridorYearFilter,
+  corridorCombinedFilter,
+  corridorLayerFilter,
+  attachCorridorInteractions,
+  CORRIDOR_KINDS,
+  CORRIDOR_KIND_COLORS,
+  CORRIDOR_KIND_STYLES,
 } from "../lib/exploration-map-layers";
 
 // ── 现成矢量底图（与 history-map-stage 一致：CartoDB Positron）─────────
@@ -60,12 +66,18 @@ function createPolityLabelNode(props) {
  * @param {number} selectedYear  当前所选年份（用于走廊过滤）
  * @param {object|null} initialCamera  恢复的视角 {center:[lng,lat], zoom}
  * @param {function|null} onCameraChange  视角变化上报（往返恢复用）
+ * @param {string[]|null} enabledKinds  开启的走廊分组（P4 分组开关；
+ *   null/undefined = 全开，与旧版行为一致）
+ * @param {function|null} onLayersChange  (enabledKinds:string[]) => void
+ *   分组开关变化上报（父级可持久化供往返恢复）
  */
-export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYear, initialCamera, onCameraChange }) {
+export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYear, initialCamera, onCameraChange, enabledKinds, onLayersChange }) {
   const mapNodeRef = useRef(null);
   const mapRef = useRef(null);
   const maplibreglRef = useRef(null); // init 中保存模块，供 effect createMarker 使用
   const polityLabelsRef = useRef([]);
+  // P4 走廊点击/悬停接线句柄（attach 一次；year/kind 变化只 close，不重 attach）
+  const interactionsRef = useRef(null);
   // mapReady：map "load" 后置 true，纳入 snapshot/corridors effect deps，
   // 解决 map 异步 init 与 snapshot fetch 竞态——map ready 后重触 effect 应用待挂快照。
   const [mapReady, setMapReady] = useState(false);
@@ -73,6 +85,26 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
   const [error, setError] = useState(null);
   const cameraCbRef = useRef(onCameraChange);
   cameraCbRef.current = onCameraChange;
+
+  // ── P4 走廊分组开关 ──────────────────────────────────────────────
+  // 受控（enabledKinds prop 优先）+ 非受控（内部 state 兜底）双模式：
+  // 父级未传 enabledKinds 时由内部 state 管理，行为与旧版（全开）一致。
+  const [internalKinds, setInternalKinds] = useState(null);
+  const isControlled = Array.isArray(enabledKinds);
+  const effectiveKinds = isControlled ? enabledKinds : internalKinds;
+  const layersCbRef = useRef(onLayersChange);
+  layersCbRef.current = onLayersChange;
+
+  const toggleKind = (kind) => {
+    const current = effectiveKinds ?? CORRIDOR_KINDS;
+    const next = current.includes(kind)
+      ? current.filter((k) => k !== kind)
+      : [...current, kind];
+    // 保持固定顺序（与 CORRIDOR_KINDS 一致），避免开关次序影响表达稳定性
+    const ordered = CORRIDOR_KINDS.filter((k) => next.includes(k));
+    if (!isControlled) setInternalKinds(ordered);
+    layersCbRef.current?.(ordered);
+  };
 
   // ── 初始化底图 + 大区（常驻，淡化）──────────────────────────────
   useEffect(() => {
@@ -223,7 +255,7 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
 
   // 走廊层：corridors 常驻，按 selectedYear 过滤（from/to 两端包含；
   // 无 from/to 的走廊按上游定义「一直显示」，与 corridorActiveAt 一致）。
-  // mapReady 纳入 deps 以解决与 init 的竞态。
+  // P4：叠加分组开关（enabledKinds，null=全开）；mapReady 纳入 deps 以解决竞态。
   const corridorsVersionRef = useRef(null);
 
   useEffect(() => {
@@ -233,10 +265,22 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
       const applied = applyCorridorsToMap(map, corridors, "corridors", {
         versionRef: corridorsVersionRef,
       });
-      // 无论新建或已存在，都更新过滤
+      // 无论新建或已存在，都更新过滤（年份 + 分组联合）。
+      // 四类线层各自 kind 隔离过滤（corridorLayerFilter）；标签层共用
+      // 联合过滤（标签 feature 无 from/to → 年份分支恒真，实际由分组 in 生效）。
+      // 2026-11-12 实测：漏掉标签层导致关组后名称仍显示。
       const m = mapRef.current;
+      for (const kind of CORRIDOR_KINDS) {
+        if (m && m.getLayer(`corridor-line-${kind}`)) {
+          m.setFilter(`corridor-line-${kind}`, corridorLayerFilter(kind, selectedYear, effectiveKinds));
+        }
+      }
+      // 兼容旧单层（防残留）+ 标签层
       if (m && m.getLayer("corridor-line")) {
-        m.setFilter("corridor-line", corridorYearFilter(selectedYear));
+        m.setFilter("corridor-line", corridorCombinedFilter(selectedYear, effectiveKinds));
+      }
+      if (m && m.getLayer("corridor-label")) {
+        m.setFilter("corridor-label", corridorCombinedFilter(selectedYear, effectiveKinds));
       }
       return applied;
     };
@@ -248,12 +292,59 @@ export function ExplorationMapStage({ snapshot, phaseKey, corridors, selectedYea
         apply();
       });
     }
-  }, [corridors, selectedYear, mapReady]);
+  }, [corridors, selectedYear, effectiveKinds, mapReady]);
 
   const attributionText = buildBasemapAttribution(basemapOnline === true);
 
+  // P4 分组标签（固定顺序；key → 展示名 + 分组色 + 线样，与 corridor-line-{kind} 一致）
+  const KIND_META = {
+    wall: { label: "长城", color: CORRIDOR_KIND_COLORS.wall, dash: CORRIDOR_KIND_STYLES.wall.dasharray, width: CORRIDOR_KIND_STYLES.wall.width },
+    canal: { label: "运河", color: CORRIDOR_KIND_COLORS.canal, dash: CORRIDOR_KIND_STYLES.canal.dasharray, width: CORRIDOR_KIND_STYLES.canal.width },
+    road: { label: "道路", color: CORRIDOR_KIND_COLORS.road, dash: CORRIDOR_KIND_STYLES.road.dasharray, width: CORRIDOR_KIND_STYLES.road.width },
+    sea: { label: "海路", color: CORRIDOR_KIND_COLORS.sea, dash: CORRIDOR_KIND_STYLES.sea.dasharray, width: CORRIDOR_KIND_STYLES.sea.width },
+  };
+
   return (
     <div className="exploration-map-canvas" ref={mapNodeRef}>
+      {/* P4 走廊分组开关：左上角图层面板（触控 ≥44px） */}
+      <div className="layer-panel" role="group" aria-label="走廊图层分组">
+        {CORRIDOR_KINDS.map((kind) => {
+          const on = (effectiveKinds ?? CORRIDOR_KINDS).includes(kind);
+          return (
+            <button
+              key={kind}
+              type="button"
+              className={`layer-panel__toggle${on ? " is-on" : ""}`}
+              aria-pressed={on}
+              aria-label={`${KIND_META[kind].label}图层`}
+              title={`${KIND_META[kind].label}路线开关`}
+              onClick={() => toggleKind(kind)}
+            >
+              {/* 图例线样与标签对应：SVG 线段 = 本类真实 color + dasharray + width
+                  （上游 jiangshan-map 图例对照：app.js <line stroke-dasharray>） */}
+              <svg
+                className="layer-panel__swatch"
+                width="20"
+                height="8"
+                viewBox="0 0 20 8"
+                aria-hidden="true"
+              >
+                <line
+                  x1="0"
+                  y1="4"
+                  x2="20"
+                  y2="4"
+                  stroke={KIND_META[kind].color}
+                  strokeWidth={Math.max(1.4, KIND_META[kind].width)}
+                  strokeDasharray={KIND_META[kind].dash.join(" ")}
+                  strokeLinecap="round"
+                />
+              </svg>
+              {KIND_META[kind].label}
+            </button>
+          );
+        })}
+      </div>
       {basemapOnline !== null ? (
         <div className="history-map-attribution" role="contentinfo">
           {attributionText}

@@ -535,3 +535,203 @@ test("无 restoredState 时默认 220 年、抽屉收起（首次进入探索）
     globalThis.fetch = origFetch;
   }
 });
+
+// ── Phase 4：走廊分组开关（PLAN「关河丝路按 from/to 过滤 + 分组开关」）──
+
+test("图层面板：默认渲染 4 组开关（长城/运河/道路/海路），全部默认开", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationMapStage } = await import("../components/exploration-map-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: false });
+  try {
+    const { document } = await render(
+      createElement(ExplorationMapStage, {
+        snapshot: null,
+        phaseKey: null,
+        corridors: { type: "FeatureCollection", features: [] },
+        selectedYear: 220,
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 30));
+    const toggles = [...document.querySelectorAll(".layer-panel__toggle")];
+    assert.equal(toggles.length, 4, "恰好 4 组开关");
+    const labels = toggles.map((t) => t.getAttribute("aria-label") || t.textContent.trim());
+    assert.ok(labels.some((l) => l.includes("长城")), "有长城组");
+    assert.ok(labels.some((l) => l.includes("运河")), "有运河组");
+    assert.ok(labels.some((l) => l.includes("道路")), "有道路组");
+    assert.ok(labels.some((l) => l.includes("海路")), "有海路组");
+    assert.ok(toggles.every((t) => t.getAttribute("aria-pressed") === "true"), "默认全开");
+    // 图例线样与标签对应：每个开关含 SVG 线段样片（color + dasharray），非纯色块
+    const swatches = [...document.querySelectorAll(".layer-panel__swatch")];
+    assert.equal(swatches.length, 4, "四组各一个线样 SVG");
+    const lines = swatches.map((s) => s.querySelector("line"));
+    assert.ok(lines.every(Boolean), "样片含 <line>");
+    const dashSet = new Set(lines.map((l) => l.getAttribute("stroke-dasharray")));
+    assert.equal(dashSet.size, 4, "四组虚线节奏两两不同（图例线样区分）");
+    await new Promise((r) => setTimeout(r, 60));
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("图层面板：点击开关触发 onLayersChange，关闭组从列表移除", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationMapStage } = await import("../components/exploration-map-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: false });
+  let received = null;
+  try {
+    const { document } = await render(
+      createElement(ExplorationMapStage, {
+        snapshot: null,
+        phaseKey: null,
+        corridors: { type: "FeatureCollection", features: [] },
+        selectedYear: 220,
+        onLayersChange: (kinds) => { received = kinds; },
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 30));
+    const wallToggle = [...document.querySelectorAll(".layer-panel__toggle")]
+      .find((t) => (t.getAttribute("aria-label") || "").includes("长城"));
+    assert.ok(wallToggle, "找到长城开关");
+    const win = document.defaultView;
+    wallToggle.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 20));
+    assert.ok(Array.isArray(received), "onLayersChange 收到数组");
+    assert.ok(!received.includes("wall"), "长城已从开启列表移除");
+    assert.ok(received.includes("canal") && received.includes("road") && received.includes("sea"),
+      "其余三组仍在列表");
+    await new Promise((r) => setTimeout(r, 60));
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("图层状态可由外部恢复（restored layers 经 props 传入）", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationMapStage } = await import("../components/exploration-map-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: false });
+  try {
+    const { document } = await render(
+      createElement(ExplorationMapStage, {
+        snapshot: null,
+        phaseKey: null,
+        corridors: { type: "FeatureCollection", features: [] },
+        selectedYear: 220,
+        enabledKinds: ["canal"],
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 30));
+    const toggles = [...document.querySelectorAll(".layer-panel__toggle")];
+    assert.equal(toggles.length, 4, "仍渲染 4 组");
+    const pressed = {};
+    for (const t of toggles) {
+      const label = t.getAttribute("aria-label") || t.textContent;
+      pressed[label] = t.getAttribute("aria-pressed");
+    }
+    // canal 开，其余关
+    assert.ok(Object.entries(pressed).some(([l, p]) => l.includes("运河") && p === "true"), "运河开");
+    assert.ok(Object.entries(pressed).some(([l, p]) => l.includes("长城") && p === "false"), "长城关");
+    assert.ok(Object.entries(pressed).some(([l, p]) => l.includes("道路") && p === "false"), "道路关");
+    assert.ok(Object.entries(pressed).some(([l, p]) => l.includes("海路") && p === "false"), "海路关");
+    await new Promise((r) => setTimeout(r, 60));
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test("P4 往返恢复：enabledKinds 纳入探索现场快照，onStateChange 上报", async () => {
+  const { createElement } = await import("react");
+  const { ExplorationStage } = await import("../components/exploration-stage.jsx");
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    const json = (body) => ({ ok: true, json: async () => body });
+    if (String(url).includes("index.json")) return json(MOCK_INDEX);
+    if (String(url).includes("milestones")) return json(MOCK_MILESTONES);
+    if (String(url).includes("bridge")) return json(MOCK_BRIDGE);
+    return json({ features: [] });
+  };
+  const emissions = [];
+  try {
+    const { document } = await render(
+      createElement(ExplorationStage, {
+        entries: MOCK_STORIES,
+        onEnterStory: () => {},
+        onStateChange: (s) => emissions.push(s),
+        restoredState: { selectedYear: 245, enabledKinds: ["wall", "sea"] },
+      }),
+    );
+    await new Promise((r) => setTimeout(r, 150));
+    // 恢复的分组状态反映在开关上（受控模式）
+    const wallToggle = [...document.querySelectorAll(".layer-panel__toggle")]
+      .find((t) => (t.getAttribute("aria-label") || "").includes("长城"));
+    assert.ok(wallToggle, "图层面板已渲染");
+    assert.equal(wallToggle.getAttribute("aria-pressed"), "true", "长城按恢复值开启");
+    // 首次上报包含 enabledKinds
+    const first = emissions[0];
+    assert.ok(first, "onStateChange 至少上报一次");
+    assert.deepEqual(first.enabledKinds, ["wall", "sea"], "上报快照含 enabledKinds");
+    // 切换一组（wall 开→关）→ 上报更新且 wall 被移除
+    const win = document.defaultView;
+    const wallToggle2 = [...document.querySelectorAll(".layer-panel__toggle")]
+      .find((t) => (t.getAttribute("aria-label") || "").includes("长城"));
+    const before = emissions.length;
+    wallToggle2.dispatchEvent(new win.MouseEvent("click", { bubbles: true }));
+    await new Promise((r) => setTimeout(r, 30));
+    assert.ok(emissions.length > before, "开关变化触发上报");
+    const last = emissions[emissions.length - 1];
+    assert.deepEqual(last.enabledKinds, ["sea"], "长城关闭后上报仅 sea");
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+// ── Phase 4：走廊点击识别内容（corridorInfoContent，纯 DOM / textContent 安全）──
+// 仅用已入库字段（title/kind/from/to/summary），summary 缺失不渲染、不伪造。
+
+async function kindDom() {
+  const { JSDOM } = await import("jsdom");
+  return new JSDOM("<!DOCTYPE html><html><body></body></html>").window.document;
+}
+
+test("corridorInfoContent：有 summary 的走廊渲染 名称+分组+起止+摘要（textContent）", async () => {
+  const { corridorInfoContent } = await import("../lib/exploration-map-layers.js");
+  const doc = await kindDom();
+  const el = corridorInfoContent({
+    title: "秦长城", kind: "wall", from: -214, to: -122,
+    summary: "蒙恬北逐匈奴后，连接秦、赵、燕旧长城，西起临洮，东至辽东。",
+  }, { document: doc });
+  assert.ok(el, "返回 Element");
+  assert.equal(el.querySelector(".corridor-info__name").textContent, "秦长城", "名称 textContent");
+  assert.equal(el.querySelector(".corridor-info__kind").textContent, "长城", "分组中文标签");
+  assert.equal(el.querySelector(".corridor-info__years").textContent, "-214–-122 年", "起止年份");
+  assert.ok(el.querySelector(".corridor-info__summary"), "摘要渲染（数据已入库）");
+  assert.equal(el.querySelector(".corridor-info__summary").textContent.includes("蒙恬"), true, "摘要为入库原文");
+  // 安全：无 innerHTML 注入风险（title 含 <script> 时原样文本）
+  const doc2 = await kindDom();
+  const el2 = corridorInfoContent({ title: "<script>x</script>", kind: "road", from: 1, to: 2 }, { document: doc2 });
+  assert.equal(el2.querySelector(".corridor-info__name").textContent, "<script>x</script>", "title 经 textContent 转义");
+  assert.equal(el2.querySelectorAll("script").length, 0, "未产生 script 节点");
+});
+
+test("corridorInfoContent：无 summary 的走廊只渲染 名称+分组+起止，不伪造摘要", async () => {
+  const { corridorInfoContent } = await import("../lib/exploration-map-layers.js");
+  const doc = await kindDom();
+  // 真实数据中无 summary 的走廊（如 隋唐大运河·永济渠）
+  const el = corridorInfoContent({
+    title: "隋唐大运河·永济渠", kind: "canal", from: 608, to: 1292,
+  }, { document: doc });
+  assert.equal(el.querySelector(".corridor-info__name").textContent, "隋唐大运河·永济渠");
+  assert.equal(el.querySelector(".corridor-info__kind").textContent, "运河");
+  assert.equal(el.querySelector(".corridor-info__years").textContent, "608–1292 年");
+  assert.equal(el.querySelector(".corridor-info__summary"), null, "无 summary 时不渲染摘要节点（不伪造）");
+});
+
+test("corridorInfoContent：缺 from/to 时不渲染年份段（不编造区间）", async () => {
+  const { corridorInfoContent } = await import("../lib/exploration-map-layers.js");
+  const doc = await kindDom();
+  const el = corridorInfoContent({ title: "无名路", kind: "road" }, { document: doc });
+  assert.equal(el.querySelector(".corridor-info__years"), null, "无 from/to 不渲染年份");
+  assert.equal(el.querySelector(".corridor-info__summary"), null, "无 summary 不渲染摘要");
+});
